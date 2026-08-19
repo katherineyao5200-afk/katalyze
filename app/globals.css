@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+:root {
+  /* Brand colors — locked kit, do not invent new hues (CLAUDE.md) */
+  --navy-900: #1f2441; /* primary dark surface; body text on light */
+  --navy-700: #313f79; /* secondary dark; gradient midpoint; hover */
+  --near-black: #15182e; /* deepest canvas, darker than navy-900 */
+  --periwinkle: #8a8db3; /* information — stats, labels, secondary text on dark */
+  --blush: #e8ccd2; /* action — CTAs, links, interactive elements */
+  --cream: #f5eff7; /* light surface; body text on dark */
+
+  --background: var(--cream);
+  --foreground: var(--navy-900);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-navy-900: var(--navy-900);
+  --color-navy-700: var(--navy-700);
+  --color-near-black: var(--near-black);
+  --color-periwinkle: var(--periwinkle);
+  --color-blush: var(--blush);
+  --color-cream: var(--cream);
+
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-migra);
+
+  /* Fluid type scale — clamp() only, never stepped (PRD §5) */
+  --text-eyebrow: clamp(0.75rem, 0.71rem + 0.15vw, 0.875rem);
+  --text-body: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+  --text-body-lg: clamp(1.125rem, 1.05rem + 0.35vw, 1.375rem);
+  --text-h4: clamp(1.25rem, 1.1rem + 0.7vw, 1.75rem);
+  --text-h3: clamp(1.5rem, 1.2rem + 1.4vw, 2.5rem);
+  --text-h2: clamp(2rem, 1.4rem + 2.6vw, 3.75rem);
+  --text-h1: clamp(2.5rem, 1.4rem + 4.4vw, 5.5rem);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: var(--near-black);
+    --foreground: var(--cream);
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), Arial, Helvetica, sans-serif;
+}
