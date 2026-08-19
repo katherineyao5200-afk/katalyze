@@ -4,8 +4,6 @@ You are building the marketing website for **Katalyze**, a countertop device tha
 
 **The full spec is in `docs/PRD.md`. Read it before starting work on any new area of the site.**
 
-**Actual reference images are in `docs/visual-references/` — read `00-INDEX.md` there and look at the images directly before building any visually significant component (the point field, the device hero section, the cartridge section, typography treatment).** These images are the source of truth for aesthetic judgment calls; the PRD's written description of them is a translation, not a replacement.
-
 Product/hardware facts live in `docs/product-engineering-spec.md`. Consult it before writing any copy that describes how the device works.
 
 ---
@@ -49,7 +47,7 @@ Do not introduce new hues. Derive surface depth only by interpolating between `n
 
 All headings use `clamp()` for fluid scaling.
 
-⚠️ Migra files are Pangram Pangram's free **personal-use** tier. A commercial license is required before public launch. Keep this noted in the project README.
+⚠️ Migra files are Pangram Pangram's free **personal-use** tier. A commercial license is required before public launch. Keep this noted in the README.
 
 ---
 
@@ -97,8 +95,6 @@ Plain and confident. The visuals carry the atmosphere, so the words stay grounde
 
 Primary slogan: **"Your catalyst to better skin."**
 
-**Pricing is finalized, not teased.** Four tiers — Machine Purchase ($279 one-time), Basic ($25/mo), Full ($45/mo), Premium ($89/mo). Full detail in `docs/PRD.md` §9 `/pricing`. Show real numbers on the pricing page.
-
 Approved supporting lines:
 - We measure. They guess.
 - Skin changes daily. So should your formula.
@@ -135,3 +131,13 @@ Get steps 1–6 fully working before writing any animation. A beautiful site wit
 10. Parallax
 11. Remaining pages
 12. Accessibility + performance + responsive QA
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
