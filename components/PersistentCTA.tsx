@@ -65,7 +65,7 @@ export default function PersistentCTA() {
               type="button"
               onClick={dismiss}
               aria-label="Dismiss"
-              className="shrink-0 font-sans text-body text-periwinkle transition-colors duration-300 ease-[cubic-bezier(.16,1,.3,1)] hover:text-blush focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush focus-visible:ring-offset-2 focus-visible:ring-offset-navy-900 rounded-sm"
+              className="flex h-11 w-11 shrink-0 items-center justify-center font-sans text-body text-periwinkle transition-colors duration-300 ease-[cubic-bezier(.16,1,.3,1)] hover:text-blush focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush focus-visible:ring-offset-2 focus-visible:ring-offset-navy-900 rounded-sm"
             >
               ✕
             </button>

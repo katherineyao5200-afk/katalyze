@@ -20,7 +20,10 @@ export default function Footer() {
   return (
     <footer className="bg-near-black">
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 px-6 py-12 text-center">
-        <Link href="/" className={focusRing}>
+        <Link
+          href="/"
+          className={`inline-flex min-h-11 items-center ${focusRing}`}
+        >
           <Image
             src={images.logo.nav.src}
             alt={images.logo.nav.alt}
@@ -36,7 +39,7 @@ export default function Footer() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className={`transition-colors duration-300 ease-[cubic-bezier(.16,1,.3,1)] hover:text-blush ${focusRing}`}
+                  className={`inline-flex min-h-11 items-center py-2 transition-colors duration-300 ease-[cubic-bezier(.16,1,.3,1)] hover:text-blush ${focusRing}`}
                 >
                   {link.label}
                 </Link>

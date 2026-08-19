@@ -25,7 +25,10 @@ export default function Nav() {
         aria-label="Primary"
         className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-6 gap-y-3 px-6 py-4"
       >
-        <Link href="/" className={focusRing}>
+        <Link
+          href="/"
+          className={`inline-flex min-h-11 items-center ${focusRing}`}
+        >
           <Image
             src={images.logo.nav.src}
             alt={images.logo.nav.alt}
@@ -48,7 +51,7 @@ export default function Nav() {
                 <Link
                   href={link.href}
                   aria-current={isActive ? "page" : undefined}
-                  className={`transition-colors duration-300 ease-[cubic-bezier(.16,1,.3,1)] ${
+                  className={`inline-flex min-h-11 items-center py-2 transition-colors duration-300 ease-[cubic-bezier(.16,1,.3,1)] ${
                     isActive ? "text-blush" : "text-cream hover:text-blush"
                   } ${focusRing}`}
                 >

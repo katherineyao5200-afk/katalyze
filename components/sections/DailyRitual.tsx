@@ -52,7 +52,7 @@ export default function DailyRitual() {
 
         <Link
           href="/how-it-works"
-          className={`font-sans text-body text-blush transition-colors duration-300 ease-[cubic-bezier(.16,1,.3,1)] hover:text-cream ${focusRing}`}
+          className={`inline-flex min-h-11 items-center py-2 font-sans text-body text-blush transition-colors duration-300 ease-[cubic-bezier(.16,1,.3,1)] hover:text-cream ${focusRing}`}
         >
           Learn how it works →
         </Link>
