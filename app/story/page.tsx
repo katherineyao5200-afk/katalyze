@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Our Story | Katalyze",
+  title: "Our Story",
   description:
     "Why Katherine Yao built Katalyze: an overflowing cabinet, irritated skin, and one question about why skincare doesn't work the way cooking does.",
 };

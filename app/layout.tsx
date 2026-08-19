@@ -39,9 +39,28 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
+const title = "Katalyze";
+const description = "Your catalyst to better skin.";
+
 export const metadata: Metadata = {
-  title: "Katalyze",
-  description: "Your catalyst to better skin.",
+  title: {
+    default: title,
+    template: "%s | Katalyze",
+  },
+  description,
+  openGraph: {
+    title,
+    description,
+    siteName: title,
+    type: "website",
+    images: ["/images/logo/horizontal-dark.png"],
+  },
+  twitter: {
+    card: "summary",
+    title,
+    description,
+    images: ["/images/logo/horizontal-dark.png"],
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

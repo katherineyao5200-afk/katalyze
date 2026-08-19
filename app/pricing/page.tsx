@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import WaitlistForm from "@/components/WaitlistForm";
 
 export const metadata: Metadata = {
-  title: "Pricing | Katalyze",
+  title: "Pricing",
   description:
     "Katalyze pricing: a one-time device purchase plus three subscription tiers for cartridge replenishment.",
 };

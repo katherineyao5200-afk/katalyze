@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "How It Works | Katalyze",
+  title: "How It Works",
   description:
     "Read, mix, apply, learn — how Katalyze turns a fingertip reading into a fresh, personalized dose.",
 };
