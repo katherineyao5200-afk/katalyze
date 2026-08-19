@@ -9,6 +9,8 @@ type Source = "hero" | "closing" | "persistent" | "pricing" | "footer";
 interface WaitlistFormProps {
   source: Source;
   className?: string;
+  /** Marks this as a full inline form so PersistentCTA can hide while it's in view. */
+  trackVisibility?: boolean;
 }
 
 const inputFocusRing =
@@ -17,7 +19,11 @@ const inputFocusRing =
 const buttonFocusRing =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-900 focus-visible:ring-offset-2 focus-visible:ring-offset-blush";
 
-export default function WaitlistForm({ source, className = "" }: WaitlistFormProps) {
+export default function WaitlistForm({
+  source,
+  className = "",
+  trackVisibility = false,
+}: WaitlistFormProps) {
   const [email, setEmail] = useState("");
   const [company, setCompany] = useState("");
   const [status, setStatus] = useState<Status>("idle");
@@ -64,6 +70,7 @@ export default function WaitlistForm({ source, className = "" }: WaitlistFormPro
     <form
       onSubmit={handleSubmit}
       noValidate
+      data-inline-form={trackVisibility ? "" : undefined}
       className={`flex flex-col gap-3 ${className}`}
     >
       <div className="flex flex-col gap-2 sm:flex-row">

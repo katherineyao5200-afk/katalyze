@@ -5,6 +5,7 @@ import "./globals.css";
 
 import Footer from "@/components/Footer";
 import Nav from "@/components/Nav";
+import PersistentCTA from "@/components/PersistentCTA";
 
 const migra = localFont({
   variable: "--font-migra",
@@ -53,6 +54,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Nav />
         {children}
         <Footer />
+        <PersistentCTA />
       </body>
     </html>
   );

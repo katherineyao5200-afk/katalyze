@@ -49,7 +49,7 @@ export default function Footer() {
           <p className="font-sans text-body text-cream">
             Our first production run is limited. The waitlist hears first.
           </p>
-          <WaitlistForm source="footer" className="w-full" />
+          <WaitlistForm source="footer" className="w-full" trackVisibility />
         </div>
 
         <p className="font-sans text-eyebrow text-periwinkle">
