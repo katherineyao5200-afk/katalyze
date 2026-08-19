@@ -1,4 +1,5 @@
 import ImagePlaceholder from "@/components/ImagePlaceholder";
+import Reveal from "@/components/Reveal";
 import { images } from "@/lib/images";
 
 export default function DeviceShowcase() {
@@ -6,7 +7,7 @@ export default function DeviceShowcase() {
 
   return (
     <section className="bg-near-black px-6 py-32">
-      <div className="mx-auto flex max-w-3xl flex-col items-center gap-12 text-center">
+      <Reveal className="mx-auto flex max-w-3xl flex-col items-center gap-12 text-center">
         <div className="w-full max-w-sm">
           <ImagePlaceholder
             width={device.width}
@@ -18,7 +19,7 @@ export default function DeviceShowcase() {
         <h2 className="max-w-xl font-display font-extralight text-h2 text-cream">
           One object. Six cartridges. A different formula every day.
         </h2>
-      </div>
+      </Reveal>
     </section>
   );
 }

@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import Reveal from "@/components/Reveal";
+
 const STEPS = [
   {
     title: "Read",
@@ -25,7 +27,7 @@ const focusRing =
 export default function DailyRitual() {
   return (
     <section className="bg-near-black px-6 py-24">
-      <div className="mx-auto flex max-w-3xl flex-col items-center gap-10 text-center">
+      <Reveal className="mx-auto flex max-w-3xl flex-col items-center gap-10 text-center">
         <h2 className="font-display font-extralight text-h2 text-cream">
           The daily ritual.
         </h2>
@@ -54,7 +56,7 @@ export default function DailyRitual() {
         >
           Learn how it works →
         </Link>
-      </div>
+      </Reveal>
     </section>
   );
 }

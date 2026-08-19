@@ -1,4 +1,5 @@
 import ImagePlaceholder from "@/components/ImagePlaceholder";
+import Reveal from "@/components/Reveal";
 import { images } from "@/lib/images";
 
 const BASE_LABELS = ["Base formula", "Base formula", "Base formula"];
@@ -29,7 +30,7 @@ function Cartridge({ slot, label }: { slot: CartridgeSlot; label: string }) {
 export default function WhatsInside() {
   return (
     <section className="bg-cream px-6 py-24">
-      <div className="mx-auto flex max-w-4xl flex-col items-center gap-16 text-center">
+      <Reveal className="mx-auto flex max-w-4xl flex-col items-center gap-16 text-center">
         <div className="flex flex-col items-center gap-4">
           <h2 className="font-display font-extralight text-h2 text-navy-900">
             What&apos;s inside.
@@ -48,7 +49,7 @@ export default function WhatsInside() {
             <Cartridge key={`active-${i}`} slot={slot} label={ACTIVE_LABELS[i]} />
           ))}
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }

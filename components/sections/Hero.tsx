@@ -1,31 +1,53 @@
+import ParallaxLayer from "@/components/ParallaxLayer";
+import PointField from "@/components/PointField";
 import WaitlistForm from "@/components/WaitlistForm";
 
 export default function Hero() {
   return (
-    <section className="relative flex min-h-[90vh] flex-col items-center justify-center gap-6 bg-near-black px-6 py-24 text-center">
-      <p className="font-sans text-eyebrow uppercase tracking-[0.2em] text-periwinkle">
-        Now developing
-      </p>
+    <section className="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden bg-near-black px-6 py-24 text-center">
+      {/* Depth 1: ambient gradient, slowest */}
+      <ParallaxLayer
+        speed={0.08}
+        className="absolute inset-0 bg-gradient-to-br from-navy-700/40 via-near-black to-near-black"
+      >
+        {null}
+      </ParallaxLayer>
 
-      <h1 className="max-w-3xl font-display font-extralight text-h1 text-cream">
-        Skincare, mixed <em className="font-display italic">fresh</em>, every
-        morning.
-      </h1>
+      {/* Depth 2: points of light, mid */}
+      <ParallaxLayer speed={0.18} className="absolute inset-0">
+        <PointField />
+      </ParallaxLayer>
 
-      <p className="font-display font-extralight italic text-body-lg text-periwinkle">
-        Your catalyst to better skin.
-      </p>
+      {/* Depth 3: text and CTA, front (static) */}
+      <div className="relative z-10 flex flex-col items-center gap-6">
+        <p className="font-sans text-eyebrow uppercase tracking-[0.2em] text-periwinkle">
+          Now developing
+        </p>
 
-      <p className="max-w-xl font-sans text-body text-cream">
-        Katalyze reads your skin and blends a single dose on demand — no
-        half-used bottles, no guessing what today calls for.
-      </p>
+        <h1 className="max-w-3xl font-display font-extralight text-h1 text-cream">
+          Skincare, mixed <em className="font-display italic">fresh</em>, every
+          morning.
+        </h1>
 
-      <WaitlistForm source="hero" trackVisibility className="mt-4 w-full max-w-md" />
+        <p className="font-display font-extralight italic text-body-lg text-periwinkle">
+          Your catalyst to better skin.
+        </p>
+
+        <p className="max-w-xl font-sans text-body text-cream">
+          Katalyze reads your skin and blends a single dose on demand — no
+          half-used bottles, no guessing what today calls for.
+        </p>
+
+        <WaitlistForm
+          source="hero"
+          trackVisibility
+          className="mt-4 w-full max-w-md"
+        />
+      </div>
 
       <span
         aria-hidden="true"
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 text-periwinkle"
+        className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 text-periwinkle"
       >
         ↓
       </span>

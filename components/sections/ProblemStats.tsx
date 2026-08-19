@@ -1,3 +1,5 @@
+import Reveal from "@/components/Reveal";
+
 const STATS = [
   {
     value: "71%",
@@ -18,7 +20,7 @@ const STATS = [
 export default function ProblemStats() {
   return (
     <section className="bg-near-black px-6 py-24">
-      <div className="mx-auto flex max-w-4xl flex-col items-center gap-16 text-center">
+      <Reveal className="mx-auto flex max-w-4xl flex-col items-center gap-16 text-center">
         <h2 className="max-w-2xl font-display font-extralight text-h2 text-cream">
           Your skin changes by the day. Your routine hasn&apos;t.
         </h2>
@@ -35,7 +37,7 @@ export default function ProblemStats() {
             </div>
           ))}
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }
