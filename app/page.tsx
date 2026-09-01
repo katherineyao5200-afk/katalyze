@@ -1,10 +1,10 @@
 import Analysis from "@/components/sections/Analysis";
 import ClosingCTA from "@/components/sections/ClosingCTA";
 import DeviceShowcase from "@/components/sections/DeviceShowcase";
+import Formulation from "@/components/sections/Formulation";
 import Hero from "@/components/sections/Hero";
 import HowItWorks from "@/components/sections/HowItWorks";
 import Thesis from "@/components/sections/Thesis";
-import WhatsInside from "@/components/sections/WhatsInside";
 
 export default function Home() {
   return (
@@ -14,7 +14,7 @@ export default function Home() {
       <Analysis />
       <DeviceShowcase />
       <HowItWorks />
-      <WhatsInside />
+      <Formulation />
       <ClosingCTA />
     </main>
   );
