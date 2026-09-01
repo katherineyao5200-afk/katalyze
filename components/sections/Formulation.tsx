@@ -1,4 +1,10 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+
+import ImagePlaceholder from "@/components/ImagePlaceholder";
 import Reveal from "@/components/Reveal";
+import { images } from "@/lib/images";
 
 // Real named actives (PRD §5) — base formulas aren't individually named
 // anywhere in the docs, so they stay generic rather than invented.
@@ -13,11 +19,36 @@ const SPECIMENS = [
   { label: "Hyaluronic acid", pct: "—" },
   { label: "Niacinamide", pct: "—" },
   { label: "Ceramide", pct: "—" },
-];
+] as const;
 
-// Layout device: annotated plate, light ground (§6 row 05) — the one
-// deliberate light-background exception on the page.
+// Layout device: annotated plate, light ground (§6 row 05), pinned per
+// System B (§11) — "the analysis and formulation sections" are its
+// named use case. Same IntersectionObserver-driven active state as
+// Analysis, not raw scroll position.
 export default function Formulation() {
+  const cartridge = images.cartridges.active[0];
+  const [active, setActive] = useState(0);
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const index = itemRefs.current.indexOf(
+              entry.target as HTMLDivElement,
+            );
+            if (index !== -1) setActive(index);
+          }
+        }
+      },
+      { threshold: 0.5 },
+    );
+
+    itemRefs.current.forEach((el) => el && observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section className="bg-white" style={{ paddingBlock: "var(--s-24)" }}>
       <Reveal
@@ -52,22 +83,50 @@ export default function Formulation() {
       </Reveal>
 
       <div
-        className="mx-auto"
+        className="relative mx-auto grid grid-cols-1 md:grid-cols-[0.9fr_1.1fr]"
         style={{
           maxWidth: "var(--max-w)",
           paddingInline: "var(--margin)",
           marginTop: "var(--s-16)",
         }}
       >
-        <dl
-          className="grid grid-cols-1 md:grid-cols-2"
-          style={{ columnGap: "var(--gutter)" }}
+        <div
+          className="relative md:sticky md:top-0 md:flex md:h-screen md:items-center"
+          style={{ paddingBlock: "var(--s-8)" }}
         >
+          <div className="flex w-full max-w-xs flex-col gap-3">
+            <ImagePlaceholder
+              width={cartridge.width}
+              height={cartridge.height}
+              alt="Cartridge specimen"
+            />
+            <p
+              className="font-mono uppercase"
+              style={{
+                fontSize: "var(--text-2xs)",
+                letterSpacing: "var(--track-label)",
+                color: "var(--indigo)",
+              }}
+            >
+              [{SPECIMENS[active].label}]
+            </p>
+          </div>
+        </div>
+
+        <dl className="flex flex-col">
           {SPECIMENS.map((item, i) => (
             <div
               key={`${item.label}-${i}`}
-              className="flex items-baseline justify-between gap-6 py-4"
-              style={{ borderTop: "1px solid var(--rule-on-light)" }}
+              ref={(el) => {
+                itemRefs.current[i] = el;
+              }}
+              className="flex flex-col justify-center gap-1 py-8 transition-opacity duration-[var(--dur-base)] ease-[var(--ease-soft)] md:py-0"
+              style={{
+                minHeight: "50vh",
+                opacity: i === active ? 1 : 0.4,
+                borderTop: "1px solid var(--rule-on-light)",
+                paddingLeft: "var(--s-4)",
+              }}
             >
               <dt
                 className="font-mono uppercase"
