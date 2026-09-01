@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import localFont from "next/font/local";
+import "lenis/dist/lenis.css";
 import "./globals.css";
 
 import Footer from "@/components/Footer";
 import Nav from "@/components/Nav";
 import PersistentCTA from "@/components/PersistentCTA";
+import SmoothScroll from "@/components/SmoothScroll";
 
 const migra = localFont({
   variable: "--font-migra",
@@ -70,6 +72,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${migra.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <SmoothScroll />
         <Nav />
         {children}
         <Footer />
