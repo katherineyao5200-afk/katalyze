@@ -3,6 +3,8 @@ interface ImagePlaceholderProps {
   height: number;
   alt: string;
   className?: string;
+  /** Overrides the default var(--r-lg) — e.g. for edge-bleeding crops. */
+  radius?: string;
 }
 
 /**
@@ -15,6 +17,7 @@ export default function ImagePlaceholder({
   height,
   alt,
   className = "",
+  radius = "var(--r-lg)",
 }: ImagePlaceholderProps) {
   return (
     <div
@@ -23,7 +26,7 @@ export default function ImagePlaceholder({
       className={`grain w-full ${className}`}
       style={{
         aspectRatio: `${width} / ${height}`,
-        borderRadius: "var(--r-lg)",
+        borderRadius: radius,
         backgroundImage: "var(--grad-atmosphere)",
       }}
     />
