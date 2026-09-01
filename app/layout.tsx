@@ -5,6 +5,7 @@ import "lenis/dist/lenis.css";
 import "./globals.css";
 
 import Footer from "@/components/Footer";
+import Gate from "@/components/Gate";
 import Nav from "@/components/Nav";
 import PersistentCTA from "@/components/PersistentCTA";
 import SmoothScroll from "@/components/SmoothScroll";
@@ -72,6 +73,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${migra.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <Gate />
         <SmoothScroll />
         <Nav />
         {children}
