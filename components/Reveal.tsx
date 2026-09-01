@@ -1,14 +1,20 @@
 "use client";
 
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { CSSProperties, ReactNode, useEffect, useRef, useState } from "react";
 
 interface RevealProps {
   children: ReactNode;
   className?: string;
+  style?: CSSProperties;
   delayMs?: number;
 }
 
-export default function Reveal({ children, className = "", delayMs = 0 }: RevealProps) {
+export default function Reveal({
+  children,
+  className = "",
+  style,
+  delayMs = 0,
+}: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -54,8 +60,11 @@ export default function Reveal({ children, className = "", delayMs = 0 }: Reveal
   return (
     <div
       ref={ref}
-      style={{ transitionDelay: visible ? `${delayMs}ms` : "0ms" }}
-      className={`transition-all duration-700 ease-[cubic-bezier(.16,1,.3,1)] ${
+      style={{
+        ...style,
+        transitionDelay: visible ? `${delayMs}ms` : "0ms",
+      }}
+      className={`ease-glide transition-all duration-[var(--dur-base)] ${
         visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
       } ${className}`}
     >

@@ -14,6 +14,12 @@ export const images = {
       height: 1200,
       alt: "The Katalyze device",
     },
+    skinMacro: {
+      src: null,
+      width: 1000,
+      height: 1250,
+      alt: "Close macro detail of skin, lit by data points",
+    },
   },
   cartridges: {
     base: [

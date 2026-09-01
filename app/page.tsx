@@ -1,3 +1,4 @@
+import Analysis from "@/components/sections/Analysis";
 import ClosingCTA from "@/components/sections/ClosingCTA";
 import DailyRitual from "@/components/sections/DailyRitual";
 import DeviceShowcase from "@/components/sections/DeviceShowcase";
@@ -10,6 +11,7 @@ export default function Home() {
     <main className="flex flex-1 flex-col">
       <Hero />
       <Thesis />
+      <Analysis />
       <DeviceShowcase />
       <DailyRitual />
       <WhatsInside />

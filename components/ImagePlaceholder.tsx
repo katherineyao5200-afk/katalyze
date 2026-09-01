@@ -20,8 +20,12 @@ export default function ImagePlaceholder({
     <div
       role="img"
       aria-label={alt}
-      style={{ aspectRatio: `${width} / ${height}` }}
-      className={`w-full rounded-2xl bg-gradient-to-br from-navy-700 via-navy-900 to-near-black ${className}`}
+      className={`grain w-full ${className}`}
+      style={{
+        aspectRatio: `${width} / ${height}`,
+        borderRadius: "var(--r-lg)",
+        backgroundImage: "var(--grad-atmosphere)",
+      }}
     />
   );
 }
