@@ -2,6 +2,8 @@
 
 You are building the marketing website for **Katalyze**, a countertop device that reads the user's skin and mixes a fresh, personalized skincare dose on demand.
 
+**Read `docs/DESIGN-SYSTEM.md` first, in full, before this file or any other doc.** It is the active design system and working agreement — tokens, layout rules, typography, motion, and the three signature interactive systems — and it supersedes the brand tokens, typography, and design-principles sections below wherever the two disagree. The sections of this file that don't overlap with it (product accuracy rules, compliance rules, team accuracy, build order) still apply in full.
+
 **The full spec is in `docs/PRD.md`. Read it before starting work on any new area of the site.**
 
 Product/hardware facts live in `docs/product-engineering-spec.md`. Consult it before writing any copy that describes how the device works.

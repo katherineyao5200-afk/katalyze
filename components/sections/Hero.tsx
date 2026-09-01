@@ -1,56 +1,57 @@
-import ParallaxLayer from "@/components/ParallaxLayer";
-import PointField from "@/components/PointField";
+import ParticleField from "@/components/ParticleField";
 import WaitlistForm from "@/components/WaitlistForm";
 
+// Layout device 2 (§5): full-bleed atmospheric split, no container, no
+// margin on the section itself — text gets its own inset instead. Dark
+// left -> light right via --grad-atmosphere; grain mandatory on top.
 export default function Hero() {
   return (
-    <section className="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden bg-near-black px-6 py-24 text-center">
-      {/* Depth 1: ambient gradient, slowest */}
-      <ParallaxLayer
-        speed={0.08}
-        className="absolute inset-0 bg-gradient-to-br from-navy-700/40 via-near-black to-near-black"
+    <section className="grain relative flex min-h-[100vh] items-end overflow-hidden bg-[image:var(--grad-atmosphere)] bg-cover">
+      <ParticleField />
+
+      {/* Text block: cols 1-7 of 12, lower-left per §6 row 01. */}
+      <div
+        className="relative z-10 flex w-full flex-col gap-6"
+        style={{ padding: "var(--margin)" }}
       >
-        {null}
-      </ParallaxLayer>
+        <div className="flex max-w-2xl flex-col gap-6">
+          <p className="font-mono text-2xs uppercase text-periwinkle tracking-[var(--track-label)]">
+            Now developing
+          </p>
 
-      {/* Depth 2: points of light, mid */}
-      <ParallaxLayer speed={0.18} className="absolute inset-0">
-        <PointField />
-      </ParallaxLayer>
+          <h1
+            className="font-display font-extralight text-white"
+            style={{
+              fontSize: "var(--text-hero)",
+              lineHeight: "var(--leading-display)",
+              letterSpacing: "var(--track-display)",
+            }}
+          >
+            Your catalyst
+            <br />
+            <em className="italic">to better skin.</em>
+          </h1>
 
-      {/* Depth 3: text and CTA, front (static) */}
-      <div className="relative z-10 flex flex-col items-center gap-6">
-        <p className="font-sans text-eyebrow uppercase tracking-[0.2em] text-periwinkle">
-          Now developing
-        </p>
+          <p
+            className="max-w-md text-white/80"
+            style={{ fontSize: "var(--text-lg)", lineHeight: "var(--leading-body)" }}
+          >
+            Katalyze reads your skin and blends a single dose on demand — no
+            half-used bottles, no guessing what today calls for.
+          </p>
 
-        <h1 className="max-w-3xl font-display font-extralight text-h1 text-cream">
-          Skincare, mixed <em className="font-display italic">fresh</em>, every
-          morning.
-        </h1>
-
-        <p className="font-display font-extralight italic text-body-lg text-periwinkle">
-          Your catalyst to better skin.
-        </p>
-
-        <p className="max-w-xl font-sans text-body text-cream">
-          Katalyze reads your skin and blends a single dose on demand — no
-          half-used bottles, no guessing what today calls for.
-        </p>
-
-        <WaitlistForm
-          source="hero"
-          trackVisibility
-          className="mt-4 w-full max-w-md"
-        />
+          <WaitlistForm source="hero" trackVisibility className="mt-2 max-w-md" />
+        </div>
       </div>
 
-      <span
+      {/* Mono hint, bottom-right — the discoverable pointer-interaction
+          affordance §11 System A asks for. */}
+      <p
         aria-hidden="true"
-        className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 text-periwinkle"
+        className="pointer-events-none absolute right-6 bottom-6 z-10 font-mono text-2xs uppercase text-periwinkle/70 tracking-[var(--track-label)]"
       >
-        ↓
-      </span>
+        Move to disturb
+      </p>
     </section>
   );
 }

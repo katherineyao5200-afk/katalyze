@@ -58,14 +58,22 @@ export default function PersistentCTA() {
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 flex justify-center px-4 pb-4 sm:inset-x-auto sm:right-6 sm:bottom-6 sm:justify-end sm:px-0 sm:pb-0">
       {expanded ? (
-        <div className="flex w-full max-w-sm flex-col gap-3 rounded-2xl border border-periwinkle/20 bg-navy-900 p-5 shadow-xl">
+        <div
+          className="flex w-full max-w-sm flex-col gap-3 border border-[color:var(--rule-on-dark)] p-5 shadow-xl backdrop-blur-md"
+          style={{
+            borderRadius: "var(--r-lg)",
+            backgroundColor: "var(--panel)",
+          }}
+        >
           <div className="flex items-start justify-between gap-4">
-            <p className="font-sans text-body text-cream">Get early access.</p>
+            <p className="text-white" style={{ fontSize: "var(--text-base)" }}>
+              Get early access.
+            </p>
             <button
               type="button"
               onClick={dismiss}
               aria-label="Dismiss"
-              className="flex h-11 w-11 shrink-0 items-center justify-center font-sans text-body text-periwinkle transition-colors duration-300 ease-[cubic-bezier(.16,1,.3,1)] hover:text-blush focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush focus-visible:ring-offset-2 focus-visible:ring-offset-navy-900 rounded-sm"
+              className="flex h-11 w-11 shrink-0 items-center justify-center text-periwinkle transition-colors duration-[var(--dur-fast)] ease-[var(--ease-soft)] hover:text-blush focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush focus-visible:ring-offset-2 focus-visible:ring-offset-midnight rounded-sm"
             >
               ✕
             </button>
@@ -77,7 +85,8 @@ export default function PersistentCTA() {
           type="button"
           onClick={() => setExpanded(true)}
           aria-expanded={expanded}
-          className="w-full rounded-full bg-blush px-6 py-3 font-sans text-body font-medium text-navy-900 transition-transform duration-300 ease-[cubic-bezier(.16,1,.3,1)] hover:scale-[1.03] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-900 focus-visible:ring-offset-2 focus-visible:ring-offset-blush sm:w-auto"
+          className="w-full bg-white px-6 py-3 font-medium text-midnight transition-colors duration-[var(--dur-fast)] ease-[var(--ease-soft)] hover:bg-white/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-midnight focus-visible:ring-offset-2 focus-visible:ring-offset-white sm:w-auto"
+          style={{ borderRadius: "var(--r-md)", fontSize: "var(--text-base)" }}
         >
           Get early access
         </button>

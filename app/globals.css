@@ -1,51 +1,85 @@
 @import "tailwindcss";
+@import "./tokens.css";
 
-:root {
-  /* Brand colors — locked kit, do not invent new hues (CLAUDE.md) */
-  --navy-900: #1f2441; /* primary dark surface; body text on light */
-  --navy-700: #313f79; /* secondary dark; gradient midpoint; hover */
-  --near-black: #15182e; /* deepest canvas, darker than navy-900 */
-  --periwinkle: #8a8db3; /* information — stats, labels, secondary text on dark */
-  --blush: #e8ccd2; /* action — CTAs, links, interactive elements */
-  --cream: #f5eff7; /* light surface; body text on dark */
-
-  --background: var(--cream);
-  --foreground: var(--navy-900);
-}
-
+/*
+ * Maps the raw tokens in tokens.css into Tailwind's theme namespace so
+ * utility classes exist for them (bg-midnight, text-blush, rounded-md,
+ * ease-glide, text-hero, font-display, ...). Keep every entry a plain
+ * reference to the token — never redefine a value here.
+ */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  --color-navy-900: var(--navy-900);
-  --color-navy-700: var(--navy-700);
-  --color-near-black: var(--near-black);
+  --color-midnight: var(--midnight);
+  --color-indigo: var(--indigo);
   --color-periwinkle: var(--periwinkle);
   --color-blush: var(--blush);
-  --color-cream: var(--cream);
+  --color-white: var(--white);
+  --color-panel: var(--panel);
 
-  --font-sans: var(--font-inter);
   --font-display: var(--font-migra);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-mono);
 
-  /* Fluid type scale — clamp() only, never stepped (PRD §5) */
-  --text-eyebrow: clamp(0.75rem, 0.71rem + 0.15vw, 0.875rem);
-  --text-body: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
-  --text-body-lg: clamp(1.125rem, 1.05rem + 0.35vw, 1.375rem);
-  --text-h4: clamp(1.25rem, 1.1rem + 0.7vw, 1.75rem);
-  --text-h3: clamp(1.5rem, 1.2rem + 1.4vw, 2.5rem);
-  --text-h2: clamp(2rem, 1.4rem + 2.6vw, 3.75rem);
-  --text-h1: clamp(2.5rem, 1.4rem + 4.4vw, 5.5rem);
+  /* Type scale — docs/DESIGN-SYSTEM.md §3 */
+  --text-2xs: var(--text-2xs);
+  --text-xs: var(--text-xs);
+  --text-sm: var(--text-sm);
+  --text-base: var(--text-base);
+  --text-lg: var(--text-lg);
+  --text-xl: var(--text-xl);
+  --text-2xl: var(--text-2xl);
+  --text-3xl: var(--text-3xl);
+  --text-display: var(--text-display);
+  --text-hero: var(--text-hero);
+
+  /* Radii — near-sharp by design, see tokens.css */
+  --radius-none: var(--r-none);
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+  --radius-full: var(--r-full);
+
+  /* Motion curves — use ease-glide / ease-soft utilities.
+     Durations stay as plain vars (duration-[var(--dur-base)]); Tailwind
+     doesn't have a stable themeable duration namespace to hook into. */
+  --ease-glide: var(--ease-glide);
+  --ease-soft: var(--ease-soft);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: var(--near-black);
-    --foreground: var(--cream);
-  }
+:root {
+  /*
+   * Dark is the fixed default per §2 rule 4 — this is a brand identity,
+   * not a user preference, so unlike the previous build there is no
+   * prefers-color-scheme toggle. Light sections (Formulation) set their
+   * own background explicitly instead of relying on this flipping.
+   */
+  --background: var(--midnight);
+  --foreground: var(--white);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-inter), Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+/*
+ * Grain — mandatory over every gradient surface (§3). A clean gradient
+ * is a bug. Apply the `grain` class to the gradient element itself;
+ * this pseudo-element overlays the noise without an extra DOM node.
+ */
+.grain {
+  position: relative;
+}
+
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.19;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }

@@ -14,10 +14,10 @@ interface WaitlistFormProps {
 }
 
 const inputFocusRing =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush focus-visible:ring-offset-2 focus-visible:ring-offset-near-black";
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush focus-visible:ring-offset-2 focus-visible:ring-offset-midnight";
 
 const buttonFocusRing =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-900 focus-visible:ring-offset-2 focus-visible:ring-offset-blush";
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-midnight focus-visible:ring-offset-2 focus-visible:ring-offset-white";
 
 export default function WaitlistForm({
   source,
@@ -87,7 +87,8 @@ export default function WaitlistForm({
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           disabled={status === "loading" || isDone}
-          className={`flex-1 rounded-full border border-periwinkle/40 bg-transparent px-5 py-3 font-sans text-body text-cream placeholder:text-periwinkle disabled:opacity-60 ${inputFocusRing}`}
+          className={`flex-1 rounded-[var(--r-sm)] border border-[color:var(--rule-on-dark)] bg-transparent px-5 py-3 text-white placeholder:text-periwinkle disabled:opacity-60 ${inputFocusRing}`}
+          style={{ fontSize: "var(--text-base)" }}
         />
 
         {/* Honeypot: invisible to people, catches bots that fill every field. */}
@@ -107,7 +108,8 @@ export default function WaitlistForm({
         <button
           type="submit"
           disabled={status === "loading" || isDone}
-          className={`rounded-full bg-blush px-6 py-3 font-sans text-body font-medium text-navy-900 transition-transform duration-300 ease-[cubic-bezier(.16,1,.3,1)] hover:scale-[1.03] disabled:opacity-60 disabled:hover:scale-100 ${buttonFocusRing}`}
+          className={`rounded-[var(--r-md)] bg-white px-6 py-3 font-medium text-midnight transition-colors duration-[var(--dur-fast)] ease-[var(--ease-soft)] hover:bg-white/85 disabled:opacity-60 ${buttonFocusRing}`}
+          style={{ fontSize: "var(--text-base)" }}
         >
           {status === "loading"
             ? "Joining…"
@@ -122,7 +124,7 @@ export default function WaitlistForm({
         role="status"
         aria-live="polite"
         tabIndex={-1}
-        className={`font-sans text-eyebrow text-periwinkle focus:outline-none ${message ? "" : "sr-only"}`}
+        className={`font-mono text-2xs text-periwinkle focus:outline-none ${message ? "" : "sr-only"}`}
       >
         {message}
       </p>
