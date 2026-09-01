@@ -59,6 +59,9 @@
   --text-3xl: clamp(2.4rem, 4.5vw, 3.75rem);
   --text-display: clamp(3.5rem, 8vw, 7rem);
   --text-hero: clamp(4.5rem, 13vw, 12rem); /* Migra only, one per page */
+  /* §5's mobile-first requirement calls for a distinct (smaller) hero
+     clamp below md, not just --text-hero's own floor. */
+  --text-hero-mobile: clamp(3rem, 16vw, 5rem);
 
   --leading-display: 0.92; /* Migra at hero size — set it TIGHT */
   --leading-tight: 1.08;

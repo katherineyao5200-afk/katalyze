@@ -20,9 +20,8 @@ export default function Hero() {
           </p>
 
           <h1
-            className="font-display font-extralight text-white"
+            className="font-display font-extralight text-white [font-size:var(--text-hero-mobile)] md:[font-size:var(--text-hero)]"
             style={{
-              fontSize: "var(--text-hero)",
               lineHeight: "var(--leading-display)",
               letterSpacing: "var(--track-display)",
             }}
