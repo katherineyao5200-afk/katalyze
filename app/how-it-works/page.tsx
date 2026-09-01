@@ -31,33 +31,54 @@ const STEPS = [
 
 export default function HowItWorksPage() {
   return (
-    <main className="flex flex-1 flex-col bg-near-black">
-      <section className="px-6 py-24 text-center">
-        <div className="mx-auto flex max-w-2xl flex-col items-center gap-4">
-          <h1 className="font-display font-extralight text-h1 text-cream">
+    <main className="flex flex-1 flex-col bg-midnight">
+      <section style={{ paddingInline: "var(--margin)", paddingBlock: "var(--s-24)" }}>
+        <div
+          className="mx-auto flex flex-col gap-3"
+          style={{ maxWidth: "var(--max-w)" }}
+        >
+          <h1
+            className="font-display font-extralight text-white"
+            style={{ fontSize: "var(--text-3xl)", lineHeight: "var(--leading-tight)" }}
+          >
             How Katalyze works.
           </h1>
-          <p className="font-display font-extralight italic text-body-lg text-periwinkle">
+          <p
+            className="font-display font-extralight italic text-periwinkle"
+            style={{ fontSize: "var(--text-lg)" }}
+          >
             Not a quiz. A conversation.
           </p>
         </div>
       </section>
 
-      <section className="px-6 pb-24">
-        <div className="mx-auto flex max-w-3xl flex-col gap-16">
+      <section style={{ paddingInline: "var(--margin)", paddingBlock: "var(--s-16)" }}>
+        <div
+          className="mx-auto flex flex-col divide-y divide-[color:var(--rule-on-dark)]"
+          style={{ maxWidth: "var(--max-w)" }}
+        >
           {STEPS.map((step, i) => (
             <div
               key={step.title}
-              className="flex flex-col items-start gap-2 sm:flex-row sm:items-baseline sm:gap-8"
+              className="flex flex-col gap-2 py-8 first:pt-0 last:pb-0 sm:flex-row sm:items-baseline sm:gap-8"
             >
-              <span className="font-sans text-eyebrow text-periwinkle sm:w-8">
+              <span
+                className="font-mono text-periwinkle"
+                style={{ fontSize: "var(--text-xs)", minWidth: "2.5ch" }}
+              >
                 0{i + 1}
               </span>
               <div className="flex flex-col gap-2">
-                <h2 className="font-display font-extrabold text-h3 text-cream">
+                <h2
+                  className="font-display font-extrabold text-white"
+                  style={{ fontSize: "var(--text-2xl)" }}
+                >
                   {step.title}
                 </h2>
-                <p className="max-w-xl font-sans text-body-lg text-cream">
+                <p
+                  className="max-w-xl text-white/70"
+                  style={{ fontSize: "var(--text-lg)", lineHeight: "var(--leading-body)" }}
+                >
                   {step.description}
                 </p>
               </div>
@@ -66,12 +87,21 @@ export default function HowItWorksPage() {
         </div>
       </section>
 
-      <section className="bg-navy-900 px-6 py-24">
-        <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">
-          <h2 className="font-display font-extralight text-h2 text-cream">
+      <section className="bg-indigo" style={{ paddingInline: "var(--margin)", paddingBlock: "var(--s-24)" }}>
+        <div
+          className="mx-auto flex flex-col gap-4"
+          style={{ maxWidth: "var(--measure)" }}
+        >
+          <h2
+            className="font-display font-extralight text-white"
+            style={{ fontSize: "var(--text-2xl)", lineHeight: "var(--leading-tight)" }}
+          >
             Rule-based, on purpose.
           </h2>
-          <p className="font-sans text-body-lg text-cream">
+          <p
+            className="text-white/80"
+            style={{ fontSize: "var(--text-lg)", lineHeight: "var(--leading-body)" }}
+          >
             Every formula is generated within pre-set safe ranges — not
             open-ended guessing. Our AI writes the plain-language explanation
             of your blend; it never decides the formula itself. That

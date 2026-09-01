@@ -42,51 +42,76 @@ const TIERS = [
 ];
 
 const focusRing =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-900 focus-visible:ring-offset-2 focus-visible:ring-offset-blush";
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-midnight focus-visible:ring-offset-2 focus-visible:ring-offset-white";
 
 export default function PricingPage() {
   return (
-    <main className="flex flex-1 flex-col bg-near-black">
-      <section className="px-6 py-24 text-center">
-        <div className="mx-auto flex max-w-2xl flex-col items-center gap-4">
-          <h1 className="font-display font-extralight text-h1 text-cream">
+    <main className="flex flex-1 flex-col bg-midnight">
+      <section style={{ paddingInline: "var(--margin)", paddingBlock: "var(--s-24)" }}>
+        <div className="mx-auto flex flex-col gap-3" style={{ maxWidth: "var(--max-w)" }}>
+          <h1
+            className="font-display font-extralight text-white"
+            style={{ fontSize: "var(--text-3xl)", lineHeight: "var(--leading-tight)" }}
+          >
             Pricing.
           </h1>
-          <p className="max-w-lg font-sans text-body-lg text-cream">
+          <p
+            className="max-w-lg text-white/70"
+            style={{ fontSize: "var(--text-lg)" }}
+          >
             One device. Three ways to keep it stocked.
           </p>
         </div>
       </section>
 
-      <section className="px-6 pb-24">
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <section style={{ paddingInline: "var(--margin)", paddingBlock: "var(--s-16)" }}>
+        <div
+          className="mx-auto grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
+          style={{ maxWidth: "var(--max-w)" }}
+        >
           {TIERS.map((tier) => (
             <div
               key={tier.name}
-              className="flex flex-col gap-4 rounded-2xl border border-periwinkle/20 bg-navy-900 p-6"
+              className="flex flex-col gap-4 border border-[color:var(--rule-on-dark)] p-6"
+              style={{ borderRadius: "var(--r-lg)", backgroundColor: "var(--panel)" }}
             >
-              <h2 className="font-display font-extrabold text-h4 text-cream">
+              <h2
+                className="font-display font-extrabold text-white"
+                style={{ fontSize: "var(--text-lg)" }}
+              >
                 {tier.name}
               </h2>
 
               {tier.bestFor ? (
-                <p className="font-display italic font-extralight text-body text-periwinkle">
+                <p
+                  className="font-display italic font-extralight text-periwinkle"
+                  style={{ fontSize: "var(--text-sm)" }}
+                >
                   {tier.bestFor}
                 </p>
               ) : null}
 
-              <p className="font-sans text-body text-cream">{tier.description}</p>
+              <p className="text-white/70" style={{ fontSize: "var(--text-sm)" }}>
+                {tier.description}
+              </p>
 
-              <p className="mt-auto font-display font-extrabold text-h3 text-cream">
+              <p
+                className="mt-auto font-display font-extrabold text-white"
+                style={{ fontSize: "var(--text-xl)" }}
+              >
                 {tier.price}
-                <span className="font-sans text-body font-normal text-periwinkle">
+                <span
+                  className="font-sans font-normal text-periwinkle"
+                  style={{ fontSize: "var(--text-sm)" }}
+                >
                   {tier.cadence === "one-time" ? " one-time" : tier.cadence}
                 </span>
               </p>
 
               <a
                 href="#pricing-waitlist"
-                className={`rounded-full bg-blush px-6 py-3 text-center font-sans text-body font-medium text-navy-900 transition-transform duration-300 ease-[cubic-bezier(.16,1,.3,1)] hover:scale-[1.03] ${focusRing}`}
+                className={`bg-white px-6 py-3 text-center font-medium text-midnight transition-colors duration-[var(--dur-fast)] ease-[var(--ease-soft)] hover:bg-white/85 ${focusRing}`}
+                style={{ borderRadius: "var(--r-md)", fontSize: "var(--text-base)" }}
               >
                 Join the waitlist
               </a>
@@ -95,9 +120,15 @@ export default function PricingPage() {
         </div>
       </section>
 
-      <section id="pricing-waitlist" className="px-6 pb-24">
-        <div className="mx-auto flex max-w-xl flex-col items-center gap-4 text-center">
-          <p className="font-sans text-body text-cream">
+      <section
+        id="pricing-waitlist"
+        style={{ paddingInline: "var(--margin)", paddingBlock: "var(--s-24)" }}
+      >
+        <div
+          className="mx-auto flex flex-col gap-4"
+          style={{ maxWidth: "var(--measure)" }}
+        >
+          <p className="text-white/70" style={{ fontSize: "var(--text-base)" }}>
             Early pricing may still refine slightly before launch — we&apos;ll
             tell our waitlist first either way.
           </p>
