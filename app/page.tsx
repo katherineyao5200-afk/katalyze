@@ -1,8 +1,8 @@
 import Analysis from "@/components/sections/Analysis";
 import ClosingCTA from "@/components/sections/ClosingCTA";
-import DailyRitual from "@/components/sections/DailyRitual";
 import DeviceShowcase from "@/components/sections/DeviceShowcase";
 import Hero from "@/components/sections/Hero";
+import HowItWorks from "@/components/sections/HowItWorks";
 import Thesis from "@/components/sections/Thesis";
 import WhatsInside from "@/components/sections/WhatsInside";
 
@@ -13,7 +13,7 @@ export default function Home() {
       <Thesis />
       <Analysis />
       <DeviceShowcase />
-      <DailyRitual />
+      <HowItWorks />
       <WhatsInside />
       <ClosingCTA />
     </main>
