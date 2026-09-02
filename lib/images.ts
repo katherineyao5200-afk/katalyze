@@ -1,9 +1,9 @@
 export const images = {
   logo: {
     nav: {
-      src: "/images/logo/horizontal-dark.png",
-      width: 419,
-      height: 214,
+      src: "/images/logo/mark-cream.png",
+      width: 360,
+      height: 433,
       alt: "Katalyze",
     },
   },
