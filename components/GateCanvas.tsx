@@ -228,7 +228,9 @@ export default function GateCanvas({ onPathLength }: GateCanvasProps) {
       const rect = canvas!.getBoundingClientRect();
       const x = (event.clientX - rect.left) / rect.width;
       const y = 1 - (event.clientY - rect.top) / rect.height;
-      pointerVel = { x: (x - lastPointer.x) * 5, y: (y - lastPointer.y) * 5 };
+      const prevPointer = lastPointer;
+
+      pointerVel = { x: (x - prevPointer.x) * 5, y: (y - prevPointer.y) * 5 };
       lastPointer = { x, y };
       pointer = { x, y };
       pointerActive = true;
@@ -241,8 +243,8 @@ export default function GateCanvas({ onPathLength }: GateCanvasProps) {
             ? lerp3(INDIGO, PERIWINKLE, (speed - 0.25) / 0.35)
             : lerp3(MIDNIGHT, INDIGO, speed / 0.25);
 
-      const dxPx = (x - lastPointer.x) * rect.width;
-      const dyPx = (y - lastPointer.y) * rect.height;
+      const dxPx = (x - prevPointer.x) * rect.width;
+      const dyPx = (y - prevPointer.y) * rect.height;
       onPathLengthRef.current(Math.hypot(dxPx, dyPx));
     }
     function onLeave() {
