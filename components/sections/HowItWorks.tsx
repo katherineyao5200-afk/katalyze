@@ -7,34 +7,30 @@ const STEPS = [
     n: "01",
     title: "Read",
     description: "A capacitive pad reads your skin's hydration trends in seconds.",
-    titleSize: "var(--text-lg)",
   },
   {
     n: "02",
     title: "Mix",
     description: "Three base formulas and three actives blend to today's ratio.",
-    titleSize: "var(--text-xl)",
   },
   {
     n: "03",
     title: "Apply",
     description: "Your dose pours into the cup. You apply it yourself.",
-    titleSize: "var(--text-display)",
   },
   {
     n: "04",
     title: "Learn",
     description: "Each entry sharpens tomorrow's blend.",
-    titleSize: "var(--text-lg)",
   },
 ] as const;
 
 const focusRing =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush focus-visible:ring-offset-2 focus-visible:ring-offset-midnight rounded-sm";
 
-// Layout device: numbered technical sequence, asymmetric (§6 row 04).
-// Step 03 (Apply) is the emotional peak — largest by a wide margin, not
-// an equal card in a grid.
+// §6 row 04 specs this as an asymmetric sequence with Apply (step 03)
+// sized as the emotional peak. Reverted to equal sizing per explicit
+// request — the size jump read as too extreme in practice.
 export default function HowItWorks() {
   return (
     <section className="bg-midnight" style={{ paddingBlock: "var(--s-32)" }}>
@@ -82,7 +78,7 @@ export default function HowItWorks() {
               <div className="flex flex-col gap-1">
                 <h3
                   className="font-display font-extrabold text-white"
-                  style={{ fontSize: step.titleSize, lineHeight: "var(--leading-tight)" }}
+                  style={{ fontSize: "var(--text-xl)", lineHeight: "var(--leading-tight)" }}
                 >
                   {step.title}
                 </h3>
