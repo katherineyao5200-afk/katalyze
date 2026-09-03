@@ -9,10 +9,10 @@ export const images = {
   },
   product: {
     deviceHero: {
-      src: null,
-      width: 900,
-      height: 1200,
-      alt: "The Katalyze device",
+      src: "/images/product/device-hero.jpg",
+      width: 1080,
+      height: 1440,
+      alt: "The Katalyze device, with six cartridges visible through the frosted window",
     },
     skinMacro: {
       src: null,

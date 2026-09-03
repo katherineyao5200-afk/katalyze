@@ -1,21 +1,23 @@
-import ImagePlaceholder from "@/components/ImagePlaceholder";
+import Image from "next/image";
+
 import Reveal from "@/components/Reveal";
 import { images } from "@/lib/images";
 
 // Not one of §6's 8 named sections, but the PRD's "emotional peak" beat
-// is real content worth keeping. Given the closest-fitting device (§5.3,
-// oversized/cropped specimen): the device bleeds off the right edge
-// instead of sitting centered above the headline.
+// is real content worth keeping. Real product render now (was a
+// gradient placeholder) — full photo shown, soft ambient glow behind
+// it and a grounding shadow, rather than the edge-bleed crop that only
+// made sense for an abstract gradient block.
 export default function DeviceShowcase() {
   const device = images.product.deviceHero;
 
   return (
     <section className="overflow-hidden bg-midnight" style={{ paddingBlock: "var(--s-32)" }}>
-      <div className="mx-auto grid grid-cols-12 items-center gap-y-12" style={{ maxWidth: "var(--max-w)" }}>
-        <Reveal
-          className="col-span-12 flex flex-col gap-4 md:col-span-5"
-          style={{ paddingInlineStart: "var(--margin)" }}
-        >
+      <div
+        className="mx-auto grid grid-cols-12 items-center gap-y-12"
+        style={{ maxWidth: "var(--max-w)", paddingInline: "var(--margin)" }}
+      >
+        <Reveal className="col-span-12 flex flex-col gap-4 md:col-span-5">
           <p
             className="font-mono uppercase text-periwinkle"
             style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}
@@ -30,14 +32,32 @@ export default function DeviceShowcase() {
           </h2>
         </Reveal>
 
-        <div className="col-span-12 md:col-span-7">
-          <ImagePlaceholder
+        <Reveal
+          delayMs={120}
+          className="relative col-span-12 flex items-center justify-center md:col-span-7"
+        >
+          <div
+            aria-hidden="true"
+            className="absolute rounded-full blur-3xl"
+            style={{
+              width: "70%",
+              height: "70%",
+              backgroundImage: "var(--grad-point)",
+              opacity: 0.5,
+            }}
+          />
+          <Image
+            src={device.src}
+            alt={device.alt}
             width={device.width}
             height={device.height}
-            alt={device.alt}
-            radius="0"
+            className="relative w-full max-w-sm"
+            style={{
+              borderRadius: "var(--r-lg)",
+              boxShadow: "0 24px 60px -12px rgb(31 36 65 / 0.55)",
+            }}
           />
-        </div>
+        </Reveal>
       </div>
     </section>
   );
