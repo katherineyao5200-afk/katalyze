@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import GateCanvas from "@/components/GateCanvas";
+import GateCanvas, { canUseFluidGate } from "@/components/GateCanvas";
 
 const SESSION_KEY = "katalyze-gate-seen";
 const COMPLETE_THRESHOLD_PX = 500;
@@ -14,7 +14,9 @@ const EXIT_DURATION_MS = 900;
  * - Skip is visible immediately (well under 2s), keyboard-focusable,
  *   and first in the DOM/tab order.
  * - Bypassed entirely under prefers-reduced-motion, on touch devices,
- *   and on repeat visits this session.
+ *   on repeat visits this session, and when WebGL2 + EXT_color_buffer_
+ *   float aren't both available — a gate that renders but can't be
+ *   drawn on is worse than no gate.
  * - Content behind it is already in the DOM regardless — this renders
  *   null by default and only shows after an effect proves none of the
  *   bypass conditions apply, so a crawler or a user with JS disabled
@@ -35,7 +37,8 @@ export default function Gate() {
     ).matches;
     const isTouch = window.matchMedia("(pointer: coarse)").matches;
     const seen = sessionStorage.getItem(SESSION_KEY) === "true";
-    if (reducedMotion || isTouch || seen) return;
+    const canDraw = canUseFluidGate();
+    if (reducedMotion || isTouch || seen || !canDraw) return;
     // These bypass checks can only run client-side; syncing the real
     // value once mounted is the point of this effect.
     // eslint-disable-next-line react-hooks/set-state-in-effect

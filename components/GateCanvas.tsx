@@ -148,6 +148,25 @@ function createFbo(gl: WebGL2RenderingContext, w: number, h: number) {
   return { texture, fbo };
 }
 
+/**
+ * Tests WebGL2 + EXT_color_buffer_float support with a throwaway
+ * canvas. Gate.tsx calls this before ever showing the gate — if either
+ * is unavailable, GateCanvas's real init would silently bail with no
+ * listeners attached, leaving drawing completely inert. A broken gate
+ * is worse than no gate, so this becomes a bypass condition alongside
+ * reduced-motion/touch/repeat-visit, not something the user hits.
+ */
+export function canUseFluidGate(): boolean {
+  try {
+    const canvas = document.createElement("canvas");
+    const gl = canvas.getContext("webgl2");
+    if (!gl) return false;
+    return !!gl.getExtension("EXT_color_buffer_float");
+  } catch {
+    return false;
+  }
+}
+
 interface GateCanvasProps {
   onPathLength: (delta: number) => void;
 }
@@ -165,10 +184,23 @@ export default function GateCanvas({ onPathLength }: GateCanvasProps) {
     if (!canvas) return;
 
     const gl = canvas.getContext("webgl2", { alpha: true, premultipliedAlpha: false });
-    if (!gl) return;
+    if (!gl) {
+      console.error(
+        "GateCanvas: webgl2 context creation failed — Gate.tsx's canUseFluidGate() " +
+          "pre-check should have bypassed the gate before this ever mounted.",
+      );
+      return;
+    }
 
     const ext = gl.getExtension("EXT_color_buffer_float");
-    if (!ext) return;
+    if (!ext) {
+      console.error(
+        "GateCanvas: EXT_color_buffer_float unavailable — Gate.tsx's " +
+          "canUseFluidGate() pre-check should have bypassed the gate before " +
+          "this ever mounted.",
+      );
+      return;
+    }
 
     const simScale = 0.5; // half resolution, per spec
     let simW = 0;
