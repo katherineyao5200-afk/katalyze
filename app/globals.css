@@ -132,3 +132,85 @@ body {
     animation: none;
   }
 }
+
+/* Diagonal light sweep across the Freshness numeral — the one "cool
+   effect" section that had nothing but a static glyph. Gradient-clipped
+   text, not an overlay, so it reads as light moving through the glyph
+   rather than a bar sliding over it. Stops built from --white via
+   color-mix rather than a new literal, per the no-new-hex rule. */
+@keyframes numeral-shimmer {
+  0% {
+    background-position: -120% 0;
+  }
+  100% {
+    background-position: 220% 0;
+  }
+}
+
+.numeral-shimmer {
+  background-image: linear-gradient(
+    100deg,
+    color-mix(in srgb, var(--white) 55%, transparent) 0%,
+    color-mix(in srgb, var(--white) 55%, transparent) 40%,
+    var(--white) 50%,
+    color-mix(in srgb, var(--white) 55%, transparent) 60%,
+    color-mix(in srgb, var(--white) 55%, transparent) 100%
+  );
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: numeral-shimmer 6s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .numeral-shimmer {
+    animation: none;
+    background: none;
+    -webkit-text-fill-color: currentColor;
+    color: color-mix(in srgb, var(--white) 90%, transparent);
+  }
+}
+
+/* Accent line that draws in per step, keyed off Reveal's own
+   data-revealed attribute rather than a second observer — one visible
+   state driving both the fade and the line keeps them in lockstep. */
+.accent-line {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-slow) var(--ease-glide);
+}
+
+[data-revealed="true"] .accent-line {
+  transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .accent-line {
+    transition: none;
+    transform: scaleX(1);
+  }
+}
+
+/* Soft pulse on whichever Analysis/Formulation item is currently active
+   — the border itself already marks it; this just keeps that marker
+   from sitting completely still while its illustration is in focus. */
+@keyframes active-glow-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--periwinkle) 45%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 24px 0 color-mix(in srgb, var(--periwinkle) 45%, transparent);
+  }
+}
+
+.active-glow {
+  animation: active-glow-pulse 2.4s var(--ease-soft) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .active-glow {
+    animation: none;
+  }
+}

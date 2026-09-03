@@ -114,7 +114,9 @@ export default function Formulation() {
               ref={(el) => {
                 itemRefs.current[i] = el;
               }}
-              className="flex flex-col justify-center gap-1 py-8 transition-opacity duration-[var(--dur-base)] ease-[var(--ease-soft)] md:py-0"
+              className={`flex flex-col justify-center gap-1 py-8 transition-opacity duration-[var(--dur-base)] ease-[var(--ease-soft)] md:py-0 ${
+                i === active ? "active-glow" : ""
+              }`}
               style={{
                 minHeight: "50vh",
                 opacity: i === active ? 1 : 0.4,

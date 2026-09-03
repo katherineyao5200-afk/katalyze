@@ -13,7 +13,7 @@ export default function Freshness() {
       >
         <span
           aria-hidden="true"
-          className="font-display font-extrabold text-white/90"
+          className="numeral-shimmer font-display font-extrabold"
           style={{
             fontSize: "var(--text-hero)",
             lineHeight: "var(--leading-display)",

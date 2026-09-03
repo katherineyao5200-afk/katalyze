@@ -82,6 +82,11 @@ export default function HowItWorks() {
                 >
                   {step.title}
                 </h3>
+                <span
+                  aria-hidden="true"
+                  className="accent-line block bg-blush"
+                  style={{ width: "var(--s-8)", height: "2px", marginBlock: "var(--s-1)" }}
+                />
                 <p
                   className="text-white/70"
                   style={{ fontSize: "var(--text-sm)" }}

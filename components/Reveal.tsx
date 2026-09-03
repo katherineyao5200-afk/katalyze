@@ -60,6 +60,7 @@ export default function Reveal({
   return (
     <div
       ref={ref}
+      data-revealed={visible ? "true" : "false"}
       style={{
         ...style,
         transitionDelay: visible ? `${delayMs}ms` : "0ms",

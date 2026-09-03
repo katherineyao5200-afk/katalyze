@@ -105,7 +105,9 @@ export default function Analysis() {
               ref={(el) => {
                 itemRefs.current[i] = el;
               }}
-              className="flex flex-col justify-center gap-2 py-8 transition-opacity duration-[var(--dur-base)] ease-[var(--ease-soft)] md:py-0"
+              className={`flex flex-col justify-center gap-2 py-8 transition-opacity duration-[var(--dur-base)] ease-[var(--ease-soft)] md:py-0 ${
+                i === active ? "active-glow" : ""
+              }`}
               style={{
                 minHeight: "70vh",
                 opacity: i === active ? 1 : 0.45,
