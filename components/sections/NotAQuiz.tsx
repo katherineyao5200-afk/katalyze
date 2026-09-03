@@ -6,9 +6,28 @@ import Reveal from "@/components/Reveal";
 // the rule still applies to keep rhythm honest).
 export default function NotAQuiz() {
   return (
-    <section className="bg-midnight" style={{ paddingBlock: "var(--s-24)" }}>
+    <section
+      className="relative overflow-hidden bg-midnight"
+      style={{ paddingBlock: "var(--s-24)" }}
+    >
+      {/* Same ambient-texture idea as Thesis, offset differently (upper
+          right, smaller) so the two flat sections don't read as
+          identical twins on scroll. */}
       <div
-        className="mx-auto grid grid-cols-12"
+        aria-hidden="true"
+        className="absolute rounded-full blur-3xl"
+        style={{
+          right: "-5%",
+          top: "-15%",
+          width: "32%",
+          aspectRatio: "1 / 1",
+          backgroundImage: "var(--grad-point)",
+          opacity: 0.2,
+        }}
+      />
+
+      <div
+        className="relative z-10 mx-auto grid grid-cols-12"
         style={{
           maxWidth: "var(--max-w)",
           paddingInline: "var(--margin)",

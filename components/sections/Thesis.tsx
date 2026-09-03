@@ -20,9 +20,29 @@ const STATS = [
 // Layout device: narrow column, cols 2-7 of 12, deep midnight (§6 row 02).
 export default function Thesis() {
   return (
-    <section className="bg-midnight" style={{ paddingBlock: "var(--s-40)" }}>
+    <section
+      className="relative overflow-hidden bg-midnight"
+      style={{ paddingBlock: "var(--s-40)" }}
+    >
+      {/* Ambient texture in the empty right-hand whitespace (cols 8-12
+          carry no content) — ties this flat section back to the
+          constellation motif without competing with the text. */}
       <div
-        className="mx-auto grid grid-cols-12"
+        aria-hidden="true"
+        className="absolute rounded-full blur-3xl"
+        style={{
+          right: "-10%",
+          top: "50%",
+          transform: "translateY(-50%)",
+          width: "45%",
+          aspectRatio: "1 / 1",
+          backgroundImage: "var(--grad-point)",
+          opacity: 0.25,
+        }}
+      />
+
+      <div
+        className="relative z-10 mx-auto grid grid-cols-12"
         style={{
           maxWidth: "var(--max-w)",
           paddingInline: "var(--margin)",
