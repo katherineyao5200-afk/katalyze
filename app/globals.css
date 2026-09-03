@@ -83,3 +83,29 @@ body {
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
+
+/*
+ * Slow ambient drift for placeholder specimens (ImagePlaceholder) —
+ * "resting states drift imperceptibly," not a frozen gradient block.
+ * Real photos don't need this; only the still-abstract slots do.
+ */
+@keyframes placeholder-drift {
+  0% {
+    background-position: 20% 30%;
+  }
+  100% {
+    background-position: 80% 70%;
+  }
+}
+
+.placeholder-drift {
+  background-size: 220% 220%;
+  animation: placeholder-drift 22s var(--ease-soft) infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .placeholder-drift {
+    animation: none;
+    background-position: 50% 50%;
+  }
+}

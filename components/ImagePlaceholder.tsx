@@ -23,7 +23,7 @@ export default function ImagePlaceholder({
     <div
       role="img"
       aria-label={alt}
-      className={`grain w-full ${className}`}
+      className={`grain placeholder-drift w-full ${className}`}
       style={{
         aspectRatio: `${width} / ${height}`,
         borderRadius: radius,

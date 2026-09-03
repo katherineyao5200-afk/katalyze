@@ -43,6 +43,17 @@ export default function Hero() {
         </div>
       </div>
 
+      {/* Small anchored detail, bottom-left — balances the pointer hint
+          on the right per §11 System A. Real product facts, not filler:
+          capacitive read + rule-based mix are both hard rules in
+          CLAUDE.md, so this doubles as a quiet credibility marker. */}
+      <p
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-6 left-6 z-10 font-mono text-2xs uppercase text-periwinkle/70 tracking-[var(--track-label)]"
+      >
+        Capacitive read · Rule-based mix
+      </p>
+
       {/* Mono hint, bottom-right — the discoverable pointer-interaction
           affordance §11 System A asks for. */}
       <p

@@ -1,5 +1,6 @@
 import Image from "next/image";
 
+import FloatOnScroll from "@/components/FloatOnScroll";
 import Reveal from "@/components/Reveal";
 import { images } from "@/lib/images";
 
@@ -36,27 +37,29 @@ export default function DeviceShowcase() {
           delayMs={120}
           className="relative col-span-12 flex items-center justify-center md:col-span-7"
         >
-          <div
-            aria-hidden="true"
-            className="absolute rounded-full blur-3xl"
-            style={{
-              width: "70%",
-              height: "70%",
-              backgroundImage: "var(--grad-point)",
-              opacity: 0.5,
-            }}
-          />
-          <Image
-            src={device.src}
-            alt={device.alt}
-            width={device.width}
-            height={device.height}
-            className="relative w-full max-w-sm"
-            style={{
-              borderRadius: "var(--r-lg)",
-              boxShadow: "0 24px 60px -12px rgb(31 36 65 / 0.55)",
-            }}
-          />
+          <FloatOnScroll className="relative flex items-center justify-center">
+            <div
+              aria-hidden="true"
+              className="absolute rounded-full blur-3xl"
+              style={{
+                width: "70%",
+                height: "70%",
+                backgroundImage: "var(--grad-point)",
+                opacity: 0.5,
+              }}
+            />
+            <Image
+              src={device.src}
+              alt={device.alt}
+              width={device.width}
+              height={device.height}
+              className="relative w-full max-w-sm"
+              style={{
+                borderRadius: "var(--r-lg)",
+                boxShadow: "0 24px 60px -12px rgb(31 36 65 / 0.55)",
+              }}
+            />
+          </FloatOnScroll>
         </Reveal>
       </div>
     </section>
