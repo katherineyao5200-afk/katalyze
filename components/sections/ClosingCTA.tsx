@@ -24,7 +24,7 @@ export default function ClosingCTA() {
         className="relative z-10 max-w-xl font-display font-extralight text-white"
         style={{ fontSize: "var(--text-2xl)", lineHeight: "var(--leading-tight)" }}
       >
-        Be the first to try it.
+        Join the founding cohort.
       </h2>
       <p
         className="relative z-10 text-white/80"

@@ -49,6 +49,13 @@ export default function HowItWorksPage() {
           >
             Not a quiz. A conversation.
           </p>
+          <p
+            className="max-w-lg text-white/60"
+            style={{ fontSize: "var(--text-sm)", lineHeight: "var(--leading-body)" }}
+          >
+            Closer to a skincare printer than a subscription box: it reads,
+            mixes, and dispenses one fresh dose, on demand.
+          </p>
         </div>
       </section>
 

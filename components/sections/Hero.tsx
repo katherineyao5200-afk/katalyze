@@ -26,17 +26,19 @@ export default function Hero() {
               letterSpacing: "var(--track-display)",
             }}
           >
-            Your catalyst
+            It reads your skin.
             <br />
-            <em className="italic">to better skin.</em>
+            <em className="italic">Then it mixes.</em>
           </h1>
 
           <p
             className="max-w-md text-white/80"
             style={{ fontSize: "var(--text-lg)", lineHeight: "var(--leading-body)" }}
           >
-            Katalyze reads your skin and blends a single dose on demand — no
-            half-used bottles, no guessing what today calls for.
+            Most personalized skincare guesses once — a quiz, a photo — then
+            stops. Katalyze checks in every time: a capacitive sensor reads
+            your skin&apos;s hydration trend, then mixes a fresh single dose
+            on the spot. A skincare printer, not a subscription box.
           </p>
 
           <WaitlistForm source="hero" trackVisibility className="mt-2 max-w-md" />

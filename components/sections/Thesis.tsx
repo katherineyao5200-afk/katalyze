@@ -2,16 +2,20 @@ import Reveal from "@/components/Reveal";
 
 const STATS = [
   {
-    value: "71%",
+    value: "71.2%",
     description:
       "say their skin changes with the weather, but their products stay the same",
+  },
+  {
+    value: "78.1%",
+    description: "say too many options is their biggest struggle",
   },
   {
     value: "78%",
     description: "have bought a product that ended up not working for their skin",
   },
   {
-    value: "86%",
+    value: "86.3%",
     description:
       "say proven results, not features, are what would earn their trust",
   },

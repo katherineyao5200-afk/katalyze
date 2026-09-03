@@ -6,6 +6,7 @@ import Freshness from "@/components/sections/Freshness";
 import Hero from "@/components/sections/Hero";
 import HowItWorks from "@/components/sections/HowItWorks";
 import NotAQuiz from "@/components/sections/NotAQuiz";
+import Proof from "@/components/sections/Proof";
 import Thesis from "@/components/sections/Thesis";
 
 export default function Home() {
@@ -19,6 +20,7 @@ export default function Home() {
       <Formulation />
       <Freshness />
       <NotAQuiz />
+      <Proof />
       <ClosingCTA />
     </main>
   );

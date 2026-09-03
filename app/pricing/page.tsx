@@ -41,6 +41,29 @@ const TIERS = [
   },
 ];
 
+const FAQS = [
+  {
+    question: "Is it safe?",
+    answer:
+      "Every formula is generated within pre-set safe ranges by a rule-based engine — not open-ended guessing. Our AI writes the plain-language explanation of your blend; it never decides the formula itself. The device never touches your skin: your dose pours into a cup, and you apply it yourself, like a serum.",
+  },
+  {
+    question: "Does it measure sebum, or give a clinical-grade reading?",
+    answer:
+      "No. The capacitive pad gives a relative hydration trend over time — not a clinically calibrated absolute value, and not a sebum reading. Think of it as a screening tool that gets more useful the longer you use it, not a diagnostic device.",
+  },
+  {
+    question: "How does refilling work?",
+    answer:
+      "Six independent channels — three base formulas, three actives — run low at different rates depending on your routine. Basic replenishes just the actives running low; Full replenishes everything automatically; Premium adds priority access to new formulations, multi-user profiles, and expedited shipping.",
+  },
+  {
+    question: "When will it ship?",
+    answer:
+      "We're targeting a first production run of about 2,000 units. Exact ship windows go to the waitlist first, before anywhere else — that's the whole reason to join now instead of waiting for a public launch.",
+  },
+];
+
 const focusRing =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-midnight focus-visible:ring-offset-2 focus-visible:ring-offset-white";
 
@@ -60,6 +83,15 @@ export default function PricingPage() {
             style={{ fontSize: "var(--text-lg)" }}
           >
             One device. Three ways to keep it stocked.
+          </p>
+          <p
+            className="max-w-lg text-white/60"
+            style={{ fontSize: "var(--text-sm)", lineHeight: "var(--leading-body)" }}
+          >
+            You&apos;re probably already spending $20–50 a month on skincare.
+            This isn&apos;t new spend — it&apos;s a swap. And because each
+            dose is mixed fresh for one use, nothing sits half-used in a
+            drawer.
           </p>
         </div>
       </section>
@@ -117,6 +149,52 @@ export default function PricingPage() {
               </a>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section style={{ paddingInline: "var(--margin)", paddingBlock: "var(--s-16)" }}>
+        <div
+          className="mx-auto flex flex-col"
+          style={{ maxWidth: "var(--measure)" }}
+        >
+          <h2
+            className="font-display font-extralight text-white"
+            style={{
+              fontSize: "var(--text-xl)",
+              lineHeight: "var(--leading-tight)",
+              marginBottom: "var(--s-6)",
+            }}
+          >
+            Questions before you join.
+          </h2>
+          <div className="flex flex-col divide-y divide-[color:var(--rule-on-dark)]">
+            {FAQS.map((faq) => (
+              <details key={faq.question} className="group py-5 first:pt-0 last:pb-0">
+                <summary
+                  className={`flex cursor-pointer list-none items-center justify-between gap-4 text-white ${focusRing}`}
+                  style={{ fontSize: "var(--text-base)" }}
+                >
+                  {faq.question}
+                  <span
+                    aria-hidden="true"
+                    className="shrink-0 text-periwinkle transition-transform duration-[var(--dur-fast)] ease-[var(--ease-soft)] group-open:rotate-45"
+                  >
+                    +
+                  </span>
+                </summary>
+                <p
+                  className="text-white/70"
+                  style={{
+                    marginTop: "var(--s-3)",
+                    fontSize: "var(--text-sm)",
+                    lineHeight: "var(--leading-body)",
+                  }}
+                >
+                  {faq.answer}
+                </p>
+              </details>
+            ))}
+          </div>
         </div>
       </section>
 
