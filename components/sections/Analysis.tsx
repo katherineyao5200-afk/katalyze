@@ -2,20 +2,40 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import ImagePlaceholder from "@/components/ImagePlaceholder";
+import DeviceIllustration, { type DevicePart } from "@/components/DeviceIllustration";
 import Reveal from "@/components/Reveal";
-import { images } from "@/lib/images";
 
 // Real inputs only (§5 rule) — no fabricated sensor readings. The device
 // measures relative hydration via a capacitive pad; everything else is
 // user-reported or external. Four real inputs, not padded to a round
-// number with invented data.
-const INPUTS = [
-  { label: "Hydration trend", detail: "capacitive pad, relative reading", y: 22 },
-  { label: "Local weather", detail: "pulled automatically, daily", y: 42 },
-  { label: "Logged skin feel", detail: "your entry, each morning", y: 62 },
-  { label: "Initial screening", detail: "one-time, at setup", y: 82 },
-] as const;
+// number with invented data. `part` ties each input to the device part
+// that's actually responsible for it.
+const INPUTS: {
+  label: string;
+  detail: string;
+  part: DevicePart;
+}[] = [
+  {
+    label: "Hydration trend",
+    detail: "capacitive pad, relative reading",
+    part: "buttons",
+  },
+  {
+    label: "Local weather",
+    detail: "pulled automatically, daily",
+    part: "display",
+  },
+  {
+    label: "Logged skin feel",
+    detail: "your entry, each morning",
+    part: "window",
+  },
+  {
+    label: "Initial screening",
+    detail: "one-time, at setup",
+    part: "cartridge-base",
+  },
+];
 
 // Layout devices 1 + System B (§5, §11): annotated plate, pinned to a
 // scrolling text column — "the analysis and formulation sections" are
@@ -23,7 +43,6 @@ const INPUTS = [
 // centered in the viewport; IntersectionObserver drives that, not raw
 // scroll position, so it stays correct regardless of Lenis's smoothing.
 export default function Analysis() {
-  const specimen = images.product.skinMacro;
   const [active, setActive] = useState(0);
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -74,26 +93,8 @@ export default function Analysis() {
           className="relative md:sticky md:top-0 md:flex md:h-screen md:items-center"
           style={{ paddingBlock: "var(--s-8)" }}
         >
-          <div className="relative w-full">
-            <ImagePlaceholder
-              width={specimen.width}
-              height={specimen.height}
-              alt={specimen.alt}
-            />
-            {INPUTS.map((input, i) => (
-              <span
-                key={input.label}
-                aria-hidden="true"
-                className="absolute h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full transition-all duration-[var(--dur-base)] ease-[var(--ease-soft)]"
-                style={{
-                  left: "50%",
-                  top: `${input.y}%`,
-                  backgroundImage: "var(--grad-point)",
-                  opacity: i === active ? 1 : 0.35,
-                  transform: `translate(-50%, -50%) scale(${i === active ? 1.6 : 1})`,
-                }}
-              />
-            ))}
+          <div className="device-sway relative w-full max-w-md">
+            <DeviceIllustration activePart={INPUTS[active].part} />
           </div>
         </div>
 

@@ -2,9 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import ImagePlaceholder from "@/components/ImagePlaceholder";
+import CartridgeIllustration from "@/components/CartridgeIllustration";
 import Reveal from "@/components/Reveal";
-import { images } from "@/lib/images";
 
 // Real named actives (PRD §5) — base formulas aren't individually named
 // anywhere in the docs, so they stay generic rather than invented.
@@ -26,7 +25,6 @@ const SPECIMENS = [
 // named use case. Same IntersectionObserver-driven active state as
 // Analysis, not raw scroll position.
 export default function Formulation() {
-  const cartridge = images.cartridges.active[0];
   const [active, setActive] = useState(0);
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -94,12 +92,8 @@ export default function Formulation() {
           className="relative md:sticky md:top-0 md:flex md:h-screen md:items-center"
           style={{ paddingBlock: "var(--s-8)" }}
         >
-          <div className="flex w-full max-w-xs flex-col gap-3">
-            <ImagePlaceholder
-              width={cartridge.width}
-              height={cartridge.height}
-              alt="Cartridge specimen"
-            />
+          <div className="device-sway flex w-full max-w-sm flex-col gap-3">
+            <CartridgeIllustration activeIndex={active} />
             <p
               className="font-mono uppercase"
               style={{

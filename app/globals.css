@@ -109,3 +109,26 @@ body {
     background-position: 50% 50%;
   }
 }
+
+/* Slow, barely-there sway for the device illustrations — "nothing is
+   fully static" without competing with the per-part highlight
+   transitions, which drive the actual meaning. */
+@keyframes device-sway {
+  0% {
+    transform: rotate(-1.5deg);
+  }
+  100% {
+    transform: rotate(1.5deg);
+  }
+}
+
+.device-sway {
+  animation: device-sway 7s var(--ease-soft) infinite alternate;
+  transform-origin: 50% 85%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .device-sway {
+    animation: none;
+  }
+}
