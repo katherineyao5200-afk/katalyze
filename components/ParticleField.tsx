@@ -100,18 +100,22 @@ float snoise(vec3 v){
   return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
 }
 
+// 4-tap curl approximation (was 6) — this was the most expensive part of
+// the shader at 90k-250k pixels/frame and a real contributor to the
+// "laggy" complaint. Drops full 3D curl for a 2D-plane curl (x,y from
+// finite differences) plus a z-wobble reusing the same 4 samples instead
+// of two more noise evaluations — a third fewer snoise() calls, visually
+// close enough for a "low amplitude drift," which is all this needs to be.
 vec3 curlNoise(vec3 p){
   const float e = 0.1;
   float n1 = snoise(vec3(p.x, p.y + e, p.z));
   float n2 = snoise(vec3(p.x, p.y - e, p.z));
-  float n3 = snoise(vec3(p.x, p.y, p.z + e));
-  float n4 = snoise(vec3(p.x, p.y, p.z - e));
-  float n5 = snoise(vec3(p.x + e, p.y, p.z));
-  float n6 = snoise(vec3(p.x - e, p.y, p.z));
-  float x = (n1 - n2) - (n3 - n4);
-  float y = (n3 - n4) - (n5 - n6);
-  float z = (n5 - n6) - (n1 - n2);
-  return normalize(vec3(x, y, z) + 1e-4) ;
+  float n3 = snoise(vec3(p.x + e, p.y, p.z));
+  float n4 = snoise(vec3(p.x - e, p.y, p.z));
+  float x = n1 - n2;
+  float y = n4 - n3;
+  float z = (n1 + n2 - n3 - n4) * 0.5;
+  return normalize(vec3(x, y, z) + 1e-4);
 }
 `;
 
@@ -170,6 +174,18 @@ void main() {
   }
 
   vel = (vel + drift + repulsion + restForce) * uDamping;
+
+  // Hard clamp — restForce is proportional to distance-from-target with
+  // no ceiling, so a particle that's briefly far off (e.g. right after
+  // the morph target swaps) could otherwise take one huge, visible jump
+  // in a single frame instead of a smooth correction. This is the fix
+  // for the "sudden jumps / streaking" artifact class.
+  float speed = length(vel);
+  const float MAX_SPEED = 0.05;
+  if (speed > MAX_SPEED) {
+    vel = vel / speed * MAX_SPEED;
+  }
+
   gl_FragColor = vec4(vel, 1.0);
 }
 `;
@@ -192,7 +208,10 @@ void main() {
   // range here is a few world units, not enough to warrant it, and an
   // uncalibrated depth-scaled size previously produced ~100px+ circles
   // that fully saturated the frame at 250k points.
-  gl_PointSize = mix(1.3, 2.4, clamp(vSpeed, 0.0, 1.0)) * uDpr;
+  // Sized up slightly from the original 1.3-2.4 range to compensate for
+  // the lower particle count below (fewer, marginally bigger points
+  // keeps the field reading as full rather than sparse).
+  gl_PointSize = mix(1.7, 3.0, clamp(vSpeed, 0.0, 1.0)) * uDpr;
   gl_Position = projectionMatrix * mvPosition;
 }
 `;
@@ -208,13 +227,26 @@ void main() {
   vec2 c = gl_PointCoord - 0.5;
   float d = length(c);
   if (d > 0.5) discard;
-  float alpha = smoothstep(0.5, 0.0, d) * 0.42;
+
+  // Real UnrealBloomPass isn't usable here (see the file-level comment —
+  // it hardcodes opaque alpha, incompatible with this transparent
+  // canvas). This fakes a glow per-point instead, entirely inside the
+  // sprite's own alpha falloff: a small bright core plus a wider, dimmer
+  // halo, both from the same distance field, no separate blur pass and
+  // no alpha-channel cost. Addressed the "flat/dim" feedback directly.
+  float core = smoothstep(0.5, 0.1, d);
+  float halo = smoothstep(0.5, 0.0, d) * 0.45;
+  float alpha = clamp(core + halo, 0.0, 1.0) * 0.6;
 
   float mixFactor = clamp(vRadius * 0.7, 0.0, 1.0);
   vec3 color = mix(uColorCore, uColorBody, mixFactor);
   // Blush only on the fastest, outermost points (~<10% by design).
   float blushMix = smoothstep(0.55, 1.0, vSpeed) * smoothstep(0.6, 1.0, vRadius);
   color = mix(color, uColorEdge, blushMix * 0.85);
+  // Slight brightness boost — additive blending makes this compound
+  // nicely into a glow wherever points overlap, without any point
+  // individually looking blown out.
+  color *= 1.25;
 
   gl_FragColor = vec4(color, alpha);
 }
@@ -300,8 +332,13 @@ export default function ParticleField({
     ).matches;
     if (reducedMotion || !hasWebGL2()) return;
 
+    // Reduced from the spec's 250k/60k after live feedback ("stuttery/
+    // laggy") — two GPGPU passes plus a 250k-point draw every frame is
+    // genuinely heavy on anything short of a high-end discrete GPU. This
+    // still reads as a dense field (helped by the larger point size
+    // below), just without the frame-rate cost.
     const isDesktop = window.matchMedia("(min-width: 768px)").matches;
-    const particleCount = isDesktop ? 250000 : 60000;
+    const particleCount = isDesktop ? 90000 : 30000;
     const texSize = Math.ceil(Math.sqrt(particleCount));
 
     let disposed = false;
