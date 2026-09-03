@@ -9,6 +9,10 @@ import { useEffect, useRef } from "react";
  * section that just needs a little life, not a centerpiece). Sparse
  * dots drift slowly, faint hairlines connect nearby ones, brand colors
  * only. Pauses off-screen, respects prefers-reduced-motion.
+ *
+ * Each dot twinkles on its own sine cycle (random phase/speed) — that's
+ * what actually reads as "glitter" rather than static dots; density and
+ * peak brightness are bumped up from the original quieter pass too.
  */
 
 const PERIWINKLE = "138, 141, 179";
@@ -22,6 +26,9 @@ interface Point {
   vx: number;
   vy: number;
   color: string;
+  radius: number;
+  twinklePhase: number;
+  twinkleSpeed: number;
 }
 
 export default function ParticleDrift({
@@ -49,7 +56,7 @@ export default function ParticleDrift({
 
     function makePoints() {
       const area = width * height;
-      const count = Math.max(24, Math.min(48, Math.round(area / 22000)));
+      const count = Math.max(40, Math.min(90, Math.round(area / 13000)));
       points = Array.from({ length: count }, () => {
         const angle = Math.random() * Math.PI * 2;
         return {
@@ -57,7 +64,10 @@ export default function ParticleDrift({
           y: Math.random() * height,
           vx: Math.cos(angle) * DRIFT_SPEED * Math.random(),
           vy: Math.sin(angle) * DRIFT_SPEED * Math.random(),
-          color: Math.random() < 0.7 ? PERIWINKLE : BLUSH,
+          color: Math.random() < 0.65 ? PERIWINKLE : BLUSH,
+          radius: 0.9 + Math.random() * 1.6,
+          twinklePhase: Math.random() * Math.PI * 2,
+          twinkleSpeed: 0.6 + Math.random() * 1.4,
         };
       });
     }
@@ -73,7 +83,7 @@ export default function ParticleDrift({
       makePoints();
     }
 
-    function draw() {
+    function draw(t: number) {
       ctx!.clearRect(0, 0, width, height);
 
       for (let i = 0; i < points.length; i++) {
@@ -94,14 +104,22 @@ export default function ParticleDrift({
       }
 
       for (const p of points) {
+        // Twinkle: each dot pulses on its own sine cycle rather than
+        // sitting at a fixed opacity — this is what actually reads as
+        // glitter rather than static dots.
+        const twinkle =
+          0.25 + 0.75 * (0.5 + 0.5 * Math.sin(t * p.twinkleSpeed + p.twinklePhase));
         ctx!.beginPath();
-        ctx!.arc(p.x, p.y, 1.3, 0, Math.PI * 2);
-        ctx!.fillStyle = `rgba(${p.color}, 0.5)`;
+        ctx!.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx!.fillStyle = `rgba(${p.color}, ${(0.35 + 0.5 * twinkle).toFixed(3)})`;
         ctx!.fill();
       }
     }
 
+    const startTime = performance.now();
+
     function step() {
+      const t = (performance.now() - startTime) / 1000;
       for (const p of points) {
         p.x += p.vx;
         p.y += p.vy;
@@ -110,7 +128,7 @@ export default function ParticleDrift({
         if (p.y < -10) p.y = height + 10;
         if (p.y > height + 10) p.y = -10;
       }
-      draw();
+      draw(t);
       rafId = requestAnimationFrame(step);
     }
 
@@ -125,11 +143,11 @@ export default function ParticleDrift({
     }
 
     resize();
-    draw();
+    draw(0);
 
     const resizeObserver = new ResizeObserver(() => {
       resize();
-      draw();
+      draw((performance.now() - startTime) / 1000);
     });
     resizeObserver.observe(canvas);
 
