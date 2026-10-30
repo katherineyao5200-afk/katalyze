@@ -103,6 +103,13 @@ export default function Thesis() {
               </div>
             ))}
           </dl>
+
+          <p
+            className="text-periwinkle"
+            style={{ marginTop: "var(--s-6)", fontSize: "var(--text-xs)" }}
+          >
+            Katalyze market research survey, about 75 respondents, 2026.
+          </p>
         </Reveal>
       </div>
     </section>

@@ -17,22 +17,26 @@ const INPUTS: {
 }[] = [
   {
     label: "Hydration trend",
-    detail: "capacitive pad, relative reading",
+    detail:
+      "Rest a fingertip on the pad for three seconds. It tracks whether your skin is drier or more hydrated than your usual, not a clinical number.",
     part: "buttons",
   },
   {
     label: "Local weather",
-    detail: "pulled automatically, daily",
+    detail:
+      "Humidity and temperature for where you are, pulled by the app each day. A dry, cold week shifts the blend before you notice it.",
     part: "display",
   },
   {
     label: "Logged skin feel",
-    detail: "your entry, each morning",
+    detail:
+      "A quick check-in each morning: tight, oily, irritated, fine. You know things a sensor can't.",
     part: "window",
   },
   {
     label: "Initial screening",
-    detail: "one-time, at setup",
+    detail:
+      "A one-time questionnaire at setup covering skin type, sensitivities and goals. It sets the safe range every daily formula stays inside.",
     part: "cartridge-base",
   },
 ];
@@ -109,7 +113,7 @@ export default function Analysis() {
                 i === active ? "active-glow" : ""
               }`}
               style={{
-                minHeight: "70vh",
+                minHeight: "45vh",
                 opacity: i === active ? 1 : 0.45,
                 borderLeft: "1px solid var(--rule-on-dark)",
                 paddingLeft: "var(--s-4)",
@@ -122,11 +126,14 @@ export default function Analysis() {
                   letterSpacing: "var(--track-label)",
                 }}
               >
-                [{input.label}]
+                {input.label}
               </dt>
               <dd
-                className="mt-1 text-white/70"
-                style={{ fontSize: "var(--text-sm)" }}
+                className="mt-1 max-w-sm text-white/75"
+                style={{
+                  fontSize: "var(--text-base)",
+                  lineHeight: "var(--leading-body)",
+                }}
               >
                 {input.detail}
               </dd>

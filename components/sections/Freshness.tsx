@@ -1,9 +1,9 @@
 import Reveal from "@/components/Reveal";
 
 // Layout devices 2 + 3 combined (§6 row 06): full-bleed split, one side
-// carrying an oversized cropped numeral. No real waste/freshness figure
-// exists in any doc, so the numeral stays an honest "—" rather than an
-// invented percentage — same call as Formulation's percentages.
+// carrying an oversized cropped numeral. No measured waste figure exists
+// yet, so the numeral is the one fact that's true by design: the device
+// mixes a single dose at a time.
 export default function Freshness() {
   return (
     <section className="grid grid-cols-1 md:grid-cols-2">
@@ -17,10 +17,10 @@ export default function Freshness() {
           style={{
             fontSize: "var(--text-hero)",
             lineHeight: "var(--leading-display)",
-            marginLeft: "calc(var(--margin) * -0.15)",
+            marginLeft: "var(--margin)",
           }}
         >
-          —
+          1
         </span>
         <span
           className="absolute font-mono uppercase text-periwinkle"
@@ -31,7 +31,7 @@ export default function Freshness() {
             letterSpacing: "var(--track-label)",
           }}
         >
-          Per-dose waste — figure pending
+          Dose mixed at a time. No half-used bottles.
         </span>
       </div>
 

@@ -7,6 +7,7 @@ import Hero from "@/components/sections/Hero";
 import HowItWorks from "@/components/sections/HowItWorks";
 import NotAQuiz from "@/components/sections/NotAQuiz";
 import Proof from "@/components/sections/Proof";
+import Prototype from "@/components/sections/Prototype";
 import Thesis from "@/components/sections/Thesis";
 
 export default function Home() {
@@ -20,6 +21,7 @@ export default function Home() {
       <Formulation />
       <Freshness />
       <NotAQuiz />
+      <Prototype />
       <Proof />
       <ClosingCTA />
     </main>

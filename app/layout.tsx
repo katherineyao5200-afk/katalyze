@@ -46,6 +46,9 @@ const title = "Katalyze";
 const description = "Your catalyst to better skin.";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.katalyzeskin.com",
+  ),
   title: {
     default: title,
     template: "%s | Katalyze",

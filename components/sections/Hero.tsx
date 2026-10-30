@@ -62,7 +62,7 @@ export default function Hero() {
         aria-hidden="true"
         className="pointer-events-none absolute right-6 bottom-6 z-10 font-mono text-2xs uppercase text-periwinkle/70 tracking-[var(--track-label)]"
       >
-        Move to disturb
+        Move your cursor
       </p>
     </section>
   );

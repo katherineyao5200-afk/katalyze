@@ -5,19 +5,36 @@ import { useEffect, useRef, useState } from "react";
 import CartridgeIllustration from "@/components/CartridgeIllustration";
 import Reveal from "@/components/Reveal";
 
-// Real named actives (PRD §5) — base formulas aren't individually named
-// anywhere in the docs, so they stay generic rather than invented.
-// Percentages are left as "—": no real formulation percentage data
-// exists yet, and a placeholder specific number would read as a real
-// clinical claim, which §5's "real input names only" rule (extended
-// here to real values only) doesn't allow.
+// Real named actives (PRD §5). Base formulas aren't individually named
+// anywhere in the docs yet, so they're numbered rather than invented.
+// Each line says what the ingredient is for, not a percentage: no real
+// formulation data exists yet, and a specific number would read as a
+// clinical claim.
 const SPECIMENS = [
-  { label: "Base formula", pct: "—" },
-  { label: "Base formula", pct: "—" },
-  { label: "Base formula", pct: "—" },
-  { label: "Hyaluronic acid", pct: "—" },
-  { label: "Niacinamide", pct: "—" },
-  { label: "Ceramide", pct: "—" },
+  {
+    label: "Base 01",
+    role: "The carrier every dose starts from. How much of each base goes in sets the texture for the day.",
+  },
+  {
+    label: "Base 02",
+    role: "A second base, so a dry winter morning and a humid summer one don't get the same feel.",
+  },
+  {
+    label: "Base 03",
+    role: "The third base widens the range further. Each sits in its own channel with its own pump, so nothing cross-mixes.",
+  },
+  {
+    label: "Hyaluronic acid",
+    role: "A humectant that holds water at the skin's surface. Weighted up when your hydration trend dips.",
+  },
+  {
+    label: "Niacinamide",
+    role: "Vitamin B3, widely used for oil balance and an even tone.",
+  },
+  {
+    label: "Ceramide",
+    role: "A lipid that is part of the skin's own barrier. Weighted up on irritated or wind-dried days.",
+  },
 ] as const;
 
 // Layout device: annotated plate, light ground (§6 row 05), pinned per
@@ -102,7 +119,7 @@ export default function Formulation() {
                 color: "var(--indigo)",
               }}
             >
-              [{SPECIMENS[active].label}]
+              {SPECIMENS[active].label}
             </p>
           </div>
         </div>
@@ -118,7 +135,7 @@ export default function Formulation() {
                 i === active ? "active-glow" : ""
               }`}
               style={{
-                minHeight: "50vh",
+                minHeight: "35vh",
                 opacity: i === active ? 1 : 0.4,
                 borderTop: "1px solid var(--rule-on-light)",
                 paddingLeft: "var(--s-4)",
@@ -135,10 +152,14 @@ export default function Formulation() {
                 {item.label}
               </dt>
               <dd
-                className="font-mono tabular-nums"
-                style={{ fontSize: "var(--text-sm)", color: "var(--ink-on-light)" }}
+                className="max-w-sm"
+                style={{
+                  fontSize: "var(--text-base)",
+                  lineHeight: "var(--leading-body)",
+                  color: "var(--ink-on-light)",
+                }}
               >
-                {item.pct}
+                {item.role}
               </dd>
             </div>
           ))}
