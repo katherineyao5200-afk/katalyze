@@ -126,7 +126,7 @@ export default function Analysis() {
                   letterSpacing: "var(--track-label)",
                 }}
               >
-                {input.label}
+                [{input.label}]
               </dt>
               <dd
                 className="mt-1 max-w-sm text-white/75"

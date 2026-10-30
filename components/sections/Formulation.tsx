@@ -119,7 +119,7 @@ export default function Formulation() {
                 color: "var(--indigo)",
               }}
             >
-              {SPECIMENS[active].label}
+              [{SPECIMENS[active].label}]
             </p>
           </div>
         </div>

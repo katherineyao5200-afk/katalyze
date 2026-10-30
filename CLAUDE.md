@@ -4,7 +4,7 @@ You are building the marketing website for **Katalyze**, a countertop device tha
 
 **Read `docs/DESIGN-SYSTEM.md` first, in full, before this file or any other doc.** It is the active design system and working agreement — tokens, layout rules, typography, motion, and the three signature interactive systems — and it supersedes the brand tokens, typography, and design-principles sections below wherever the two disagree. The sections of this file that don't overlap with it (product accuracy rules, compliance rules, team accuracy, build order) still apply in full.
 
-**Use the `frontend-design` skill (`.claude/skills/frontend-design/`) for any visual or layout work.** Where it disagrees with `docs/DESIGN-SYSTEM.md` on palette or typefaces, the design system wins. Its list of generated-page tells (all-caps eyebrows, middle-dot meta strings, mono data labels, "→" on links, fade-up on every section) does apply here.
+**Use the `frontend-design` skill (`.claude/skills/frontend-design/`) for any visual or layout work.** Where it disagrees with `docs/DESIGN-SYSTEM.md`, the design system wins. In particular, the mono micro-labels and bracketed readouts are a deliberate choice taken from the reference sites, not template chrome: keep them, but make them do real work (leader lines to the thing they label, real values only).
 
 **The full spec is in `docs/PRD.md`. Read it before starting work on any new area of the site.**
 
