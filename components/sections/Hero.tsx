@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import ParticleField from "@/components/ParticleField";
 import WaitlistForm from "@/components/WaitlistForm";
 
@@ -42,6 +44,18 @@ export default function Hero() {
           </p>
 
           <WaitlistForm source="hero" trackVisibility className="mt-2 max-w-md" />
+
+          {/* Founder line — answers "who is behind this?" in the first
+              screen, for readers evaluating the founder, not just the product. */}
+          <p className="text-sm text-white/70">
+            Founded by Katherine Yao, a student founder.{" "}
+            <Link
+              href="/story"
+              className="text-blush underline decoration-blush/40 underline-offset-4 transition-colors hover:decoration-blush"
+            >
+              Read the story
+            </Link>
+          </p>
         </div>
       </div>
 

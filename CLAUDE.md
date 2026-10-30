@@ -4,6 +4,8 @@ You are building the marketing website for **Katalyze**, a countertop device tha
 
 **Read `docs/DESIGN-SYSTEM.md` first, in full, before this file or any other doc.** It is the active design system and working agreement — tokens, layout rules, typography, motion, and the three signature interactive systems — and it supersedes the brand tokens, typography, and design-principles sections below wherever the two disagree. The sections of this file that don't overlap with it (product accuracy rules, compliance rules, team accuracy, build order) still apply in full.
 
+**Use the `frontend-design` skill (`.claude/skills/frontend-design/`) for any visual or layout work.** Where it disagrees with `docs/DESIGN-SYSTEM.md` on palette or typefaces, the design system wins. Its list of generated-page tells (all-caps eyebrows, middle-dot meta strings, mono data labels, "→" on links, fade-up on every section) does apply here.
+
 **The full spec is in `docs/PRD.md`. Read it before starting work on any new area of the site.**
 
 Product/hardware facts live in `docs/product-engineering-spec.md`. Consult it before writing any copy that describes how the device works.
