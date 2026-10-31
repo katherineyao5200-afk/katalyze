@@ -87,7 +87,7 @@ export default function WaitlistForm({
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           disabled={status === "loading" || isDone}
-          className={`flex-1 rounded-[var(--r-sm)] border border-[color:var(--rule-on-dark)] bg-transparent px-5 py-3 text-white placeholder:text-periwinkle disabled:opacity-60 ${inputFocusRing}`}
+          className={`min-w-0 flex-1 rounded-[var(--r-sm)] border border-[color:var(--rule-on-dark)] bg-transparent px-5 py-3 text-white placeholder:text-periwinkle disabled:opacity-60 ${inputFocusRing}`}
           style={{ fontSize: "var(--text-base)" }}
         />
 
@@ -108,7 +108,7 @@ export default function WaitlistForm({
         <button
           type="submit"
           disabled={status === "loading" || isDone}
-          className={`rounded-[var(--r-md)] bg-white px-6 py-3 font-medium text-midnight transition-colors duration-[var(--dur-fast)] ease-[var(--ease-soft)] hover:bg-white/85 disabled:opacity-60 ${buttonFocusRing}`}
+          className={`whitespace-nowrap rounded-[var(--r-md)] bg-white px-6 py-3 font-medium text-midnight transition-colors duration-[var(--dur-fast)] ease-[var(--ease-soft)] hover:bg-white/85 disabled:opacity-60 ${buttonFocusRing}`}
           style={{ fontSize: "var(--text-base)" }}
         >
           {status === "loading"

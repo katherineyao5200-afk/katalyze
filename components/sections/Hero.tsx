@@ -56,7 +56,7 @@ export default function Hero() {
           CLAUDE.md, so this doubles as a quiet credibility marker. */}
       <p
         aria-hidden="true"
-        className="pointer-events-none absolute bottom-6 left-6 z-10 font-mono text-2xs uppercase text-periwinkle/70 tracking-[var(--track-label)]"
+        className="pointer-events-none absolute bottom-6 left-6 z-10 hidden font-mono md:block text-2xs uppercase text-periwinkle/70 tracking-[var(--track-label)]"
       >
         Capacitive read · Rule-based mix
       </p>
@@ -65,7 +65,7 @@ export default function Hero() {
           affordance §11 System A asks for. */}
       <p
         aria-hidden="true"
-        className="pointer-events-none absolute right-6 bottom-6 z-10 font-mono text-2xs uppercase text-periwinkle/70 tracking-[var(--track-label)]"
+        className="pointer-events-none absolute right-6 bottom-6 z-10 hidden font-mono md:block text-2xs uppercase text-periwinkle/70 tracking-[var(--track-label)]"
       >
         Move your cursor
       </p>
