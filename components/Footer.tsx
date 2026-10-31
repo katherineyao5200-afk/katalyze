@@ -58,6 +58,27 @@ export default function Footer() {
           <WaitlistForm source="footer" className="w-full" trackVisibility />
         </div>
 
+        <div
+          className="flex w-full flex-col items-center gap-2 border-t border-[color:var(--rule-on-dark)] pt-6 text-[color:var(--muted-on-dark)]"
+          style={{
+            fontSize: "var(--text-xs)",
+            lineHeight: "var(--leading-body)",
+          }}
+        >
+          <p>
+            Katalyze is in development and not yet for sale. Prices shown are
+            planned launch prices.
+          </p>
+          <p>
+            Founded by Katherine Yao, working with external hardware,
+            formulation and software partners.
+          </p>
+          <p>
+            Waitlist emails are used only for Katalyze launch news. You can
+            unsubscribe at any time.
+          </p>
+        </div>
+
         <p className="font-mono text-2xs text-periwinkle tracking-[var(--track-label)]">
           &copy; {year} Katalyze. Your catalyst to better skin.
         </p>

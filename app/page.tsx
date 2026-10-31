@@ -1,4 +1,7 @@
 import AtAGlance from "@/components/home/AtAGlance";
+import Business from "@/components/home/Business";
+import FAQ from "@/components/home/FAQ";
+import Pricing from "@/components/home/Pricing";
 import Close from "@/components/home/Close";
 import Founder from "@/components/home/Founder";
 import HomeHero from "@/components/home/HomeHero";
@@ -18,8 +21,11 @@ export default function Home() {
       <Process />
       <Inside />
       <Progress />
+      <Business />
+      <Pricing />
       <Voices />
       <Founder />
+      <FAQ />
       <Close />
     </main>
   );
