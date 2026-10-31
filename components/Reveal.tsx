@@ -21,6 +21,7 @@ interface RevealProps {
   style?: CSSProperties;
   delayMs?: number;
   variant?: RevealVariant;
+  role?: string;
 }
 
 export default function Reveal({
@@ -29,6 +30,7 @@ export default function Reveal({
   style,
   delayMs = 0,
   variant = "rise",
+  role,
 }: RevealProps) {
   // data-revealed still drives CSS-only details (e.g. HowItWorks' accent line).
   const [revealed, setRevealed] = useState(false);
@@ -38,6 +40,7 @@ export default function Reveal({
       data-revealed={revealed ? "true" : "false"}
       className={className}
       style={style}
+      role={role}
       variants={VARIANTS[variant]}
       initial="hidden"
       whileInView="shown"

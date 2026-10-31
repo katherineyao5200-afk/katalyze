@@ -214,3 +214,33 @@ body {
     animation: none;
   }
 }
+
+/* Dotted vertical column rules on the light homepage grounds — the
+   sharplink reference's grid made visible, at the quarter lines. */
+.column-rules {
+  background-image:
+    repeating-linear-gradient(to bottom, var(--rule-on-light) 0 2px, transparent 2px 6px),
+    repeating-linear-gradient(to bottom, var(--rule-on-light) 0 2px, transparent 2px 6px),
+    repeating-linear-gradient(to bottom, var(--rule-on-light) 0 2px, transparent 2px 6px);
+  background-size: 1px 100%;
+  background-repeat: no-repeat;
+  background-position: 25% 0, 50% 0, 75% 0;
+}
+
+/* Annotation leader lines draw in from the label toward the object. */
+.leader {
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform var(--dur-slow) var(--ease-glide);
+}
+
+[data-revealed="true"] .leader {
+  transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .leader {
+    transition: none;
+    transform: scaleX(1);
+  }
+}

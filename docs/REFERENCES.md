@@ -1,6 +1,8 @@
 # Visual references
 
 Screenshots of the four sites kat picked as references, captured October 2026.
+The homepage was redesigned from these on 2026-10-31: a light ground from
+sharplink and truekind, dark bands and annotated specimens from alethia.
 They live in `docs/references/`. **Open the image before working on the section
 it maps to.** Words alone don't carry layout, so look at the picture.
 
@@ -11,17 +13,17 @@ Migra and Inter.
 | Image | What to take from it | Katalyze section |
 |---|---|---|
 | `zero-hero-gate.jpg` | A full-screen interactive gate before the site, with the mark drawn by the visitor | `Gate.tsx` ("Trace the K") |
-| `alethia-hero-specimens.jpg` | Floating objects with thin annotation readouts pointing at them, plus a left-aligned headline | `Hero.tsx`, `Formulation.tsx` (specimens) |
-| `alethia-photo-text-overlay.jpg` | Text set over a soft, blurred photo that sharpens on scroll | `DeviceShowcase.tsx` |
-| `alethia-centered-statement.jpg` | A small mono chip above a centered display statement | `Thesis.tsx`, section openers |
-| `alethia-bracket-image-cards.jpg` | Full-bleed image cards with bracketed mono labels and a round arrow button | `Prototype.tsx` photos |
-| `alethia-dark-closing.jpg` | A dark closing block with a centered statement and a single action | `ClosingCTA.tsx` |
-| `sharplink-hero-annotated-object.jpg` | One object in the hero with thin bounding boxes annotating it | `Hero.tsx` (device render, when it exists) |
-| `sharplink-grid-data-card.jpg` | Dotted grid rules, numbered chips (01, 02, 03) and a dark data card between text columns | `Analysis.tsx`, `HowItWorks.tsx` |
-| `sharplink-numbered-section.jpg` | A label chip, a big two-line headline, and a quiet paragraph off to one side | `HowItWorks.tsx`, `/story` |
-| `truekind-hero.jpg` | A centered headline mixing roman and italic, and a pill-shaped call to action | `Hero.tsx` (waitlist form) |
-| `truekind-plain-value-cards.jpg` | Three plain-language cards, each one idea with a small icon, readable by anyone | A new "what / how / how far along" strip under the hero |
-| `truekind-section-opener.jpg` | A centered two-word opener (caps plus italic) with a thin rule above | Section openers |
+| `alethia-hero-specimens.jpg` | Floating objects with thin annotation readouts pointing at them, plus a left-aligned headline | `home/HomeHero.tsx`, `home/Inside.tsx` |
+| `alethia-photo-text-overlay.jpg` | Text set over a soft, blurred photo that sharpens on scroll | Not used yet |
+| `alethia-centered-statement.jpg` | A small mono chip above a centered display statement | Section openers (`home/Chip.tsx`) |
+| `alethia-bracket-image-cards.jpg` | Full-bleed image cards with bracketed mono labels and a round arrow button | `home/Progress.tsx`, `home/Founder.tsx` |
+| `alethia-dark-closing.jpg` | A dark closing block with a centered statement and a single action | `home/Close.tsx` |
+| `sharplink-hero-annotated-object.jpg` | One object in the hero with thin bounding boxes annotating it | `home/HomeHero.tsx` |
+| `sharplink-grid-data-card.jpg` | Dotted grid rules, numbered chips (01, 02, 03) and a dark data card between text columns | `home/Research.tsx` |
+| `sharplink-numbered-section.jpg` | A label chip, a big two-line headline, and a quiet paragraph off to one side | `home/Process.tsx`, `/story` |
+| `truekind-hero.jpg` | A centered headline mixing roman and italic, and a pill-shaped call to action | `home/HomeHero.tsx` (waitlist form) |
+| `truekind-plain-value-cards.jpg` | Three plain-language cards, each one idea with a small icon, readable by anyone | `home/AtAGlance.tsx` |
+| `truekind-section-opener.jpg` | A centered two-word opener (caps plus italic) with a thin rule above | `home/Voices.tsx` |
 
 ## Why truekind matters
 

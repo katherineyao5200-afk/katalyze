@@ -19,6 +19,8 @@ const focusRing =
 
 export default function Nav() {
   const pathname = usePathname();
+  // The redesigned homepage sits on a pale ground; every other page is dark.
+  const light = pathname === "/";
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -35,21 +37,25 @@ export default function Nav() {
   return (
     <header
       className={`sticky top-0 z-50 transition-colors duration-[var(--dur-base)] ease-[var(--ease-soft)] ${
-        scrolled
-          ? "bg-midnight/80 backdrop-blur-md"
-          : "bg-transparent"
+        light
+          ? scrolled
+            ? "bg-white/80 backdrop-blur-md"
+            : "bg-white"
+          : scrolled
+            ? "bg-midnight/80 backdrop-blur-md"
+            : "bg-transparent"
       }`}
     >
       <nav
         aria-label="Primary"
-        className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-6 gap-y-3 px-6 py-4"
+        className="mx-auto flex max-w-[var(--max-w)] flex-wrap items-center justify-between gap-x-6 gap-y-3 px-[var(--margin)] py-4"
       >
         <Link
           href="/"
           className={`inline-flex min-h-11 items-center ${focusRing}`}
         >
           <Image
-            src={images.logo.nav.src}
+            src={light ? images.logo.navDark.src : images.logo.nav.src}
             alt={images.logo.nav.alt}
             width={images.logo.nav.width}
             height={images.logo.nav.height}
@@ -71,9 +77,13 @@ export default function Nav() {
                   href={link.href}
                   aria-current={isActive ? "page" : undefined}
                   className={`inline-flex min-h-11 items-center py-2 underline-offset-[6px] transition-colors duration-[var(--dur-fast)] ease-[var(--ease-soft)] ${
-                    isActive
-                      ? "text-white underline decoration-blush"
-                      : "text-white/70 no-underline hover:text-white"
+                    light
+                      ? isActive
+                        ? "text-midnight underline decoration-indigo"
+                        : "text-midnight/70 no-underline hover:text-midnight"
+                      : isActive
+                        ? "text-white underline decoration-blush"
+                        : "text-white/70 no-underline hover:text-white"
                   } ${focusRing}`}
                   style={{ fontSize: "var(--text-sm)" }}
                 >

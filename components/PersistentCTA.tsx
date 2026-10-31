@@ -62,7 +62,7 @@ export default function PersistentCTA() {
           className="flex w-full max-w-sm flex-col gap-3 border border-[color:var(--rule-on-dark)] p-5 shadow-xl backdrop-blur-md"
           style={{
             borderRadius: "var(--r-lg)",
-            backgroundColor: "var(--panel)",
+            backgroundColor: "var(--midnight)",
           }}
         >
           <div className="flex items-start justify-between gap-4">
@@ -85,7 +85,7 @@ export default function PersistentCTA() {
           type="button"
           onClick={() => setExpanded(true)}
           aria-expanded={expanded}
-          className="w-full bg-white px-6 py-3 font-medium text-midnight transition-colors duration-[var(--dur-fast)] ease-[var(--ease-soft)] hover:bg-white/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-midnight focus-visible:ring-offset-2 focus-visible:ring-offset-white sm:w-auto"
+          className="w-full border border-[color:var(--rule-on-dark)] bg-indigo px-6 py-3 font-medium text-white shadow-[0_2px_12px_rgb(31_36_65/0.35)] transition-colors duration-[var(--dur-fast)] ease-[var(--ease-soft)] hover:bg-midnight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush focus-visible:ring-offset-2 focus-visible:ring-offset-midnight sm:w-auto"
           style={{ borderRadius: "var(--r-md)", fontSize: "var(--text-base)" }}
         >
           Get early access

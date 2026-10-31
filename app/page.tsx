@@ -1,29 +1,26 @@
-import Analysis from "@/components/sections/Analysis";
-import ClosingCTA from "@/components/sections/ClosingCTA";
-import DeviceShowcase from "@/components/sections/DeviceShowcase";
-import Formulation from "@/components/sections/Formulation";
-import Freshness from "@/components/sections/Freshness";
-import Hero from "@/components/sections/Hero";
-import HowItWorks from "@/components/sections/HowItWorks";
-import NotAQuiz from "@/components/sections/NotAQuiz";
-import Proof from "@/components/sections/Proof";
-import Prototype from "@/components/sections/Prototype";
-import Thesis from "@/components/sections/Thesis";
+import AtAGlance from "@/components/home/AtAGlance";
+import Close from "@/components/home/Close";
+import Founder from "@/components/home/Founder";
+import HomeHero from "@/components/home/HomeHero";
+import Inside from "@/components/home/Inside";
+import Process from "@/components/home/Process";
+import Progress from "@/components/home/Progress";
+import Research from "@/components/home/Research";
+import Voices from "@/components/home/Voices";
 
+// Section map and the reference behind each one: docs/REFERENCES.md.
 export default function Home() {
   return (
-    <main className="flex flex-1 flex-col">
-      <Hero />
-      <Thesis />
-      <Analysis />
-      <DeviceShowcase />
-      <HowItWorks />
-      <Formulation />
-      <Freshness />
-      <NotAQuiz />
-      <Prototype />
-      <Proof />
-      <ClosingCTA />
+    <main className="flex flex-1 flex-col bg-white">
+      <HomeHero />
+      <AtAGlance />
+      <Research />
+      <Process />
+      <Inside />
+      <Progress />
+      <Voices />
+      <Founder />
+      <Close />
     </main>
   );
 }

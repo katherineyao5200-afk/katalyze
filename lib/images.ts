@@ -6,6 +6,12 @@ export const images = {
       height: 433,
       alt: "Katalyze",
     },
+    navDark: {
+      src: "/images/logo/mark-navy.png",
+      width: 367,
+      height: 440,
+      alt: "Katalyze",
+    },
   },
   product: {
     deviceHero: {

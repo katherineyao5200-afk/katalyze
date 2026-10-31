@@ -10,10 +10,17 @@ const LINE = {
   shown: { opacity: 1, y: 0, filter: "blur(0px)" },
 };
 
-export default function HeroHeadline() {
+export default function HeroHeadline({ tone = "dark" }: { tone?: "dark" | "light" }) {
+  // On the light homepage the headline shares the row with the device, so
+  // it steps down from --text-hero to --text-display.
+  const size =
+    tone === "light"
+      ? "text-midnight [font-size:var(--text-hero-mobile)] md:[font-size:var(--text-display)]"
+      : "text-white [font-size:var(--text-hero-mobile)] md:[font-size:var(--text-hero)]";
+
   return (
     <motion.h1
-      className="font-display font-extralight text-white [font-size:var(--text-hero-mobile)] md:[font-size:var(--text-hero)]"
+      className={`font-display font-extralight ${size}`}
       style={{
         lineHeight: "var(--leading-display)",
         letterSpacing: "var(--track-display)",
