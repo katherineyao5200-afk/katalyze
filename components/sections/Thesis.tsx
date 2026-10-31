@@ -1,3 +1,4 @@
+import CountUp from "@/components/CountUp";
 import Reveal from "@/components/Reveal";
 
 const STATS = [
@@ -89,7 +90,7 @@ export default function Thesis() {
                   className="font-display font-extrabold text-periwinkle tabular-nums"
                   style={{ fontSize: "var(--text-2xl)" }}
                 >
-                  {stat.value}
+                  <CountUp value={stat.value} />
                 </dt>
                 <dd
                   className="text-white/70"

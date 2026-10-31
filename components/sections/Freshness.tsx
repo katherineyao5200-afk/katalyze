@@ -36,6 +36,7 @@ export default function Freshness() {
       </div>
 
       <Reveal
+        variant="fade"
         className="flex flex-col justify-center bg-midnight"
         style={{
           paddingInline: "var(--margin)",

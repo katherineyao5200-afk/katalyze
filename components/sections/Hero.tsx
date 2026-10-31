@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import HeroHeadline from "@/components/HeroHeadline";
 import ParticleField from "@/components/ParticleField";
 import WaitlistForm from "@/components/WaitlistForm";
 
@@ -21,17 +22,7 @@ export default function Hero() {
             Now developing
           </p>
 
-          <h1
-            className="font-display font-extralight text-white [font-size:var(--text-hero-mobile)] md:[font-size:var(--text-hero)]"
-            style={{
-              lineHeight: "var(--leading-display)",
-              letterSpacing: "var(--track-display)",
-            }}
-          >
-            It reads your skin.
-            <br />
-            <em className="italic">Then it mixes.</em>
-          </h1>
+          <HeroHeadline />
 
           <p
             className="max-w-md text-white/80"

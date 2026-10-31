@@ -6,6 +6,7 @@ import "./globals.css";
 
 import Footer from "@/components/Footer";
 import Gate from "@/components/Gate";
+import MotionProvider from "@/components/MotionProvider";
 import Nav from "@/components/Nav";
 import PersistentCTA from "@/components/PersistentCTA";
 import SmoothScroll from "@/components/SmoothScroll";
@@ -76,12 +77,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${migra.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <Gate />
-        <SmoothScroll />
-        <Nav />
-        {children}
-        <Footer />
-        <PersistentCTA />
+        <MotionProvider>
+          <Gate />
+          <SmoothScroll />
+          <Nav />
+          {children}
+          <Footer />
+          <PersistentCTA />
+        </MotionProvider>
       </body>
     </html>
   );

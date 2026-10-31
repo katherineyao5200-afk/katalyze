@@ -66,7 +66,8 @@ export default function HowItWorks() {
           {STEPS.map((step, i) => (
             <Reveal
               key={step.n}
-              delayMs={i * 80}
+              delayMs={i * 120}
+              variant="slide"
               className="flex items-baseline gap-6 py-6 first:pt-0 last:pb-0"
             >
               <span

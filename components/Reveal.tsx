@@ -1,12 +1,26 @@
 "use client";
 
-import { CSSProperties, ReactNode, useEffect, useRef, useState } from "react";
+import { motion, type Variants } from "motion/react";
+import { CSSProperties, ReactNode, useState } from "react";
+
+// Each section picks the entrance that fits its content instead of one
+// fade-up everywhere: "rise" for text blocks, "fade" for quiet asides,
+// "scale" for objects and photos, "slide" for items in a sequence.
+export type RevealVariant = "rise" | "fade" | "scale" | "slide";
+
+const VARIANTS: Record<RevealVariant, Variants> = {
+  rise: { hidden: { opacity: 0, y: 28 }, shown: { opacity: 1, y: 0 } },
+  fade: { hidden: { opacity: 0 }, shown: { opacity: 1 } },
+  scale: { hidden: { opacity: 0, scale: 0.94 }, shown: { opacity: 1, scale: 1 } },
+  slide: { hidden: { opacity: 0, x: -24 }, shown: { opacity: 1, x: 0 } },
+};
 
 interface RevealProps {
   children: ReactNode;
   className?: string;
   style?: CSSProperties;
   delayMs?: number;
+  variant?: RevealVariant;
 }
 
 export default function Reveal({
@@ -14,62 +28,24 @@ export default function Reveal({
   className = "",
   style,
   delayMs = 0,
+  variant = "rise",
 }: RevealProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(false);
-
-  useEffect(() => {
-    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
-    // matchMedia isn't available during SSR; sync the real value once mounted.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setReducedMotion(query.matches);
-
-    const handleChange = (event: MediaQueryListEvent) =>
-      setReducedMotion(event.matches);
-
-    query.addEventListener("change", handleChange);
-    return () => query.removeEventListener("change", handleChange);
-  }, []);
-
-  useEffect(() => {
-    if (reducedMotion) {
-      // Reduced motion means no reveal transform: show content immediately.
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setVisible(true);
-      return;
-    }
-
-    const el = ref.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.15 },
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [reducedMotion]);
+  // data-revealed still drives CSS-only details (e.g. HowItWorks' accent line).
+  const [revealed, setRevealed] = useState(false);
 
   return (
-    <div
-      ref={ref}
-      data-revealed={visible ? "true" : "false"}
-      style={{
-        ...style,
-        transitionDelay: visible ? `${delayMs}ms` : "0ms",
-      }}
-      className={`ease-glide transition-all duration-[var(--dur-base)] ${
-        visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
-      } ${className}`}
+    <motion.div
+      data-revealed={revealed ? "true" : "false"}
+      className={className}
+      style={style}
+      variants={VARIANTS[variant]}
+      initial="hidden"
+      whileInView="shown"
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ delay: delayMs / 1000 }}
+      onAnimationComplete={() => setRevealed(true)}
     >
       {children}
-    </div>
+    </motion.div>
   );
 }

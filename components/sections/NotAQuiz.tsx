@@ -34,7 +34,7 @@ export default function NotAQuiz() {
           columnGap: "var(--gutter)",
         }}
       >
-        <Reveal className="col-span-12 flex flex-col gap-4 md:col-span-6 md:col-start-2">
+        <Reveal variant="fade" className="col-span-12 flex flex-col gap-4 md:col-span-6 md:col-start-2">
           <p
             className="text-white/70"
             style={{ fontSize: "var(--text-lg)", lineHeight: "var(--leading-body)" }}

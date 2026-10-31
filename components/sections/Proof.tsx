@@ -1,3 +1,4 @@
+import CountUp from "@/components/CountUp";
 import Reveal from "@/components/Reveal";
 
 const STATS = [
@@ -98,7 +99,7 @@ export default function Proof() {
                   className="font-display font-extrabold tabular-nums"
                   style={{ fontSize: "var(--text-2xl)", color: "var(--indigo)" }}
                 >
-                  {stat.value}
+                  <CountUp value={stat.value} />
                 </p>
                 <p
                   style={{

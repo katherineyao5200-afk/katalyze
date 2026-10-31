@@ -35,6 +35,7 @@ export default function DeviceShowcase() {
 
         <Reveal
           delayMs={120}
+          variant="scale"
           className="relative col-span-12 flex items-center justify-center md:col-span-7"
         >
           <FloatOnScroll className="relative flex items-center justify-center">

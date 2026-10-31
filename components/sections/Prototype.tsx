@@ -90,6 +90,7 @@ export default function Prototype() {
 
         <Reveal
           delayMs={120}
+          variant="scale"
           className="col-span-12 grid grid-cols-2 gap-3 md:col-span-6 md:col-start-7"
         >
           <figure className="row-span-2">
