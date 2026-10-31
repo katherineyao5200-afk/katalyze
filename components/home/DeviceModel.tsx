@@ -4,6 +4,7 @@ import type { MotionValue } from "motion/react";
 import { useEffect, useRef, type RefObject } from "react";
 import * as THREE from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
+import { RectAreaLightUniformsLib } from "three/examples/jsm/lights/RectAreaLightUniformsLib.js";
 
 /**
  * The Katalyze device, modelled in code from the product render:
@@ -79,10 +80,10 @@ function buildDevice() {
 
   const shell = track(
     new THREE.MeshPhysicalMaterial({
-      color: 0xe6e5ec,
-      roughness: 0.42,
-      clearcoat: 0.35,
-      clearcoatRoughness: 0.4,
+      color: 0xeceaf0,
+      roughness: 0.34,
+      clearcoat: 0.7,
+      clearcoatRoughness: 0.22,
       sheen: 0.4,
       sheenColor: new THREE.Color(0xe8ccd2),
     }),
@@ -108,7 +109,55 @@ function buildDevice() {
     }),
   );
   bodyGeo.translate(0, 0, -DEPTH / 2);
-  group.add(new THREE.Mesh(bodyGeo, shell));
+  const bodyMesh = new THREE.Mesh(bodyGeo, shell);
+  bodyMesh.castShadow = true;
+  bodyMesh.receiveShadow = true;
+  group.add(bodyMesh);
+
+  // Cavity liner: a slightly cooler, matte inner shell so the bay reads
+  // as a recess, lit by a soft light strip along its ceiling.
+  const lin = {
+    x0: WIN.x0 + 0.16,
+    x1: WIN.x1 - 0.16,
+    y0: WIN.y0 + 0.16,
+    y1: WIN.y1 - 0.16,
+  };
+  const linerMat = track(
+    new THREE.MeshStandardMaterial({
+      color: 0xd6d8e6,
+      roughness: 0.9,
+      side: THREE.DoubleSide,
+    }),
+  );
+  const linerDepth = FRONT + 0.1;
+  const zMid = -0.1 + linerDepth / 2;
+  const plane = (w: number, h: number) => track(new THREE.PlaneGeometry(w, h));
+  const floor = new THREE.Mesh(plane(lin.x1 - lin.x0, linerDepth), linerMat);
+  floor.rotation.x = -Math.PI / 2;
+  floor.position.set(0, lin.y0, zMid);
+  floor.receiveShadow = true;
+  group.add(floor);
+  const ceil = new THREE.Mesh(plane(lin.x1 - lin.x0, linerDepth), linerMat);
+  ceil.rotation.x = Math.PI / 2;
+  ceil.position.set(0, lin.y1, zMid);
+  group.add(ceil);
+  [lin.x0, lin.x1].forEach((x) => {
+    const wall = new THREE.Mesh(plane(linerDepth, lin.y1 - lin.y0), linerMat);
+    wall.rotation.y = Math.PI / 2;
+    wall.position.set(x, (lin.y0 + lin.y1) / 2, zMid);
+    group.add(wall);
+  });
+  const strip = new THREE.Mesh(
+    plane(lin.x1 - lin.x0 - 0.1, 0.05),
+    track(new THREE.MeshBasicMaterial({ color: 0xf5f3ff, toneMapped: false })),
+  );
+  strip.rotation.x = Math.PI / 2;
+  strip.position.set(0, lin.y1 - 0.002, 0.45);
+  group.add(strip);
+  const bayLight = new THREE.RectAreaLight(0xf3f0ff, 6, lin.x1 - lin.x0, 0.3);
+  bayLight.position.set(0, lin.y1 - 0.01, 0.4);
+  bayLight.lookAt(0, lin.y0, 0.4);
+  group.add(bayLight);
 
   // Back wall of the cartridge bay.
   const bayGeo = track(
@@ -119,7 +168,7 @@ function buildDevice() {
   );
   const bay = new THREE.Mesh(
     bayGeo,
-    track(new THREE.MeshStandardMaterial({ color: 0xe9eaf2, roughness: 0.8 })),
+    track(new THREE.MeshStandardMaterial({ color: 0xe2e4ef, roughness: 0.85 })),
   );
   bay.position.z = -0.1;
   group.add(bay);
@@ -133,27 +182,53 @@ function buildDevice() {
     dropper: boolean,
   ) => {
     const g = new THREE.Group();
-    const mat = track(
+    const floorY = WIN.y0 + 0.16;
+    const shellMat = track(
       new THREE.MeshPhysicalMaterial({
-        color: tint,
-        roughness: 0.25,
-        transmission: 0.35,
-        thickness: 0.3,
-        clearcoat: 0.6,
+        color: 0xffffff,
+        roughness: 0.32,
+        transmission: 0.92,
+        thickness: r * 1.5,
+        ior: 1.45,
+        clearcoat: 0.8,
+        clearcoatRoughness: 0.15,
+        attenuationColor: new THREE.Color(tint),
+        attenuationDistance: 0.6,
       }),
     );
-    const bodyG = track(new THREE.CylinderGeometry(r, r, h, 32));
-    const b = new THREE.Mesh(bodyG, mat);
-    b.position.y = WIN.y0 + h / 2;
-    g.add(b);
+    const shellG = track(new THREE.CylinderGeometry(r, r, h, 48, 1));
+    const shellMesh = new THREE.Mesh(shellG, shellMat);
+    shellMesh.position.y = floorY + h / 2;
+    shellMesh.castShadow = true;
+    g.add(shellMesh);
+    const fill = h * 0.78;
+    const liquid = new THREE.Mesh(
+      track(new THREE.CylinderGeometry(r * 0.9, r * 0.9, fill, 40)),
+      track(
+        new THREE.MeshPhysicalMaterial({
+          color: tint,
+          roughness: 0.18,
+          sheen: 0.5,
+          sheenColor: new THREE.Color(tint),
+          emissive: tint,
+          emissiveIntensity: 0.18,
+        }),
+      ),
+    );
+    liquid.position.y = floorY + 0.02 + fill / 2;
+    g.add(liquid);
     const capMat = track(
-      new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.35 }),
+      new THREE.MeshPhysicalMaterial({
+        color: 0xfafafc,
+        roughness: 0.28,
+        clearcoat: 0.6,
+      }),
     );
     const capG = track(
       new THREE.CylinderGeometry(r * 0.62, r * 0.7, h * 0.14, 24),
     );
     const cap = new THREE.Mesh(capG, capMat);
-    cap.position.y = WIN.y0 + h + h * 0.07;
+    cap.position.y = WIN.y0 + 0.16 + h + h * 0.07;
     g.add(cap);
     if (dropper) {
       const tipG = track(
@@ -170,29 +245,30 @@ function buildDevice() {
           }),
         ),
       );
-      tip.position.y = WIN.y0 + h + h * 0.14 + h * 0.19;
+      tip.position.y = WIN.y0 + 0.16 + h + h * 0.14 + h * 0.19;
       g.add(tip);
     }
-    g.position.set(x, 0, 0.3);
+    g.position.set(x, 0, 0.32);
     group.add(g);
   };
-  bottle(-1.0, 0.82, 0.2, 0xb9c1e2, false);
-  bottle(-0.52, 0.82, 0.2, 0xc9cde6, false);
-  bottle(-0.04, 0.82, 0.2, 0xf3eadf, false);
-  bottle(0.4, 0.5, 0.125, 0xaab3dc, true);
-  bottle(0.74, 0.5, 0.125, 0xeec8cf, true);
-  bottle(1.08, 0.5, 0.125, 0xeec8cf, true);
+  bottle(-0.98, 0.56, 0.19, 0xb9c1e2, false);
+  bottle(-0.52, 0.56, 0.19, 0xc9cde6, false);
+  bottle(-0.06, 0.56, 0.19, 0xf3eadf, false);
+  bottle(0.36, 0.34, 0.115, 0xaab3dc, true);
+  bottle(0.66, 0.34, 0.115, 0xeec8cf, true);
+  bottle(0.96, 0.34, 0.115, 0xeec8cf, true);
 
   // Frosted glass over the bay.
   const glass = new THREE.Mesh(
     bayGeo,
     track(
       new THREE.MeshPhysicalMaterial({
-        color: 0xffffff,
-        roughness: 0.15,
+        color: 0xf4f5fb,
+        roughness: 0.4,
         transparent: true,
-        opacity: 0.16,
+        opacity: 0.12,
         clearcoat: 1,
+        clearcoatRoughness: 0.05,
       }),
     ),
   );
@@ -229,9 +305,9 @@ function buildDevice() {
   // Cup tray: a shallow oval bowl at the front right.
   const bowlG = track(
     new THREE.SphereGeometry(
-      0.38,
-      40,
-      16,
+      0.44,
+      48,
+      20,
       0,
       Math.PI * 2,
       Math.PI / 2,
@@ -249,7 +325,8 @@ function buildDevice() {
       }),
     ),
   );
-  bowl.scale.set(1.5, 0.6, 0.85);
+  bowl.castShadow = true;
+  bowl.scale.set(1.45, 0.62, 0.85);
   bowl.position.set(0.6, -0.48, FRONT + 0.16);
   group.add(bowl);
 
@@ -317,7 +394,10 @@ export default function DeviceModel({
     }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 0.88;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.VSMShadowMap;
+    RectAreaLightUniformsLib.init();
+    renderer.toneMappingExposure = 1.0;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.domElement.style.width = "100%";
     renderer.domElement.style.height = "100%";
@@ -328,15 +408,32 @@ export default function DeviceModel({
     const pmrem = new THREE.PMREMGenerator(renderer);
     const envTex = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
     scene.environment = envTex;
-    scene.environmentIntensity = 0.4;
+    scene.environmentIntensity = 0.45;
 
     const camera = new THREE.PerspectiveCamera(28, 1, 0.1, 100);
 
     // Light: cool key from above left, blush and periwinkle rims.
-    scene.add(new THREE.HemisphereLight(0xdfe3ff, 0x1f2441, 0.3));
-    const key = new THREE.DirectionalLight(0xffffff, 1.6);
-    key.position.set(-5, 5, 4);
+    scene.add(new THREE.HemisphereLight(0xdfe3ff, 0x1f2441, 0.2));
+    const key = new THREE.DirectionalLight(0xfff8f4, 2.6);
+    key.position.set(-2.5, 8, 3.5);
+    key.castShadow = true;
+    key.shadow.mapSize.set(2048, 2048);
+    key.shadow.radius = 14;
+    key.shadow.blurSamples = 16;
+    key.shadow.bias = -0.0005;
+    const sc = key.shadow.camera;
+    sc.left = -7;
+    sc.right = 7;
+    sc.top = 7;
+    sc.bottom = -7;
+    sc.near = 1;
+    sc.far = 20;
     scene.add(key);
+    // Studio softbox overhead: the long soft highlight across the top.
+    const softbox = new THREE.RectAreaLight(0xffffff, 3.2, 7, 2.5);
+    softbox.position.set(0, 5, 2.5);
+    softbox.lookAt(0, 0, 0);
+    scene.add(softbox);
     const rimL = new THREE.PointLight(0x8a8db3, 18, 12);
     rimL.position.set(-4, 1, -2);
     scene.add(rimL);
@@ -364,6 +461,17 @@ export default function DeviceModel({
     shadow.rotation.x = -Math.PI / 2;
     shadow.position.y = -BODY_H / 2 - 0.2;
     pivot.add(shadow);
+    // Soft cast shadow from the key light on an invisible floor.
+    const floorGeo = new THREE.PlaneGeometry(10, 10);
+    const floorMat = new THREE.ShadowMaterial({
+      opacity: 0.28,
+      color: 0x0a0c1c,
+    });
+    const ground = new THREE.Mesh(floorGeo, floorMat);
+    ground.rotation.x = -Math.PI / 2;
+    ground.position.y = -BODY_H / 2 - 0.19;
+    ground.receiveShadow = true;
+    pivot.add(ground);
 
     function resize() {
       const w = container!.clientWidth;
@@ -466,6 +574,8 @@ export default function DeviceModel({
       unsub?.();
       disposables.forEach((d) => d.dispose());
       shadowGeo.dispose();
+      floorGeo.dispose();
+      floorMat.dispose();
       shadowMat.dispose();
       shadowTex.dispose();
       envTex.dispose();
