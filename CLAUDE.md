@@ -6,6 +6,8 @@ You are building the marketing website for **Katalyze**, a countertop device tha
 
 **Use the `frontend-design` skill (`.claude/skills/frontend-design/`) for any visual or layout work.** Where it disagrees with `docs/DESIGN-SYSTEM.md`, the design system wins. In particular, the mono micro-labels and bracketed readouts are a deliberate choice taken from the reference sites, not template chrome: keep them, but make them do real work (leader lines to the thing they label, real values only).
 
+**Before changing any section's layout, open its reference image.** `docs/REFERENCES.md` maps each section to a screenshot in `docs/references/`. Read the image itself, not just the description.
+
 **The full spec is in `docs/PRD.md`. Read it before starting work on any new area of the site.**
 
 Product/hardware facts live in `docs/product-engineering-spec.md`. Consult it before writing any copy that describes how the device works.
