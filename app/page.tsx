@@ -11,7 +11,7 @@ import Voices from "@/components/home/Voices";
 // Section map and the reference behind each one: docs/REFERENCES.md.
 export default function Home() {
   return (
-    <main className="flex flex-1 flex-col bg-white">
+    <main className="flex flex-1 flex-col bg-midnight">
       <HomeHero />
       <AtAGlance />
       <Research />

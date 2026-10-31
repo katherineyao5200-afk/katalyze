@@ -10,13 +10,20 @@ const LINE = {
   shown: { opacity: 1, y: 0, filter: "blur(0px)" },
 };
 
-export default function HeroHeadline({ tone = "dark" }: { tone?: "dark" | "light" }) {
-  // On the light homepage the headline shares the row with the device, so
-  // it steps down from --text-hero to --text-display.
+export default function HeroHeadline({
+  tone = "dark",
+  compact = false,
+}: {
+  tone?: "dark" | "light";
+  compact?: boolean;
+}) {
+  // When the headline shares the screen with the device it steps down
+  // from --text-hero to --text-display.
   const size =
-    tone === "light"
-      ? "text-midnight [font-size:var(--text-hero-mobile)] md:[font-size:var(--text-display)]"
-      : "text-white [font-size:var(--text-hero-mobile)] md:[font-size:var(--text-hero)]";
+    (tone === "light" ? "text-midnight " : "text-white ") +
+    (tone === "light" || compact
+      ? "[font-size:var(--text-hero-mobile)] md:[font-size:var(--text-display)]"
+      : "[font-size:var(--text-hero-mobile)] md:[font-size:var(--text-hero)]");
 
   return (
     <motion.h1

@@ -35,6 +35,15 @@
     rgb(232 204 210 / 0.32) 100%
   );
 
+  /* Dark homepage ground: midnight to indigo and back, nothing new. */
+  --canvas-deep: #15182e;
+  --grad-haze-dark: linear-gradient(
+    180deg,
+    #1f2441 0%,
+    #283260 55%,
+    #1f2441 100%
+  );
+
   /* ---- The brand gradient (sampled from the kit) ---- */
   --grad-atmosphere: linear-gradient(
     100deg,

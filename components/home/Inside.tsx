@@ -76,7 +76,7 @@ export default function Inside() {
         }}
       >
         <Reveal className="col-span-12 flex flex-col gap-6 lg:col-span-4">
-          <Chip>What&apos;s inside</Chip>
+          <Chip tone="light">What&apos;s inside</Chip>
           <h2
             className="font-display font-extralight text-midnight"
             style={{ fontSize: "var(--text-3xl)", lineHeight: "var(--leading-tight)" }}

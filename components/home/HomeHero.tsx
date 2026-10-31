@@ -1,162 +1,550 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+import {
+  motion,
+  useMotionValueEvent,
+  useScroll,
+  useSpring,
+  useTransform,
+  type MotionValue,
+} from "motion/react";
+import { useRef, useState, useSyncExternalStore } from "react";
 
 import Chip from "@/components/home/Chip";
 import HeroHeadline from "@/components/HeroHeadline";
-import Reveal from "@/components/Reveal";
 import WaitlistForm from "@/components/WaitlistForm";
 import { images } from "@/lib/images";
 
-// Annotations on the device render. Positions are percentages of the
-// image frame and point at things that are really there: the cartridge
-// window and the cup tray.
-const ANNOTATIONS = [
+// The constellation is WebGL and heavy; load it after first paint.
+const ParticleField = dynamic(() => import("@/components/ParticleField"), {
+  ssr: false,
+});
+
+// Readouts on the device render. Box positions are percentages of the
+// image frame and point at parts that are really there.
+type Annotation = {
+  id: string;
+  label: string;
+  value: string;
+  box: { left: string; top: string; width: string; height: string };
+  side: "left" | "right";
+  at: number; // scroll progress where it appears
+};
+
+const ANNOTATIONS: Annotation[] = [
   {
-    label: "[6 cartridges]",
+    id: "cartridges",
+    label: "[01 · 6 cartridges]",
     value: "3 base · 3 active",
-    box: { left: "14%", top: "35%", width: "60%", height: "25%" },
-    labelTop: "35%",
+    box: { left: "15%", top: "35%", width: "59%", height: "25%" },
+    side: "right",
+    at: 0.3,
   },
   {
-    label: "[Cup tray]",
-    value: "One fresh dose",
-    box: { left: "42%", top: "62%", width: "30%", height: "9%" },
-    labelTop: "62%",
+    id: "controls",
+    label: "[02 · Controls]",
+    value: "Display and buttons",
+    box: { left: "19%", top: "60.5%", width: "22%", height: "7%" },
+    side: "left",
+    at: 0.42,
+  },
+  {
+    id: "cup",
+    label: "[03 · Cup tray]",
+    value: "One fresh dose, into a cup",
+    box: { left: "42%", top: "62%", width: "31%", height: "9%" },
+    side: "right",
+    at: 0.54,
   },
 ];
 
-// Reference: sharplink hero (one object, annotated) + alethia hero
-// (left headline, readouts on leader lines) + truekind (plain promise
-// and a single clear action). Light ground: the device is shot on white.
+function useMedia(query: string) {
+  return useSyncExternalStore(
+    (cb) => {
+      const mq = window.matchMedia(query);
+      mq.addEventListener("change", cb);
+      return () => mq.removeEventListener("change", cb);
+    },
+    () => window.matchMedia(query).matches,
+    () => false,
+  );
+}
+
+const useIsDesktop = () => useMedia("(min-width: 1024px)");
+
+// Reference: alethia's pinned specimen hero and sharplink's annotated
+// object. The section is 320vh tall; a 100vh stage stays pinned while the
+// scroll drives three beats: the promise, the device read part by part,
+// then the one line that sums it up.
 export default function HomeHero() {
-  const device = images.product.deviceHero;
+  // Reduced motion gets the static hero, with no pinning or scrubbing.
+  const reduce = useMedia("(prefers-reduced-motion: reduce)");
+  if (reduce) return <StaticHero />;
+  return <ScrollHero />;
+}
+
+function ScrollHero() {
+  const ref = useRef<HTMLElement>(null);
+  const desktop = useIsDesktop();
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end end"],
+  });
+  // A little spring so the stage glides rather than ticks.
+  const p = useSpring(scrollYProgress, {
+    stiffness: 160,
+    damping: 30,
+    mass: 0.4,
+  });
+
+  // Beat 1: the promise leaves.
+  const introOpacity = useTransform(p, [0, 0.16, 0.24], [1, 1, 0]);
+  const introY = useTransform(p, [0, 0.24], ["0vh", "-8vh"]);
+
+  // The device: off to the right (desktop) or dimmed behind (phone),
+  // then centred and full, then dimmed behind the closing line.
+  const deviceX = useTransform(
+    p,
+    [0, 0.26],
+    desktop ? ["21vw", "0vw"] : ["0vw", "0vw"],
+  );
+  const deviceScale = useTransform(
+    p,
+    [0, 0.26, 0.72, 1],
+    desktop ? [0.86, 1, 1, 1.12] : [0.9, 1, 1, 1.1],
+  );
+  const deviceOpacity = useTransform(
+    p,
+    [0, 0.2, 0.7, 0.82],
+    desktop ? [1, 1, 1, 0.28] : [0, 1, 1, 0.22],
+  );
+  const glowOpacity = useTransform(
+    p,
+    [0, 0.3, 0.7, 0.85],
+    [0.35, 0.8, 0.8, 0.3],
+  );
+
+  // The constellation thins out once the device is being read.
+  const fieldOpacity = useTransform(
+    p,
+    [0, 0.22, 0.75, 0.9],
+    [1, 0.35, 0.35, 0.8],
+  );
+
+  // Beat 3: the summary line.
+  const outroOpacity = useTransform(p, [0.74, 0.84], [0, 1]);
+  const outroY = useTransform(p, [0.74, 0.86], ["4vh", "0vh"]);
+
+  // Cup glows when the dose readout lands.
+  const cupGlow = useTransform(p, [0.54, 0.62, 0.72, 0.8], [0, 1, 1, 0]);
+
+  const [beat, setBeat] = useState(1);
+  useMotionValueEvent(p, "change", (v) => {
+    setBeat(v < 0.24 ? 1 : v < 0.74 ? 2 : 3);
+  });
 
   return (
     <section
-      className="column-rules relative overflow-hidden bg-[image:var(--grad-haze)]"
-      style={{ paddingBlock: "var(--s-12) var(--s-24)" }}
+      ref={ref}
+      aria-label="Introducing Katalyze"
+      className="relative bg-[color:var(--canvas-deep)]"
+      style={{ height: "320vh" }}
+    >
+      <div className="sticky top-0 h-[100svh] overflow-hidden">
+        {/* Atmosphere */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-[image:var(--grad-haze-dark)] opacity-60"
+        />
+        <motion.div
+          aria-hidden="true"
+          className="absolute inset-0"
+          style={{ opacity: fieldOpacity }}
+        >
+          <ParticleField />
+        </motion.div>
+        <div
+          aria-hidden="true"
+          className="grain pointer-events-none absolute inset-0"
+        />
+
+        {/* The device */}
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center pt-16">
+          <motion.div
+            className="relative"
+            style={{
+              x: deviceX,
+              scale: deviceScale,
+              opacity: deviceOpacity,
+              height: desktop ? "74vh" : "56svh",
+              aspectRatio: "1080 / 1440",
+            }}
+          >
+            <motion.span
+              aria-hidden="true"
+              className="absolute -inset-[20%] bg-[image:var(--grad-point)] blur-3xl"
+              style={{ opacity: glowOpacity }}
+            />
+            <DevicePlate cupGlow={cupGlow} />
+
+            {ANNOTATIONS.map((a) => (
+              <AnnotationMark key={a.id} a={a} p={p} desktop={desktop} />
+            ))}
+          </motion.div>
+        </div>
+
+        {/* Beat 1: the promise */}
+        <motion.div
+          className="absolute inset-0 flex items-center"
+          style={{
+            opacity: introOpacity,
+            y: introY,
+            pointerEvents: beat === 1 ? "auto" : "none",
+          }}
+        >
+          <div
+            className="mx-auto w-full"
+            style={{ maxWidth: "var(--max-w)", paddingInline: "var(--margin)" }}
+          >
+            <div className="flex max-w-xl flex-col gap-6 pt-16">
+              <Chip>Now developing · Working prototype</Chip>
+              <HeroHeadline compact />
+              <p
+                className="max-w-md text-white/85"
+                style={{
+                  fontSize: "var(--text-lg)",
+                  lineHeight: "var(--leading-body)",
+                }}
+              >
+                Katalyze is a countertop device that reads your skin with a
+                fingertip sensor, then mixes one fresh dose of skincare to match
+                it. Every day, not once at signup.
+              </p>
+              <WaitlistForm
+                source="hero"
+                trackVisibility
+                className="mt-2 max-w-md"
+              />
+              <p
+                className="text-[color:var(--muted-on-dark)]"
+                style={{ fontSize: "var(--text-sm)" }}
+              >
+                Designed and built by Katherine Yao, student founder.{" "}
+                <Link
+                  href="/story"
+                  className="text-blush underline decoration-blush/40 underline-offset-4 transition-colors hover:decoration-blush"
+                >
+                  Read the story
+                </Link>
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Phone readouts: one caption at a time under the device */}
+        {!desktop && (
+          <div className="absolute inset-x-0 bottom-6 flex justify-center px-[var(--margin)]">
+            {ANNOTATIONS.map((a, i) => (
+              <PhoneCaption
+                key={a.id}
+                a={a}
+                next={ANNOTATIONS[i + 1]?.at ?? 0.72}
+                p={p}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Beat 3: the summary */}
+        <motion.div
+          className="pointer-events-none absolute inset-0 flex items-center justify-center text-center"
+          style={{ opacity: outroOpacity, y: outroY }}
+        >
+          <div className="flex flex-col items-center gap-5 px-[var(--margin)]">
+            <p
+              className="font-display font-extralight text-white"
+              style={{
+                fontSize: "var(--text-display)",
+                lineHeight: "var(--leading-display)",
+              }}
+            >
+              Skin changes daily.
+              <br />
+              <em className="italic">So should your formula.</em>
+            </p>
+            <p
+              className="max-w-md text-white/80"
+              style={{
+                fontSize: "var(--text-base)",
+                lineHeight: "var(--leading-body)",
+              }}
+            >
+              About three seconds on the sensor. About a minute, start to
+              finish.
+            </p>
+          </div>
+        </motion.div>
+
+        {/* Progress readout, bottom left so it clears the floating CTA */}
+        <div
+          aria-hidden="true"
+          className="absolute bottom-6 left-[var(--margin)] hidden items-center gap-3 font-mono uppercase text-periwinkle lg:flex"
+          style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}
+        >
+          <span>[{String(beat).padStart(2, "0")} / 03]</span>
+          <span className="relative block h-px w-24 bg-[color:var(--rule-on-dark)]">
+            <motion.span
+              className="absolute inset-y-0 left-0 block w-full origin-left bg-periwinkle"
+              style={{ scaleX: scrollYProgress }}
+            />
+          </span>
+          <motion.span className="text-[color:var(--faint-on-dark)]" style={{ opacity: introOpacity }}>
+            Scroll to read the device
+          </motion.span>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// The render was shot on a pale studio sweep; a soft radial mask lets
+// it fall off into the navy instead of sitting in a box.
+function DevicePlate({ cupGlow }: { cupGlow?: MotionValue<number> }) {
+  const device = images.product.deviceHero;
+  const mask =
+    "radial-gradient(ellipse 44% 29% at 50% 57%, #000 60%, transparent 100%)";
+  return (
+    <div className="absolute inset-0">
+      <Image
+        src={device.src}
+        alt={device.alt}
+        fill
+        priority
+        sizes="(min-width: 1024px) 56vh, 80vw"
+        className="object-cover"
+        style={{ WebkitMaskImage: mask, maskImage: mask }}
+      />
+      {cupGlow && (
+        <motion.span
+          aria-hidden="true"
+          className="absolute rounded-full bg-blush mix-blend-soft-light blur-xl"
+          style={{
+            left: "45%",
+            top: "60%",
+            width: "24%",
+            height: "8%",
+            opacity: cupGlow,
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+function AnnotationMark({
+  a,
+  p,
+  desktop,
+}: {
+  a: Annotation;
+  p: MotionValue<number>;
+  desktop: boolean;
+}) {
+  const show = useTransform(p, [a.at, a.at + 0.06, 0.72, 0.78], [0, 1, 1, 0]);
+  const line = useTransform(p, [a.at + 0.02, a.at + 0.08], [0, 1]);
+  const centre = parseFloat(a.box.top) + parseFloat(a.box.height) / 2;
+  const left = parseFloat(a.box.left);
+  const right = left + parseFloat(a.box.width);
+  // Distance from the box to the device's edge, as a % of its width.
+  // The device is 74vh tall at 3:4, so 1% of its width is 0.555vh.
+  const outside = a.side === "right" ? 100 - right : left;
+
+  return (
+    <>
+      <motion.span
+        aria-hidden="true"
+        className="absolute border border-periwinkle/70"
+        style={{ ...a.box, opacity: show }}
+      >
+        {[
+          "-left-px -top-px",
+          "-right-px -top-px",
+          "-left-px -bottom-px",
+          "-right-px -bottom-px",
+        ].map((c) => (
+          <span key={c} className={`absolute h-1.5 w-1.5 bg-blush ${c}`} />
+        ))}
+      </motion.span>
+
+      {desktop && (
+        <motion.div
+          className={`absolute flex items-center ${a.side === "left" ? "flex-row-reverse" : ""}`}
+          style={{
+            top: `${centre}%`,
+            ...(a.side === "right"
+              ? { left: `${right}%` }
+              : { right: `${100 - left}%` }),
+            translateY: "-50%",
+            opacity: show,
+          }}
+        >
+          <motion.span
+            className="block h-px bg-periwinkle/70"
+            style={{
+              width: `calc(${outside} * 0.555vh + 3rem)`,
+              scaleX: line,
+              originX: a.side === "right" ? 0 : 1,
+            }}
+          />
+          <span
+            className={`flex flex-col whitespace-nowrap ${a.side === "right" ? "ml-3" : "mr-3 items-end text-right"}`}
+          >
+            <span
+              className="font-mono uppercase text-periwinkle"
+              style={{
+                fontSize: "var(--text-2xs)",
+                letterSpacing: "var(--track-label)",
+              }}
+            >
+              {a.label}
+            </span>
+            <span className="text-white" style={{ fontSize: "var(--text-base)" }}>
+              {a.value}
+            </span>
+          </span>
+        </motion.div>
+      )}
+    </>
+  );
+}
+
+function PhoneCaption({
+  a,
+  next,
+  p,
+}: {
+  a: Annotation;
+  next: number;
+  p: MotionValue<number>;
+}) {
+  const opacity = useTransform(
+    p,
+    [a.at, a.at + 0.04, next - 0.02, next],
+    [0, 1, 1, 0],
+  );
+  return (
+    <motion.div
+      className="absolute bottom-0 flex flex-col items-center text-center"
+      style={{ opacity }}
+    >
+      <span
+        className="font-mono uppercase text-periwinkle"
+        style={{
+          fontSize: "var(--text-2xs)",
+          letterSpacing: "var(--track-label)",
+        }}
+      >
+        {a.label}
+      </span>
+      <span className="text-white" style={{ fontSize: "var(--text-base)" }}>
+        {a.value}
+      </span>
+    </motion.div>
+  );
+}
+
+// No pinning, no scroll scrubbing: the same content laid out once.
+function StaticHero() {
+  return (
+    <section
+      aria-label="Introducing Katalyze"
+      className="relative overflow-hidden bg-[color:var(--canvas-deep)]"
+      style={{ paddingBlock: "var(--s-16) var(--s-24)" }}
     >
       <div
-        className="mx-auto grid grid-cols-12 items-center gap-y-12"
+        aria-hidden="true"
+        className="absolute inset-0 bg-[image:var(--grad-haze-dark)] opacity-60"
+      />
+      <div
+        className="relative mx-auto grid grid-cols-12 items-center gap-y-12"
         style={{
           maxWidth: "var(--max-w)",
           paddingInline: "var(--margin)",
           columnGap: "var(--gutter)",
         }}
       >
-        {/* cols 1-6: the promise */}
         <div className="col-span-12 flex flex-col gap-6 lg:col-span-6">
           <Chip>Now developing · Working prototype</Chip>
-
-          <HeroHeadline tone="light" />
-
+          <HeroHeadline compact />
           <p
-            className="max-w-lg text-[color:var(--muted-on-light)]"
-            style={{ fontSize: "var(--text-lg)", lineHeight: "var(--leading-body)" }}
+            className="max-w-md text-white/85"
+            style={{
+              fontSize: "var(--text-lg)",
+              lineHeight: "var(--leading-body)",
+            }}
           >
             Katalyze is a countertop device that reads your skin with a
-            fingertip sensor, then mixes one fresh dose of skincare to
-            match it. Every day, not once at signup.
+            fingertip sensor, then mixes one fresh dose of skincare to match it.
+            Every day, not once at signup.
           </p>
-
           <WaitlistForm
             source="hero"
-            tone="light"
             trackVisibility
             className="mt-2 max-w-md"
           />
-
           <p
-            className="text-[color:var(--muted-on-light)]"
+            className="text-[color:var(--muted-on-dark)]"
             style={{ fontSize: "var(--text-sm)" }}
           >
             Designed and built by Katherine Yao, student founder.{" "}
             <Link
               href="/story"
-              className="text-indigo underline decoration-indigo/40 underline-offset-4 transition-colors hover:decoration-indigo"
+              className="text-blush underline decoration-blush/40 underline-offset-4"
             >
               Read the story
             </Link>
           </p>
         </div>
-
-        {/* cols 7-12: the object, annotated */}
-        <Reveal
-          variant="scale"
-          className="col-span-12 lg:col-span-6"
-        >
-          <div className="relative mx-auto w-full max-w-md lg:ml-[6%] lg:mr-auto">
-            <div
-              className="relative overflow-hidden border border-[color:var(--rule-on-light)] bg-white shadow-[0_2px_12px_rgb(31_36_65/0.12)]"
-              style={{ borderRadius: "var(--r-lg)" }}
-            >
-              <Image
-                src={device.src}
-                alt={device.alt}
-                width={device.width}
-                height={device.height}
-                priority
-                sizes="(min-width: 1024px) 28rem, 90vw"
-                className="h-auto w-full"
-              />
-
-              {ANNOTATIONS.map((a) => (
-                <span
-                  key={a.label}
-                  aria-hidden="true"
-                  className="absolute border border-indigo/60"
-                  style={a.box}
-                />
-              ))}
-            </div>
-
-            {/* Readouts sit outside the frame on wide screens and point
-                back at their box with a hairline. */}
+        <div className="col-span-12 lg:col-span-6">
+          <div
+            className="relative mx-auto w-full max-w-md"
+            style={{ aspectRatio: "1080 / 1440" }}
+          >
+            <DevicePlate />
             {ANNOTATIONS.map((a) => (
-              <div
-                key={a.label}
-                className="absolute hidden items-center lg:flex"
-                style={{ top: a.labelTop, left: "100%" }}
-              >
-                <span className="leader block h-px w-10 bg-indigo/60" />
-                <span className="ml-3 flex flex-col whitespace-nowrap">
-                  <span
-                    className="font-mono uppercase text-indigo"
-                    style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}
-                  >
-                    {a.label}
-                  </span>
-                  <span
-                    className="text-[color:var(--muted-on-light)]"
-                    style={{ fontSize: "var(--text-xs)" }}
-                  >
-                    {a.value}
-                  </span>
-                </span>
+              <span
+                key={a.id}
+                aria-hidden="true"
+                className="absolute border border-periwinkle/70"
+                style={a.box}
+              />
+            ))}
+          </div>
+          <dl className="mx-auto mt-4 grid max-w-md grid-cols-3 gap-4">
+            {ANNOTATIONS.map((a) => (
+              <div key={a.id} className="flex flex-col">
+                <dt
+                  className="font-mono uppercase text-periwinkle"
+                  style={{
+                    fontSize: "var(--text-2xs)",
+                    letterSpacing: "var(--track-label)",
+                  }}
+                >
+                  {a.label}
+                </dt>
+                <dd
+                  className="text-white/85"
+                  style={{ fontSize: "var(--text-xs)" }}
+                >
+                  {a.value}
+                </dd>
               </div>
             ))}
-
-            {/* Phones: the same readouts as a caption row. */}
-            <dl className="mt-4 grid grid-cols-2 gap-4 lg:hidden">
-              {ANNOTATIONS.map((a) => (
-                <div key={a.label} className="flex flex-col">
-                  <dt
-                    className="font-mono uppercase text-indigo"
-                    style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}
-                  >
-                    {a.label}
-                  </dt>
-                  <dd
-                    className="text-[color:var(--muted-on-light)]"
-                    style={{ fontSize: "var(--text-xs)" }}
-                  >
-                    {a.value}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-        </Reveal>
+          </dl>
+        </div>
       </div>
     </section>
   );

@@ -20,7 +20,7 @@ const STATS = [
 export default function Research() {
   return (
     <section
-      className="column-rules relative bg-[image:var(--grad-haze)]"
+      className="column-rules relative bg-[image:var(--grad-haze-dark)]"
       style={{ paddingBlock: "var(--s-32)" }}
     >
       <div
@@ -34,7 +34,7 @@ export default function Research() {
         <Reveal className="col-span-12 flex flex-col gap-6 lg:col-span-4">
           <Chip>The problem</Chip>
           <h2
-            className="font-display font-extralight text-midnight"
+            className="font-display font-extralight text-white"
             style={{ fontSize: "var(--text-3xl)", lineHeight: "var(--leading-tight)" }}
           >
             We measure.
@@ -42,7 +42,7 @@ export default function Research() {
             <em className="italic">They guess.</em>
           </h2>
           <p
-            className="max-w-sm text-[color:var(--muted-on-light)]"
+            className="max-w-sm text-[color:var(--muted-on-dark)]"
             style={{ fontSize: "var(--text-base)", lineHeight: "var(--leading-body)" }}
           >
             Skin changes daily. So should your formula. Before building
@@ -58,7 +58,7 @@ export default function Research() {
           className="col-span-12 sm:col-span-8 sm:col-start-3 lg:col-span-4 lg:col-start-auto"
         >
           <div
-            className="relative flex min-h-[26rem] flex-col justify-between overflow-hidden bg-midnight p-8 text-white"
+            className="relative flex min-h-[26rem] flex-col justify-between overflow-hidden border border-[color:var(--rule-on-dark)] bg-[color:var(--panel)] p-8 text-white backdrop-blur-sm"
             style={{ borderRadius: "var(--r-lg)" }}
           >
             <span
@@ -94,16 +94,16 @@ export default function Research() {
               key={s.value}
               variant="slide"
               delayMs={i * 90}
-              className="flex items-baseline gap-5 border-b border-[color:var(--rule-on-light)] py-6 first:pt-0"
+              className="flex items-baseline gap-5 border-b border-[color:var(--rule-on-dark)] py-6 first:pt-0"
             >
               <span
-                className="w-24 shrink-0 font-display font-extralight tabular-nums text-midnight"
+                className="w-24 shrink-0 font-display font-extralight tabular-nums text-white"
                 style={{ fontSize: "var(--text-2xl)" }}
               >
                 <CountUp value={s.value} />
               </span>
               <span
-                className="text-[color:var(--muted-on-light)]"
+                className="text-[color:var(--muted-on-dark)]"
                 style={{ fontSize: "var(--text-sm)", lineHeight: "var(--leading-snug)" }}
               >
                 {s.description}
@@ -111,7 +111,7 @@ export default function Research() {
             </Reveal>
           ))}
           <p
-            className="pt-4 text-[color:var(--faint-on-light)]"
+            className="pt-4 text-[color:var(--faint-on-dark)]"
             style={{ fontSize: "var(--text-xs)" }}
           >
             Katalyze market research survey, about 75 respondents, 2026.

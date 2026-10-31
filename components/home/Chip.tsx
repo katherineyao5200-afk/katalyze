@@ -2,7 +2,7 @@
 // (sharplink). Text only; never an icon.
 export default function Chip({
   children,
-  tone = "light",
+  tone = "dark",
 }: {
   children: React.ReactNode;
   tone?: "light" | "dark";

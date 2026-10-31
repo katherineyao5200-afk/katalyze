@@ -1,8 +1,9 @@
 # Visual references
 
 Screenshots of the four sites kat picked as references, captured October 2026.
-The homepage was redesigned from these on 2026-10-31: a light ground from
-sharplink and truekind, dark bands and annotated specimens from alethia.
+The homepage was redesigned from these on 2026-10-31: layout from sharplink
+and truekind, kept on Katalyze's dark navy, with alethia's pinned, annotated
+specimen as a scroll-driven hero.
 They live in `docs/references/`. **Open the image before working on the section
 it maps to.** Words alone don't carry layout, so look at the picture.
 

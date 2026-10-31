@@ -24,10 +24,10 @@ const ITEMS = [
 
 export default function AtAGlance() {
   return (
-    <section className="bg-white" style={{ paddingBlock: "var(--s-16)" }}>
+    <section className="bg-midnight" style={{ paddingBlock: "var(--s-16)" }}>
       {/* 12 cols: three equal columns divided by hairlines */}
       <div
-        className="mx-auto grid grid-cols-1 border-y border-[color:var(--rule-on-light)] md:grid-cols-3"
+        className="mx-auto grid grid-cols-1 border-y border-[color:var(--rule-on-dark)] md:grid-cols-3"
         style={{ maxWidth: "var(--max-w)", marginInline: "var(--margin)" }}
       >
         {ITEMS.map((item, i) => (
@@ -36,19 +36,19 @@ export default function AtAGlance() {
             delayMs={i * 80}
             className={`flex flex-col gap-4 py-10 md:px-8 ${
               i > 0
-                ? "border-t border-[color:var(--rule-on-light)] md:border-t-0 md:border-l"
+                ? "border-t border-[color:var(--rule-on-dark)] md:border-t-0 md:border-l"
                 : "md:pl-0"
             }`}
           >
             <Chip>{item.n}</Chip>
             <h2
-              className="font-display font-extralight text-midnight"
+              className="font-display font-extralight text-white"
               style={{ fontSize: "var(--text-2xl)", lineHeight: "var(--leading-tight)" }}
             >
               {item.title}
             </h2>
             <p
-              className="max-w-sm text-[color:var(--muted-on-light)]"
+              className="max-w-sm text-[color:var(--muted-on-dark)]"
               style={{ fontSize: "var(--text-base)", lineHeight: "var(--leading-body)" }}
             >
               {item.body}

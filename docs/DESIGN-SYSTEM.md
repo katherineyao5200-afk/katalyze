@@ -29,7 +29,7 @@ It is editorial and dark, not clinical and white. It is atmospheric, not decorat
 1. Every value comes from `tokens.css`. No hex, px, or easing curve in a stylesheet unless it is a token. Need a new one? Add it to the token file and say why.
 2. The palette is exactly four brand colors plus white and the gradient. Nothing else.
 3. Two typefaces only: Migra (display) and Helvetica World (everything else). No third face.
-4. Dark is the default. Light sections are deliberate exceptions, not the baseline. **Exception (2026-10-31):** kat asked for a homepage redesign that merges her reference sites, so the homepage now sits on a light ground (`--grad-haze`) with dark bands for How it works, Where it stands and the close. Other pages stay dark.
+4. Dark is the default. Light sections are deliberate exceptions, not the baseline. **Update (2026-10-31):** a light homepage was tried and reverted at kat's request. The homepage is dark again, using the layout from the reference-site redesign. Only the cartridge section (`home/Inside.tsx`) is light. The hero is a pinned 320vh scroll sequence (`home/HomeHero.tsx`) with a static fallback for reduced motion.
 5. Left-aligned by default. Centering is reserved for one hero line at most, and usually not even that.
 6. Grain is applied over every gradient surface. A clean gradient is a bug.
 7. WCAG AA: 4.5:1 body, 3:1 large text, 44×44px touch targets, visible `:focus-visible`, `prefers-reduced-motion` honored globally.

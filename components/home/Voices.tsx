@@ -23,7 +23,7 @@ const QUOTES = [
 export default function Voices() {
   return (
     <section
-      className="relative overflow-hidden bg-[image:var(--grad-haze)]"
+      className="relative overflow-hidden bg-[image:var(--grad-haze-dark)]"
       style={{ paddingBlock: "var(--s-24) var(--s-32)" }}
     >
       <div
@@ -38,13 +38,13 @@ export default function Voices() {
         <Reveal className="col-span-12 flex flex-col gap-4 lg:col-span-6">
           <Chip>Recognition</Chip>
           <p
-            className="-ml-[0.06em] font-display font-extralight leading-none text-midnight"
+            className="-ml-[0.06em] font-display font-extralight leading-none text-white"
             style={{ fontSize: "clamp(6rem, 18vw, 16rem)", letterSpacing: "var(--track-display)" }}
           >
             Top <em className="italic">2%</em>
           </p>
           <p
-            className="max-w-sm text-[color:var(--muted-on-light)]"
+            className="max-w-sm text-[color:var(--muted-on-dark)]"
             style={{ fontSize: "var(--text-base)", lineHeight: "var(--leading-body)" }}
           >
             Finalist, Blue Ocean Student Entrepreneur Competition 2026.
@@ -55,16 +55,16 @@ export default function Voices() {
         <div className="col-span-12 flex flex-col gap-10 lg:col-span-5 lg:col-start-8 lg:pt-16">
           {QUOTES.map((q, i) => (
             <Reveal key={q.name} variant="fade" delayMs={i * 120}>
-              <figure className="flex flex-col gap-4 border-l border-indigo/40 pl-6">
+              <figure className="flex flex-col gap-4 border-l border-periwinkle/40 pl-6">
                 <blockquote
-                  className="font-display font-extralight italic text-midnight"
+                  className="font-display font-extralight italic text-white"
                   style={{ fontSize: "var(--text-lg)", lineHeight: "var(--leading-snug)" }}
                 >
                   &ldquo;{q.quote}&rdquo;
                 </blockquote>
                 <figcaption style={{ fontSize: "var(--text-sm)" }}>
-                  <span className="font-medium text-midnight">{q.name}</span>
-                  <span className="text-[color:var(--muted-on-light)]"> · {q.role}</span>
+                  <span className="font-medium text-white">{q.name}</span>
+                  <span className="text-[color:var(--muted-on-dark)]"> · {q.role}</span>
                 </figcaption>
               </figure>
             </Reveal>

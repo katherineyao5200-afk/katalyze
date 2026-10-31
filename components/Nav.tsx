@@ -19,8 +19,8 @@ const focusRing =
 
 export default function Nav() {
   const pathname = usePathname();
-  // The redesigned homepage sits on a pale ground; every other page is dark.
-  const light = pathname === "/";
+  // Every page is dark now; kept as a flag in case a light page returns.
+  const light = false;
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
