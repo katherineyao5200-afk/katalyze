@@ -20,11 +20,20 @@ import { RectAreaLightUniformsLib } from "three/examples/jsm/lights/RectAreaLigh
 
 export type AnchorId = "cartridges" | "controls" | "cup";
 
-// Local-space points on the model for each label.
-const ANCHOR_POINTS: Record<AnchorId, THREE.Vector3> = {
-  cartridges: new THREE.Vector3(1.3, 0.35, 0.6),
-  controls: new THREE.Vector3(-1.08, -0.68, 0.88),
-  cup: new THREE.Vector3(1.2, -0.5, 1.05),
+// Local-space bounds of each labelled part, for the tracking boxes.
+const PART_BOUNDS: Record<AnchorId, THREE.Box3> = {
+  cartridges: new THREE.Box3(
+    new THREE.Vector3(-1.18, -0.14, 0.15),
+    new THREE.Vector3(1.18, 0.64, 0.8),
+  ),
+  controls: new THREE.Box3(
+    new THREE.Vector3(-1.34, -0.84, 0.86),
+    new THREE.Vector3(-0.2, -0.52, 0.9),
+  ),
+  cup: new THREE.Box3(
+    new THREE.Vector3(-0.1, -0.88, 0.8),
+    new THREE.Vector3(1.3, -0.54, 1.4),
+  ),
 };
 
 const BODY_W = 3.4;
@@ -70,6 +79,38 @@ function keyframe(p: number, stops: [number, number][]) {
   return stops[stops.length - 1][1];
 }
 
+function canvasTexture(
+  w: number,
+  h: number,
+  draw: (g: CanvasRenderingContext2D) => void,
+) {
+  const c = document.createElement("canvas");
+  c.width = w;
+  c.height = h;
+  draw(c.getContext("2d")!);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.anisotropy = 4;
+  return t;
+}
+
+// Fine grain for a satin moulded-plastic finish.
+function grainTexture() {
+  const t = canvasTexture(256, 256, (g) => {
+    const img = g.createImageData(256, 256);
+    for (let i = 0; i < img.data.length; i += 4) {
+      const v = 120 + Math.random() * 40;
+      img.data[i] = img.data[i + 1] = img.data[i + 2] = v;
+      img.data[i + 3] = 255;
+    }
+    g.putImageData(img, 0, 0);
+  });
+  t.colorSpace = THREE.NoColorSpace;
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.repeat.set(6, 6);
+  return t;
+}
+
 function buildDevice() {
   const group = new THREE.Group();
   const disposables: { dispose(): void }[] = [];
@@ -86,8 +127,12 @@ function buildDevice() {
       clearcoatRoughness: 0.22,
       sheen: 0.4,
       sheenColor: new THREE.Color(0xe8ccd2),
+      roughnessMap: track(grainTexture()),
+      bumpMap: undefined,
     }),
   );
+  shell.bumpMap = shell.roughnessMap;
+  shell.bumpScale = 0.4;
 
   // Body: rounded outline with the window cut through, softly bevelled.
   const outline = roundedRect(
@@ -327,7 +372,7 @@ function buildDevice() {
   );
   bowl.castShadow = true;
   bowl.scale.set(1.45, 0.62, 0.85);
-  bowl.position.set(0.6, -0.48, FRONT + 0.16);
+  bowl.position.set(0.6, -0.56, FRONT + 0.2);
   group.add(bowl);
 
   // The dose: a thin blush disc inside the bowl, visible when lit.
@@ -346,8 +391,205 @@ function buildDevice() {
   );
   dose.rotation.x = -Math.PI / 2;
   dose.scale.set(1.35, 0.72, 1);
-  dose.position.set(0.6, -0.56, FRONT + 0.16);
+  dose.position.set(0.6, -0.62, FRONT + 0.2);
   group.add(dose);
+
+  // ---- Fine detail ----
+
+  // Window frame: a thin raised clear-plastic surround.
+  const frameShape = roundedRect(
+    WIN.x0 - 0.1,
+    WIN.y0 - 0.1,
+    WIN.x1 + 0.1,
+    WIN.y1 + 0.1,
+    WIN.r + 0.08,
+  );
+  frameShape.holes.push(
+    roundedRect(
+      WIN.x0 + 0.12,
+      WIN.y0 + 0.12,
+      WIN.x1 - 0.12,
+      WIN.y1 - 0.12,
+      WIN.r,
+    ),
+  );
+  const frameGeo = track(
+    new THREE.ExtrudeGeometry(frameShape, {
+      depth: 0.02,
+      bevelEnabled: true,
+      bevelThickness: 0.012,
+      bevelSize: 0.012,
+      bevelSegments: 3,
+      curveSegments: 24,
+    }),
+  );
+  const frame = new THREE.Mesh(
+    frameGeo,
+    track(
+      new THREE.MeshPhysicalMaterial({
+        color: 0xf7f8fc,
+        roughness: 0.12,
+        clearcoat: 1,
+        transmission: 0.3,
+        thickness: 0.05,
+      }),
+    ),
+  );
+  frame.position.z = FRONT - 0.035;
+  group.add(frame);
+
+  // Panel seam around the front face.
+  const seamShape = roundedRect(
+    -BODY_W / 2 + 0.06,
+    -BODY_H / 2 + 0.06,
+    BODY_W / 2 - 0.06,
+    BODY_H / 2 - 0.06,
+    0.5,
+  );
+  seamShape.holes.push(
+    roundedRect(
+      -BODY_W / 2 + 0.075,
+      -BODY_H / 2 + 0.075,
+      BODY_W / 2 - 0.075,
+      BODY_H / 2 - 0.075,
+      0.485,
+    ),
+  );
+  const seam = new THREE.Mesh(
+    track(new THREE.ShapeGeometry(seamShape, 32)),
+    track(
+      new THREE.MeshBasicMaterial({
+        color: 0xb9bac8,
+        transparent: true,
+        opacity: 0.55,
+      }),
+    ),
+  );
+  seam.position.z = FRONT + 0.003;
+  group.add(seam);
+
+  // Display screen: the K mark and a "Ready" line, softly backlit.
+  const screenTex = track(
+    canvasTexture(256, 128, (g) => {
+      const grad = g.createLinearGradient(0, 0, 256, 128);
+      grad.addColorStop(0, "#1f2441");
+      grad.addColorStop(1, "#313f79");
+      g.fillStyle = grad;
+      g.fillRect(0, 0, 256, 128);
+      g.fillStyle = "#f5eff7";
+      g.font = "600 54px Georgia, serif";
+      g.fillText("K", 28, 84);
+      g.fillStyle = "#8a8db3";
+      g.font = "500 22px monospace";
+      g.fillText("READY", 96, 60);
+      g.fillStyle = "#e8ccd2";
+      [0, 1, 2].forEach((i) => {
+        g.beginPath();
+        g.arc(104 + i * 22, 86, 5, 0, Math.PI * 2);
+        g.fill();
+      });
+    }),
+  );
+  const screen = new THREE.Mesh(
+    track(new THREE.PlaneGeometry(0.4, 0.2)),
+    track(new THREE.MeshBasicMaterial({ map: screenTex, toneMapped: false })),
+  );
+  screen.position.set(-1.08, -0.68, FRONT + 0.008);
+  group.add(screen);
+
+  // Button rings.
+  const ringG = track(new THREE.TorusGeometry(0.082, 0.008, 8, 32));
+  const ringM = track(
+    new THREE.MeshStandardMaterial({ color: 0xc4c6d4, roughness: 0.4 }),
+  );
+  [-0.68, -0.48, -0.28].forEach((x) => {
+    const r = new THREE.Mesh(ringG, ringM);
+    r.position.set(x, -0.68, FRONT + 0.006);
+    group.add(r);
+  });
+
+  // Cartridge labels: base B-01..03, active A-01..03.
+  const labelFor = (text: string) =>
+    track(
+      canvasTexture(128, 128, (g) => {
+        g.fillStyle = "#fbfbfd";
+        g.fillRect(0, 0, 128, 128);
+        g.fillStyle = "#313f79";
+        g.font = "600 30px monospace";
+        g.textAlign = "center";
+        g.fillText(text, 64, 74);
+      }),
+    );
+  const labels: [number, number, number, number, string][] = [
+    [-0.98, 0.19, 0.56, 0, "B-01"],
+    [-0.52, 0.19, 0.56, 0, "B-02"],
+    [-0.06, 0.19, 0.56, 0, "B-03"],
+    [0.36, 0.115, 0.34, 0, "A-01"],
+    [0.66, 0.115, 0.34, 0, "A-02"],
+    [0.96, 0.115, 0.34, 0, "A-03"],
+  ];
+  labels.forEach(([x, r, h, , text]) => {
+    const lg = track(
+      new THREE.CylinderGeometry(
+        r * 1.01,
+        r * 1.01,
+        h * 0.32,
+        40,
+        1,
+        true,
+        -Math.PI / 2.4,
+        Math.PI / 1.2,
+      ),
+    );
+    const lm = track(
+      new THREE.MeshStandardMaterial({
+        map: labelFor(text),
+        roughness: 0.6,
+        transparent: true,
+        opacity: 0.92,
+      }),
+    );
+    const l = new THREE.Mesh(lg, lm);
+    l.position.set(x, WIN.y0 + 0.16 + h * 0.42, 0.32);
+    group.add(l);
+  });
+
+  // Cup ledge: the lower lip the cup sits on.
+  const ledgeShape = roundedRect(-0.12, -0.45, 1.32, 0.1, 0.14);
+  const ledge = new THREE.Mesh(
+    track(
+      new THREE.ExtrudeGeometry(ledgeShape, {
+        depth: 0.12,
+        bevelEnabled: true,
+        bevelThickness: 0.04,
+        bevelSize: 0.04,
+        bevelSegments: 4,
+        curveSegments: 16,
+      }),
+    ),
+    shell,
+  );
+  ledge.rotation.x = -Math.PI / 2;
+  ledge.position.set(0, -1.0, FRONT);
+  ledge.castShadow = true;
+  ledge.receiveShadow = true;
+  group.add(ledge);
+
+  // Rubber feet.
+  const footG = track(new THREE.CylinderGeometry(0.12, 0.13, 0.05, 24));
+  const footM = track(
+    new THREE.MeshStandardMaterial({ color: 0x2a2f4d, roughness: 0.9 }),
+  );
+  [
+    [-1.25, -0.5],
+    [1.25, -0.5],
+    [-1.25, 0.5],
+    [1.25, 0.5],
+  ].forEach(([x, z]) => {
+    const f = new THREE.Mesh(footG, footM);
+    f.position.set(x, -BODY_H / 2 - BEVEL * 0 - 0.17, z);
+    group.add(f);
+  });
 
   return { group, disposables, doseMat };
 }
@@ -367,11 +609,13 @@ function shadowTexture() {
 export default function DeviceModel({
   progress,
   anchors,
+  boxes,
   className = "",
   onUnsupported,
 }: {
   progress?: MotionValue<number>;
   anchors?: Partial<Record<AnchorId, RefObject<HTMLElement | null>>>;
+  boxes?: Partial<Record<AnchorId, RefObject<HTMLElement | null>>>;
   className?: string;
   onUnsupported?: () => void;
 }) {
@@ -492,20 +736,49 @@ export default function DeviceModel({
     const ro = new ResizeObserver(resize);
     ro.observe(container);
 
-    const v = new THREE.Vector3();
+    // Project each part's 3D bounds to a screen rectangle; the box
+    // element takes the rectangle, the label anchors to its side.
+    const corner = new THREE.Vector3();
     function placeAnchors() {
-      if (!anchors) return;
+      if (!anchors && !boxes) return;
       const w = container!.clientWidth;
       const h = container!.clientHeight;
       group.updateWorldMatrix(true, false);
-      for (const id of Object.keys(anchors) as AnchorId[]) {
-        const el = anchors[id]?.current;
-        if (!el) continue;
-        v.copy(ANCHOR_POINTS[id])
-          .applyMatrix4(group.matrixWorld)
-          .project(camera);
-        el.style.left = `${((v.x + 1) / 2) * w}px`;
-        el.style.top = `${((1 - v.y) / 2) * h}px`;
+      for (const id of Object.keys(PART_BOUNDS) as AnchorId[]) {
+        const bb = PART_BOUNDS[id];
+        let x0 = Infinity,
+          y0 = Infinity,
+          x1 = -Infinity,
+          y1 = -Infinity;
+        for (let i = 0; i < 8; i++) {
+          corner
+            .set(
+              i & 1 ? bb.max.x : bb.min.x,
+              i & 2 ? bb.max.y : bb.min.y,
+              i & 4 ? bb.max.z : bb.min.z,
+            )
+            .applyMatrix4(group.matrixWorld)
+            .project(camera);
+          const sx = ((corner.x + 1) / 2) * w;
+          const sy = ((1 - corner.y) / 2) * h;
+          x0 = Math.min(x0, sx);
+          x1 = Math.max(x1, sx);
+          y0 = Math.min(y0, sy);
+          y1 = Math.max(y1, sy);
+        }
+        const box = boxes?.[id]?.current;
+        if (box) {
+          box.style.left = `${x0}px`;
+          box.style.top = `${y0}px`;
+          box.style.width = `${x1 - x0}px`;
+          box.style.height = `${y1 - y0}px`;
+        }
+        const el = anchors?.[id]?.current;
+        if (el) {
+          const left = el.dataset.side === "left";
+          el.style.left = `${left ? x0 : x1}px`;
+          el.style.top = `${(y0 + y1) / 2}px`;
+        }
       }
     }
 
@@ -538,7 +811,7 @@ export default function DeviceModel({
         [0.72, 1],
         [0.8, 0],
       ]);
-      cupLight.intensity = dose * 3;
+      cupLight.intensity = dose * 0.8;
       doseMat.opacity = dose * 0.9;
       doseMat.emissiveIntensity = dose * 0.6;
 
@@ -583,7 +856,7 @@ export default function DeviceModel({
       renderer.dispose();
       renderer.domElement.remove();
     };
-  }, [progress, anchors, onUnsupported]);
+  }, [progress, anchors, boxes, onUnsupported]);
 
   return <div ref={containerRef} className={`relative ${className}`} />;
 }

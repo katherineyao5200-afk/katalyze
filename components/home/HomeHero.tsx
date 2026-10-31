@@ -150,6 +150,14 @@ function ScrollHero() {
     () => ({ cartridges: cartridgesRef, controls: controlsRef, cup: cupRef }),
     [],
   );
+  // ...and framed by a box that tracks the part's outline as it turns.
+  const cartridgesBox = useRef<HTMLDivElement>(null);
+  const controlsBox = useRef<HTMLDivElement>(null);
+  const cupBox = useRef<HTMLDivElement>(null);
+  const boxes = useMemo(
+    () => ({ cartridges: cartridgesBox, controls: controlsBox, cup: cupBox }),
+    [],
+  );
   const [webgl, setWebgl] = useState(true);
   const onUnsupported = useCallback(() => setWebgl(false), []);
 
@@ -204,6 +212,7 @@ function ScrollHero() {
               <DeviceModel
                 progress={p}
                 anchors={anchors}
+                boxes={boxes}
                 onUnsupported={onUnsupported}
                 className="absolute inset-0"
               />
@@ -226,6 +235,7 @@ function ScrollHero() {
                   p={p}
                   desktop={desktop}
                   anchorRef={anchors[a.id]}
+                  boxRef={boxes[a.id]}
                 />
               ))}
           </motion.div>
@@ -377,63 +387,88 @@ function AnnotationMark({
   p,
   desktop,
   anchorRef,
+  boxRef,
 }: {
   a: Annotation;
   p: MotionValue<number>;
   desktop: boolean;
   anchorRef: RefObject<HTMLDivElement | null>;
+  boxRef: RefObject<HTMLDivElement | null>;
 }) {
   const show = useTransform(p, [a.at, a.at + 0.06, 0.72, 0.78], [0, 1, 1, 0]);
   const line = useTransform(p, [a.at + 0.02, a.at + 0.08], [0, 1]);
   const right = a.side === "right";
 
-  // Positioned every frame by DeviceModel (left/top in px).
+  // Box and anchor are positioned every frame by DeviceModel (px).
   return (
-    <motion.div
-      ref={anchorRef}
-      className="absolute h-0 w-0"
-      style={{ opacity: show, left: 0, top: 0 }}
-    >
-      <span
+    <>
+      <motion.div
+        ref={boxRef}
         aria-hidden="true"
-        className="absolute -left-1.5 -top-1.5 block h-3 w-3 rounded-full bg-blush shadow-[0_0_12px_rgb(232_204_210/0.9)]"
-      />
-      <span
-        aria-hidden="true"
-        className="absolute -left-4 -top-4 block h-8 w-8 animate-ping rounded-full border border-blush/60 motion-reduce:animate-none"
-      />
-      {desktop && (
-        <div
-          className={`absolute top-0 flex -translate-y-1/2 items-center ${
-            right ? "left-3" : "right-3 flex-row-reverse"
-          }`}
-        >
-          <motion.span
-            className="block h-px w-24 bg-periwinkle/80"
-            style={{ scaleX: line, originX: right ? 0 : 1 }}
-          />
+        className="absolute border border-white/45"
+        style={{ opacity: show, left: 0, top: 0 }}
+      >
+        {[
+          "-left-[3px] -top-[3px]",
+          "-right-[3px] -top-[3px]",
+          "-left-[3px] -bottom-[3px]",
+          "-right-[3px] -bottom-[3px]",
+        ].map((c) => (
           <span
-            className={`flex flex-col whitespace-nowrap ${right ? "ml-3" : "mr-3 items-end text-right"}`}
+            key={c}
+            className={`absolute block h-[5px] w-[5px] bg-white ${c}`}
+          />
+        ))}
+        <span
+          className="absolute -top-5 left-0 font-mono uppercase text-white/70"
+          style={{ fontSize: "0.625rem", letterSpacing: "var(--track-label)" }}
+        >
+          {a.label.slice(1, 3)}
+        </span>
+      </motion.div>
+      <motion.div
+        ref={anchorRef}
+        data-side={a.side}
+        className="absolute h-0 w-0"
+        style={{ opacity: show, left: 0, top: 0 }}
+      >
+        <span
+          aria-hidden="true"
+          className="absolute -left-[3px] -top-[3px] block h-[7px] w-[7px] bg-blush shadow-[0_0_10px_rgb(232_204_210/0.9)]"
+        />
+        {desktop && (
+          <div
+            className={`absolute top-0 flex -translate-y-1/2 items-center ${
+              right ? "left-3" : "right-3 flex-row-reverse"
+            }`}
           >
+            <motion.span
+              className="block h-px w-24 bg-periwinkle/80"
+              style={{ scaleX: line, originX: right ? 0 : 1 }}
+            />
             <span
-              className="font-mono uppercase text-periwinkle"
-              style={{
-                fontSize: "var(--text-2xs)",
-                letterSpacing: "var(--track-label)",
-              }}
+              className={`flex flex-col whitespace-nowrap ${right ? "ml-3" : "mr-3 items-end text-right"}`}
             >
-              {a.label}
+              <span
+                className="font-mono uppercase text-periwinkle"
+                style={{
+                  fontSize: "var(--text-2xs)",
+                  letterSpacing: "var(--track-label)",
+                }}
+              >
+                {a.label}
+              </span>
+              <span
+                className="text-white"
+                style={{ fontSize: "var(--text-base)" }}
+              >
+                {a.value}
+              </span>
             </span>
-            <span
-              className="text-white"
-              style={{ fontSize: "var(--text-base)" }}
-            >
-              {a.value}
-            </span>
-          </span>
-        </div>
-      )}
-    </motion.div>
+          </div>
+        )}
+      </motion.div>
+    </>
   );
 }
 
