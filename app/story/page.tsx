@@ -63,8 +63,9 @@ export default function StoryPage() {
               75 people first. Seven in ten said their skin changes with the
               weather. Almost eight in ten had bought something that
               didn&apos;t work for them. Then I built a working six-channel
-              prototype, and took the idea to the Blue Ocean Student
-              Entrepreneur Competition, where it was a finalist.
+              prototype. Along the way, Katalyze reached the Pitching Round
+              of the Diamond Challenge and was a finalist in the Blue Ocean
+              Student Entrepreneur Competition.
             </p>
 
             <p className="text-periwinkle" style={{ fontSize: "var(--text-base)", lineHeight: "var(--leading-body)" }}>

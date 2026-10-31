@@ -39,16 +39,49 @@ export default function Voices() {
           <Chip>Recognition</Chip>
           <p
             className="-ml-[0.06em] font-display font-extralight leading-none text-white"
-            style={{ fontSize: "clamp(6rem, 18vw, 16rem)", letterSpacing: "var(--track-display)" }}
+            style={{
+              fontSize: "clamp(6rem, 18vw, 16rem)",
+              letterSpacing: "var(--track-display)",
+            }}
           >
             Top <em className="italic">2%</em>
           </p>
           <p
             className="max-w-sm text-[color:var(--muted-on-dark)]"
-            style={{ fontSize: "var(--text-base)", lineHeight: "var(--leading-body)" }}
+            style={{
+              fontSize: "var(--text-base)",
+              lineHeight: "var(--leading-body)",
+            }}
           >
             Finalist, Blue Ocean Student Entrepreneur Competition 2026.
           </p>
+          <dl className="mt-6 flex max-w-md flex-col gap-1 border-t border-[color:var(--rule-on-dark)] pt-6">
+            <dt
+              className="font-mono uppercase text-periwinkle"
+              style={{
+                fontSize: "var(--text-2xs)",
+                letterSpacing: "var(--track-label)",
+              }}
+            >
+              [Diamond Challenge 2026]
+            </dt>
+            <dd
+              className="text-white"
+              style={{
+                fontSize: "var(--text-base)",
+                lineHeight: "var(--leading-body)",
+              }}
+            >
+              Advanced to the Pitching Round, chosen from hundreds of
+              submissions worldwide.
+            </dd>
+            <dd
+              className="text-[color:var(--faint-on-dark)]"
+              style={{ fontSize: "var(--text-xs)" }}
+            >
+              University of Delaware, Horn Entrepreneurship
+            </dd>
+          </dl>
         </Reveal>
 
         {/* cols 8-12: what industry readers said */}
@@ -58,13 +91,19 @@ export default function Voices() {
               <figure className="flex flex-col gap-4 border-l border-periwinkle/40 pl-6">
                 <blockquote
                   className="font-display font-extralight italic text-white"
-                  style={{ fontSize: "var(--text-lg)", lineHeight: "var(--leading-snug)" }}
+                  style={{
+                    fontSize: "var(--text-lg)",
+                    lineHeight: "var(--leading-snug)",
+                  }}
                 >
                   &ldquo;{q.quote}&rdquo;
                 </blockquote>
                 <figcaption style={{ fontSize: "var(--text-sm)" }}>
                   <span className="font-medium text-white">{q.name}</span>
-                  <span className="text-[color:var(--muted-on-dark)]"> · {q.role}</span>
+                  <span className="text-[color:var(--muted-on-dark)]">
+                    {" "}
+                    · {q.role}
+                  </span>
                 </figcaption>
               </figure>
             </Reveal>
