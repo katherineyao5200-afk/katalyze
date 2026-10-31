@@ -11,9 +11,17 @@ import {
   useTransform,
   type MotionValue,
 } from "motion/react";
-import { useRef, useState, useSyncExternalStore } from "react";
+import {
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type RefObject,
+} from "react";
 
 import Chip from "@/components/home/Chip";
+import DeviceModel, { type AnchorId } from "@/components/home/DeviceModel";
 import HeroHeadline from "@/components/HeroHeadline";
 import WaitlistForm from "@/components/WaitlistForm";
 import { images } from "@/lib/images";
@@ -26,10 +34,9 @@ const ParticleField = dynamic(() => import("@/components/ParticleField"), {
 // Readouts on the device render. Box positions are percentages of the
 // image frame and point at parts that are really there.
 type Annotation = {
-  id: string;
+  id: AnchorId;
   label: string;
   value: string;
-  box: { left: string; top: string; width: string; height: string };
   side: "left" | "right";
   at: number; // scroll progress where it appears
 };
@@ -39,7 +46,6 @@ const ANNOTATIONS: Annotation[] = [
     id: "cartridges",
     label: "[01 · 6 cartridges]",
     value: "3 base · 3 active",
-    box: { left: "15%", top: "35%", width: "59%", height: "25%" },
     side: "right",
     at: 0.3,
   },
@@ -47,7 +53,6 @@ const ANNOTATIONS: Annotation[] = [
     id: "controls",
     label: "[02 · Controls]",
     value: "Display and buttons",
-    box: { left: "19%", top: "60.5%", width: "22%", height: "7%" },
     side: "left",
     at: 0.42,
   },
@@ -55,7 +60,6 @@ const ANNOTATIONS: Annotation[] = [
     id: "cup",
     label: "[03 · Cup tray]",
     value: "One fresh dose, into a cup",
-    box: { left: "42%", top: "62%", width: "31%", height: "9%" },
     side: "right",
     at: 0.54,
   },
@@ -109,17 +113,17 @@ function ScrollHero() {
   const deviceX = useTransform(
     p,
     [0, 0.26],
-    desktop ? ["21vw", "0vw"] : ["0vw", "0vw"],
+    desktop ? ["20vw", "0vw"] : ["0vw", "0vw"],
   );
   const deviceScale = useTransform(
     p,
     [0, 0.26, 0.72, 1],
-    desktop ? [0.86, 1, 1, 1.12] : [0.9, 1, 1, 1.1],
+    desktop ? [0.78, 1, 1, 1.1] : [0.9, 1, 1, 1.08],
   );
   const deviceOpacity = useTransform(
     p,
     [0, 0.2, 0.7, 0.82],
-    desktop ? [1, 1, 1, 0.28] : [0, 1, 1, 0.22],
+    desktop ? [1, 1, 1, 0.16] : [0, 1, 1, 0.14],
   );
   const glowOpacity = useTransform(
     p,
@@ -131,15 +135,23 @@ function ScrollHero() {
   const fieldOpacity = useTransform(
     p,
     [0, 0.22, 0.75, 0.9],
-    [1, 0.35, 0.35, 0.8],
+    desktop ? [0.9, 0.18, 0.18, 0.2] : [0.25, 0.18, 0.18, 0.2],
   );
 
   // Beat 3: the summary line.
   const outroOpacity = useTransform(p, [0.74, 0.84], [0, 1]);
   const outroY = useTransform(p, [0.74, 0.86], ["4vh", "0vh"]);
 
-  // Cup glows when the dose readout lands.
-  const cupGlow = useTransform(p, [0.54, 0.62, 0.72, 0.8], [0, 1, 1, 0]);
+  // Each label is pinned by the 3D model to the part it names.
+  const cartridgesRef = useRef<HTMLDivElement>(null);
+  const controlsRef = useRef<HTMLDivElement>(null);
+  const cupRef = useRef<HTMLDivElement>(null);
+  const anchors = useMemo(
+    () => ({ cartridges: cartridgesRef, controls: controlsRef, cup: cupRef }),
+    [],
+  );
+  const [webgl, setWebgl] = useState(true);
+  const onUnsupported = useCallback(() => setWebgl(false), []);
 
   const [beat, setBeat] = useState(1);
   useMotionValueEvent(p, "change", (v) => {
@@ -161,7 +173,7 @@ function ScrollHero() {
         />
         <motion.div
           aria-hidden="true"
-          className="absolute inset-0"
+          className="absolute inset-0 lg:left-[35%]"
           style={{ opacity: fieldOpacity }}
         >
           <ParticleField />
@@ -171,7 +183,7 @@ function ScrollHero() {
           className="grain pointer-events-none absolute inset-0"
         />
 
-        {/* The device */}
+        {/* The device, in 3D. Labels are pinned to its parts. */}
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center pt-16">
           <motion.div
             className="relative"
@@ -179,20 +191,43 @@ function ScrollHero() {
               x: deviceX,
               scale: deviceScale,
               opacity: deviceOpacity,
-              height: desktop ? "74vh" : "56svh",
-              aspectRatio: "1080 / 1440",
+              width: desktop ? "min(66vw, 120vh)" : "100vw",
+              height: desktop ? "76vh" : "54svh",
             }}
           >
             <motion.span
               aria-hidden="true"
-              className="absolute -inset-[20%] bg-[image:var(--grad-point)] blur-3xl"
+              className="absolute inset-[10%] bg-[image:var(--grad-point)] blur-3xl"
               style={{ opacity: glowOpacity }}
             />
-            <DevicePlate cupGlow={cupGlow} />
+            {webgl ? (
+              <DeviceModel
+                progress={p}
+                anchors={anchors}
+                onUnsupported={onUnsupported}
+                className="absolute inset-0"
+              />
+            ) : (
+              <div className="absolute inset-0 flex justify-center">
+                <div
+                  className="relative h-full"
+                  style={{ aspectRatio: "1080 / 1440" }}
+                >
+                  <DevicePlate />
+                </div>
+              </div>
+            )}
 
-            {ANNOTATIONS.map((a) => (
-              <AnnotationMark key={a.id} a={a} p={p} desktop={desktop} />
-            ))}
+            {webgl &&
+              ANNOTATIONS.map((a) => (
+                <AnnotationMark
+                  key={a.id}
+                  a={a}
+                  p={p}
+                  desktop={desktop}
+                  anchorRef={anchors[a.id]}
+                />
+              ))}
           </motion.div>
         </div>
 
@@ -292,7 +327,10 @@ function ScrollHero() {
         <div
           aria-hidden="true"
           className="absolute bottom-6 left-[var(--margin)] hidden items-center gap-3 font-mono uppercase text-periwinkle lg:flex"
-          style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}
+          style={{
+            fontSize: "var(--text-2xs)",
+            letterSpacing: "var(--track-label)",
+          }}
         >
           <span>[{String(beat).padStart(2, "0")} / 03]</span>
           <span className="relative block h-px w-24 bg-[color:var(--rule-on-dark)]">
@@ -301,7 +339,10 @@ function ScrollHero() {
               style={{ scaleX: scrollYProgress }}
             />
           </span>
-          <motion.span className="text-[color:var(--faint-on-dark)]" style={{ opacity: introOpacity }}>
+          <motion.span
+            className="text-[color:var(--faint-on-dark)]"
+            style={{ opacity: introOpacity }}
+          >
             Scroll to read the device
           </motion.span>
         </div>
@@ -310,9 +351,9 @@ function ScrollHero() {
   );
 }
 
-// The render was shot on a pale studio sweep; a soft radial mask lets
-// it fall off into the navy instead of sitting in a box.
-function DevicePlate({ cupGlow }: { cupGlow?: MotionValue<number> }) {
+// Fallback when WebGL is unavailable: the render, masked so its pale
+// studio sweep falls off into the navy.
+function DevicePlate() {
   const device = images.product.deviceHero;
   const mask =
     "radial-gradient(ellipse 44% 29% at 50% 57%, #000 60%, transparent 100%)";
@@ -327,19 +368,6 @@ function DevicePlate({ cupGlow }: { cupGlow?: MotionValue<number> }) {
         className="object-cover"
         style={{ WebkitMaskImage: mask, maskImage: mask }}
       />
-      {cupGlow && (
-        <motion.span
-          aria-hidden="true"
-          className="absolute rounded-full bg-blush mix-blend-soft-light blur-xl"
-          style={{
-            left: "45%",
-            top: "60%",
-            width: "24%",
-            height: "8%",
-            opacity: cupGlow,
-          }}
-        />
-      )}
     </div>
   );
 }
@@ -348,59 +376,44 @@ function AnnotationMark({
   a,
   p,
   desktop,
+  anchorRef,
 }: {
   a: Annotation;
   p: MotionValue<number>;
   desktop: boolean;
+  anchorRef: RefObject<HTMLDivElement | null>;
 }) {
   const show = useTransform(p, [a.at, a.at + 0.06, 0.72, 0.78], [0, 1, 1, 0]);
   const line = useTransform(p, [a.at + 0.02, a.at + 0.08], [0, 1]);
-  const centre = parseFloat(a.box.top) + parseFloat(a.box.height) / 2;
-  const left = parseFloat(a.box.left);
-  const right = left + parseFloat(a.box.width);
-  // Distance from the box to the device's edge, as a % of its width.
-  // The device is 74vh tall at 3:4, so 1% of its width is 0.555vh.
-  const outside = a.side === "right" ? 100 - right : left;
+  const right = a.side === "right";
 
+  // Positioned every frame by DeviceModel (left/top in px).
   return (
-    <>
-      <motion.span
+    <motion.div
+      ref={anchorRef}
+      className="absolute h-0 w-0"
+      style={{ opacity: show, left: 0, top: 0 }}
+    >
+      <span
         aria-hidden="true"
-        className="absolute border border-periwinkle/70"
-        style={{ ...a.box, opacity: show }}
-      >
-        {[
-          "-left-px -top-px",
-          "-right-px -top-px",
-          "-left-px -bottom-px",
-          "-right-px -bottom-px",
-        ].map((c) => (
-          <span key={c} className={`absolute h-1.5 w-1.5 bg-blush ${c}`} />
-        ))}
-      </motion.span>
-
+        className="absolute -left-1.5 -top-1.5 block h-3 w-3 rounded-full bg-blush shadow-[0_0_12px_rgb(232_204_210/0.9)]"
+      />
+      <span
+        aria-hidden="true"
+        className="absolute -left-4 -top-4 block h-8 w-8 animate-ping rounded-full border border-blush/60 motion-reduce:animate-none"
+      />
       {desktop && (
-        <motion.div
-          className={`absolute flex items-center ${a.side === "left" ? "flex-row-reverse" : ""}`}
-          style={{
-            top: `${centre}%`,
-            ...(a.side === "right"
-              ? { left: `${right}%` }
-              : { right: `${100 - left}%` }),
-            translateY: "-50%",
-            opacity: show,
-          }}
+        <div
+          className={`absolute top-0 flex -translate-y-1/2 items-center ${
+            right ? "left-3" : "right-3 flex-row-reverse"
+          }`}
         >
           <motion.span
-            className="block h-px bg-periwinkle/70"
-            style={{
-              width: `calc(${outside} * 0.555vh + 3rem)`,
-              scaleX: line,
-              originX: a.side === "right" ? 0 : 1,
-            }}
+            className="block h-px w-24 bg-periwinkle/80"
+            style={{ scaleX: line, originX: right ? 0 : 1 }}
           />
           <span
-            className={`flex flex-col whitespace-nowrap ${a.side === "right" ? "ml-3" : "mr-3 items-end text-right"}`}
+            className={`flex flex-col whitespace-nowrap ${right ? "ml-3" : "mr-3 items-end text-right"}`}
           >
             <span
               className="font-mono uppercase text-periwinkle"
@@ -411,13 +424,16 @@ function AnnotationMark({
             >
               {a.label}
             </span>
-            <span className="text-white" style={{ fontSize: "var(--text-base)" }}>
+            <span
+              className="text-white"
+              style={{ fontSize: "var(--text-base)" }}
+            >
               {a.value}
             </span>
           </span>
-        </motion.div>
+        </div>
       )}
-    </>
+    </motion.div>
   );
 }
 
@@ -453,6 +469,24 @@ function PhoneCaption({
         {a.value}
       </span>
     </motion.div>
+  );
+}
+
+function StaticDevice() {
+  const [webgl, setWebgl] = useState(true);
+  const onUnsupported = useCallback(() => setWebgl(false), []);
+  return webgl ? (
+    <DeviceModel
+      onUnsupported={onUnsupported}
+      className="mx-auto aspect-[4/3] w-full max-w-xl"
+    />
+  ) : (
+    <div
+      className="relative mx-auto w-full max-w-md"
+      style={{ aspectRatio: "1080 / 1440" }}
+    >
+      <DevicePlate />
+    </div>
   );
 }
 
@@ -509,20 +543,7 @@ function StaticHero() {
           </p>
         </div>
         <div className="col-span-12 lg:col-span-6">
-          <div
-            className="relative mx-auto w-full max-w-md"
-            style={{ aspectRatio: "1080 / 1440" }}
-          >
-            <DevicePlate />
-            {ANNOTATIONS.map((a) => (
-              <span
-                key={a.id}
-                aria-hidden="true"
-                className="absolute border border-periwinkle/70"
-                style={a.box}
-              />
-            ))}
-          </div>
+          <StaticDevice />
           <dl className="mx-auto mt-4 grid max-w-md grid-cols-3 gap-4">
             {ANNOTATIONS.map((a) => (
               <div key={a.id} className="flex flex-col">
