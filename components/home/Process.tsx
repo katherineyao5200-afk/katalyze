@@ -1,5 +1,6 @@
 "use client";
 
+import Lead from "@/components/Lead";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
@@ -71,7 +72,7 @@ export default function Process() {
               lineHeight: "var(--leading-tight)",
             }}
           >
-            Four steps, about a minute, every morning.
+            Four steps,<span className="text-periwinkle"> about a minute,</span> every morning.
           </h2>
         </div>
 
@@ -141,13 +142,13 @@ export default function Process() {
                 {step.title}
               </h3>
               <p
-                className="max-w-md text-white/75"
+                className="max-w-md text-[color:var(--muted-on-dark)]"
                 style={{
                   fontSize: "var(--text-base)",
                   lineHeight: "var(--leading-body)",
                 }}
               >
-                {step.body}
+                <Lead text={step.body} />
               </p>
             </li>
           ))}

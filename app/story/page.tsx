@@ -212,7 +212,7 @@ export default function StoryPage() {
                 lineHeight: "var(--leading-tight)",
               }}
             >
-              One founder, a few good partners.
+              One founder,<span className="text-periwinkle"> a few good partners.</span>
             </h2>
           </Reveal>
           <dl className="flex flex-col md:col-span-7 md:col-start-6">

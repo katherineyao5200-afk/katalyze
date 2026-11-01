@@ -10,6 +10,7 @@ import PageFX from "@/components/PageFX";
 import MotionProvider from "@/components/MotionProvider";
 import Nav from "@/components/Nav";
 import PersistentCTA from "@/components/PersistentCTA";
+import WaitlistModal from "@/components/WaitlistModal";
 import SmoothScroll from "@/components/SmoothScroll";
 
 const migra = localFont({
@@ -93,6 +94,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {children}
           <Footer />
           <PersistentCTA />
+          <WaitlistModal />
         </MotionProvider>
       </body>
     </html>

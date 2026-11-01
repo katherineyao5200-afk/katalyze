@@ -249,7 +249,7 @@ export default function FormulaLab() {
               lineHeight: "var(--leading-tight)",
             }}
           >
-            Not a quiz.
+            <span className="text-periwinkle">Not a quiz.</span>
             <br />
             A conversation.
           </h2>

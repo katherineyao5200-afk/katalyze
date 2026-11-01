@@ -101,7 +101,7 @@ export default function SkinChart() {
               lineHeight: "var(--leading-tight)",
             }}
           >
-            Every morning becomes a point on your skin&apos;s own star chart.
+            <span className="text-periwinkle">Every morning becomes a point on</span> your skin&apos;s own star chart.
           </h2>
           <p
             className="col-span-12 max-w-md self-end text-[color:var(--muted-on-dark)] lg:col-span-4 lg:col-start-9"

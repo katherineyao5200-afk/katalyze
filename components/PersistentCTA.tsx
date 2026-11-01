@@ -3,21 +3,11 @@
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import WaitlistForm from "@/components/WaitlistForm";
-
-const DISMISS_KEY = "katalyze-persistent-cta-dismissed";
+import { openWaitlist } from "@/components/WaitlistModal";
 
 export default function PersistentCTA() {
   const pathname = usePathname();
-  const [dismissed, setDismissed] = useState(true);
-  const [expanded, setExpanded] = useState(false);
   const [inlineFormVisible, setInlineFormVisible] = useState(false);
-
-  useEffect(() => {
-    // sessionStorage isn't available during SSR; sync the real value once mounted.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setDismissed(sessionStorage.getItem(DISMISS_KEY) === "true");
-  }, []);
 
   // Layout persists across client-side navigation, so re-scan for inline
   // forms whenever the route changes rather than only once on mount.
@@ -48,49 +38,19 @@ export default function PersistentCTA() {
     return () => observer.disconnect();
   }, [pathname]);
 
-  function dismiss() {
-    sessionStorage.setItem(DISMISS_KEY, "true");
-    setDismissed(true);
-  }
-
-  if (dismissed || inlineFormVisible) return null;
+  if (inlineFormVisible) return null;
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 flex justify-center px-4 pb-4 sm:inset-x-auto sm:right-6 sm:bottom-6 sm:justify-end sm:px-0 sm:pb-0">
-      {expanded ? (
-        <div
-          className="flex w-full max-w-sm flex-col gap-3 rounded-[var(--r-lg)] border border-[color:var(--rule-on-dark)] p-5 shadow-xl backdrop-blur-md"
-          style={{
-            borderRadius: "var(--r-lg)",
-            backgroundColor: "var(--midnight)",
-          }}
-        >
-          <div className="flex items-start justify-between gap-4">
-            <p className="text-white" style={{ fontSize: "var(--text-base)" }}>
-              Get early access.
-            </p>
-            <button
-              type="button"
-              onClick={dismiss}
-              aria-label="Dismiss"
-              className="flex h-11 w-11 shrink-0 items-center justify-center text-periwinkle transition-colors duration-[var(--dur-fast)] ease-[var(--ease-soft)] hover:text-blush focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush focus-visible:ring-offset-2 focus-visible:ring-offset-midnight rounded-sm"
-            >
-              ✕
-            </button>
-          </div>
-          <WaitlistForm source="persistent" />
-        </div>
-      ) : (
-        <button
-          type="button"
-          onClick={() => setExpanded(true)}
-          aria-expanded={expanded}
-          className="w-full rounded-full bg-blush px-6 py-3 font-medium text-midnight shadow-[0_8px_30px_rgb(21_24_46/0.5)] transition-colors duration-[var(--dur-fast)] ease-[var(--ease-soft)] hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush focus-visible:ring-offset-2 focus-visible:ring-offset-midnight sm:w-auto"
-          style={{ borderRadius: "var(--r-md)", fontSize: "var(--text-base)" }}
-        >
-          Get early access
-        </button>
-      )}
+      <button
+        type="button"
+        onClick={openWaitlist}
+        aria-haspopup="dialog"
+        className="w-full rounded-full bg-blush px-6 py-3 font-medium text-midnight shadow-[0_8px_30px_rgb(21_24_46/0.5)] transition-colors duration-[var(--dur-fast)] ease-[var(--ease-soft)] hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush focus-visible:ring-offset-2 focus-visible:ring-offset-midnight sm:w-auto"
+        style={{ fontSize: "var(--text-base)" }}
+      >
+        Get early access
+      </button>
     </div>
   );
 }

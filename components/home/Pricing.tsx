@@ -84,7 +84,7 @@ export default function Pricing() {
                 lineHeight: "var(--leading-tight)",
               }}
             >
-              One device. Refills that match how you use it.
+              One device.<span className="text-periwinkle"> Refills that match how you use it.</span>
             </h2>
           </div>
           <p

@@ -4,21 +4,23 @@ import Reveal from "@/components/Reveal";
 // Reference: truekind's plain value cards. The test is a reader who knows
 // nothing about skincare: one screen should tell them what this is, how
 // it works and how far along it is. Numbered chips instead of icons.
+// Each column leads with the answer, big; the label is small and the
+// detail is quiet, so a skimmer gets the point from the headlines alone.
 const ITEMS = [
   {
-    n: "01",
-    title: "What it is",
-    body: "A countertop skincare printer. Six cartridges sit inside: three base formulas and three active ingredients.",
+    n: "01 · What it is",
+    title: "A skincare printer for your counter.",
+    body: "Six cartridges sit inside: three base formulas and three active ingredients.",
   },
   {
-    n: "02",
-    title: "How it works",
-    body: "You rest a finger on a capacitive pad. It reads whether your skin is drier or more hydrated than usual, the app adds local weather and a quick check-in, and the device mixes one dose into a cup.",
+    n: "02 · How it works",
+    title: "It reads your skin, then mixes one dose.",
+    body: "Rest a finger on the capacitive pad. It reads whether your skin is drier or more hydrated than usual, the app adds local weather and a quick check-in, and one dose goes into a cup.",
   },
   {
-    n: "03",
-    title: "Where it stands",
-    body: "A working six-channel prototype, tested with simulated liquids. Next comes real ingredients and a manufacturing partner.",
+    n: "03 · Where it stands",
+    title: "A working prototype.",
+    body: "Six channels, tested with simulated liquids. Next come real ingredients and a manufacturing partner.",
   },
 ];
 

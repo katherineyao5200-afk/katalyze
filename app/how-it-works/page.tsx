@@ -1,3 +1,4 @@
+import Lead from "@/components/Lead";
 import type { Metadata } from "next";
 
 import Close from "@/components/home/Close";
@@ -105,13 +106,13 @@ export default function HowItWorksPage() {
                   {s.title}
                 </h2>
                 <p
-                  className="max-w-lg text-white/75"
+                  className="max-w-lg text-[color:var(--muted-on-dark)]"
                   style={{
                     fontSize: "var(--text-base)",
                     lineHeight: "var(--leading-body)",
                   }}
                 >
-                  {s.body}
+                  <Lead text={s.body} />
                 </p>
                 <ul className="mt-2 flex flex-wrap gap-x-6 gap-y-2 border-t border-[color:var(--rule-on-dark)] pt-4">
                   {s.facts.map((f) => (
@@ -150,7 +151,7 @@ export default function HowItWorksPage() {
                 lineHeight: "var(--leading-tight)",
               }}
             >
-              What it doesn&apos;t do, on purpose.
+              What it doesn&apos;t do,<span className="text-periwinkle"> on purpose.</span>
             </h2>
           </Reveal>
           <dl className="flex flex-col md:col-span-7 md:col-start-6">

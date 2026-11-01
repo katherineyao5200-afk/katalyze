@@ -79,14 +79,17 @@ export default function Inside() {
             className="font-display font-extralight text-midnight"
             style={{ fontSize: "var(--text-3xl)", lineHeight: "var(--leading-tight)" }}
           >
-            Six cartridges, one dose at a time.
+            Six cartridges,<span className="text-[color:var(--faint-on-light)]"> one dose at a time.</span>
           </h2>
           <p
             className="max-w-sm text-[color:var(--muted-on-light)]"
             style={{ fontSize: "var(--text-base)", lineHeight: "var(--leading-body)" }}
           >
-            Every dose fresh. Every ounce used. Nothing sits half-used in a
-            drawer, because each dose is mixed for one use.
+            <strong className="font-medium text-midnight">
+              Every dose fresh. Every ounce used.
+            </strong>{" "}
+            Nothing sits half-used in a drawer, because each dose is mixed for
+            one use.
           </p>
           <CartridgeIllustration className="mt-6 w-full max-w-sm" />
         </Reveal>

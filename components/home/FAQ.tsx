@@ -1,3 +1,4 @@
+import Lead from "@/components/Lead";
 import Reveal from "@/components/Reveal";
 
 // Plain answers to what a careful visitor asks before trusting a
@@ -54,7 +55,7 @@ export default function FAQ() {
               lineHeight: "var(--leading-tight)",
             }}
           >
-            Questions people ask first.
+            Questions<span className="text-periwinkle"> people ask first.</span>
           </h2>
         </Reveal>
         <div className="col-span-12 border-t border-[color:var(--rule-on-dark)] lg:col-span-7 lg:col-start-6">
@@ -82,7 +83,7 @@ export default function FAQ() {
                   lineHeight: "var(--leading-body)",
                 }}
               >
-                {f.a}
+                <Lead text={f.a} />
               </p>
             </details>
           ))}

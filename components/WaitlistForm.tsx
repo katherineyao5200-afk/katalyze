@@ -130,7 +130,13 @@ export default function WaitlistForm({
             ? "Joining…"
             : isDone
               ? "Joined"
-              : "Join the waitlist"}
+              : (
+                  <>
+                    {/* Narrow phones: a shorter label leaves room to type. */}
+                    <span className="max-[420px]:hidden">Join the waitlist</span>
+                    <span className="min-[421px]:hidden">Join</span>
+                  </>
+                )}
           {!light && status !== "loading" && !isDone && (
             <span
               aria-hidden="true"

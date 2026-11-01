@@ -1,9 +1,11 @@
+import Lead from "@/components/Lead";
 import type { Metadata } from "next";
 
 import DitherField from "@/components/DitherField";
 import PageHero from "@/components/PageHero";
 import Reveal from "@/components/Reveal";
 import Sparkle from "@/components/Sparkle";
+import WaitlistButton from "@/components/WaitlistButton";
 import WaitlistForm from "@/components/WaitlistForm";
 
 export const metadata: Metadata = {
@@ -114,13 +116,12 @@ export default function PricingPage() {
               The Katalyze device and one starter set of six cartridges, chosen
               from your first skin reading and setup questions.
             </p>
-            <a
-              href="#pricing-waitlist"
+            <WaitlistButton
               className="mt-2 inline-flex w-fit items-center gap-2 rounded-full bg-blush px-6 py-3 font-medium text-midnight transition-opacity hover:opacity-90"
               style={{ fontSize: "var(--text-sm)" }}
             >
-              Join the waitlist <span aria-hidden="true">→</span>
-            </a>
+              Get early access <span aria-hidden="true">→</span>
+            </WaitlistButton>
           </Reveal>
 
           {/* Phones: one block per plan. */}
@@ -283,7 +284,7 @@ export default function PricingPage() {
               lineHeight: "var(--leading-tight)",
             }}
           >
-            Questions before you join.
+            Questions<span className="text-periwinkle"> before you join.</span>
           </h2>
           <div className="flex flex-col md:col-span-7 md:col-start-6">
             {FAQS.map((faq) => (
@@ -311,7 +312,7 @@ export default function PricingPage() {
                     lineHeight: "var(--leading-body)",
                   }}
                 >
-                  {faq.answer}
+                  <Lead text={faq.answer} />
                 </p>
               </details>
             ))}
@@ -347,7 +348,7 @@ export default function PricingPage() {
               lineHeight: "var(--leading-tight)",
             }}
           >
-            The first run is about 2,000 units.
+            <span className="text-periwinkle">The first run is</span> about 2,000 units.
           </h2>
           <p
             className="max-w-md text-[color:var(--muted-on-dark)]"

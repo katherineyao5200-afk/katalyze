@@ -37,15 +37,17 @@ export default function Research() {
           >
             We measure.
             <br />
-            They guess.
+            <span className="text-periwinkle">They guess.</span>
           </h2>
           <p
             className="max-w-sm text-[color:var(--muted-on-dark)]"
             style={{ fontSize: "var(--text-base)", lineHeight: "var(--leading-body)" }}
           >
-            Skin changes daily. So should your formula. Before building
-            anything, Katherine surveyed about 75 skincare users to check
-            that the problem was real.
+            <strong className="font-medium text-white">
+              Skin changes daily. So should your formula.
+            </strong>{" "}
+            Before building anything, Katherine surveyed about 75 skincare
+            users to check that the problem was real.
           </p>
         </Reveal>
 

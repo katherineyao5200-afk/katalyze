@@ -118,7 +118,7 @@ export default function Anatomy() {
                 lineHeight: "var(--leading-tight)",
               }}
             >
-              What&apos;s inside, layer by layer.
+              What&apos;s inside,<span className="text-periwinkle"> layer by layer.</span>
             </h2>
             <p
               className="max-w-sm text-[color:var(--muted-on-dark)]"

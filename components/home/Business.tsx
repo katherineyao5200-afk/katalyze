@@ -93,7 +93,7 @@ export default function Business() {
               lineHeight: "var(--leading-tight)",
             }}
           >
-            A big market that still personalizes only once.
+            <span className="text-periwinkle">A big market that still</span> personalizes only once.
           </h2>
         </Reveal>
 

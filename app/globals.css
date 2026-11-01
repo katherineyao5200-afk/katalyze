@@ -702,3 +702,32 @@ body {
     animation: none;
   }
 }
+
+/* Waitlist pop-up (components/WaitlistModal.tsx) */
+.waitlist-modal::backdrop {
+  background: rgb(10 12 28 / 0.6);
+  backdrop-filter: blur(6px);
+}
+.waitlist-modal[open] {
+  animation: waitlist-in 420ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.waitlist-modal[open]::backdrop {
+  animation: waitlist-fade 300ms ease-out;
+}
+@keyframes waitlist-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+}
+@keyframes waitlist-fade {
+  from {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .waitlist-modal[open],
+  .waitlist-modal[open]::backdrop {
+    animation: none;
+  }
+}

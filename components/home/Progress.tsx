@@ -89,7 +89,7 @@ export default function Progress() {
               lineHeight: "var(--leading-tight)",
             }}
           >
-            The prototype works. Next come real ingredients.
+            The prototype works.<span className="text-periwinkle"> Next come real ingredients.</span>
           </h2>
         </Reveal>
 
