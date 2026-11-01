@@ -416,3 +416,37 @@ body {
     animation: none;
   }
 }
+
+/* Anatomy labels: DeviceModel flips data-side as the device turns. */
+.anat-line {
+  position: absolute;
+  top: 0;
+  width: 4rem;
+  height: 1px;
+  background: rgb(255 255 255 / 0.4);
+}
+.anat-text {
+  position: absolute;
+  top: -0.75rem;
+  display: flex;
+  width: 14rem;
+  flex-direction: column;
+  gap: 0.25rem;
+  text-shadow:
+    0 0 14px var(--canvas-deep),
+    0 0 4px var(--canvas-deep);
+}
+.anat-label[data-side="right"] .anat-line {
+  left: 0;
+}
+.anat-label[data-side="right"] .anat-text {
+  left: 5rem;
+}
+.anat-label[data-side="left"] .anat-line {
+  right: 0;
+}
+.anat-label[data-side="left"] .anat-text {
+  right: 5rem;
+  align-items: flex-end;
+  text-align: right;
+}

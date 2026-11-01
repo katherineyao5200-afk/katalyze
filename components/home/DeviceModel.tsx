@@ -19,6 +19,29 @@ import { RectAreaLightUniformsLib } from "three/examples/jsm/lights/RectAreaLigh
  */
 
 export type AnchorId = "cartridges" | "controls" | "cup";
+export type Layer =
+  | "shell"
+  | "bay"
+  | "cartridges"
+  | "glass"
+  | "controls"
+  | "tray"
+  | "feet";
+
+// Anatomy view: where each layer travels when the device is pulled
+// apart, and the point on it a label pins to (model units).
+export const EXPLODE: Record<
+  Layer,
+  { offset: [number, number, number]; anchor: [number, number, number] }
+> = {
+  shell: { offset: [0, 0.1, -1.4], anchor: [1.55, 0.3, -0.2] },
+  bay: { offset: [0, 0, -0.4], anchor: [0, 0.25, -0.1] },
+  cartridges: { offset: [0, 1.05, 0.25], anchor: [-1.0, 0.95, 0.45] },
+  glass: { offset: [0, 0.1, 1.3], anchor: [-1.4, 0.2, 0.9] },
+  controls: { offset: [-0.2, -0.2, 1.05], anchor: [-1.05, -0.68, 0.9] },
+  tray: { offset: [0.3, -0.45, 0.9], anchor: [1.25, -0.75, 1.1] },
+  feet: { offset: [0, -0.3, 0], anchor: [1.3, -1.2, 0.4] },
+};
 
 // Local-space bounds of each labelled part, for the tracking boxes.
 const PART_BOUNDS: Record<AnchorId, THREE.Box3> = {
@@ -118,6 +141,13 @@ function buildDevice() {
     disposables.push(x);
     return x;
   };
+  // Every part is tagged with the layer it belongs to, so the anatomy
+  // view can pull the device apart layer by layer.
+  let layer: Layer = "shell";
+  const add = (o: THREE.Object3D) => {
+    o.userData.layer = layer;
+    group.add(o);
+  };
 
   const shell = track(
     new THREE.MeshPhysicalMaterial({
@@ -134,6 +164,7 @@ function buildDevice() {
   shell.bumpMap = shell.roughnessMap;
   shell.bumpScale = 0.4;
 
+  layer = "shell";
   // Body: rounded outline with the window cut through, softly bevelled.
   const outline = roundedRect(
     -BODY_W / 2,
@@ -157,8 +188,9 @@ function buildDevice() {
   const bodyMesh = new THREE.Mesh(bodyGeo, shell);
   bodyMesh.castShadow = true;
   bodyMesh.receiveShadow = true;
-  group.add(bodyMesh);
+  add(bodyMesh);
 
+  layer = "bay";
   // Cavity liner: a slightly cooler, matte inner shell so the bay reads
   // as a recess, lit by a soft light strip along its ceiling.
   const lin = {
@@ -181,16 +213,16 @@ function buildDevice() {
   floor.rotation.x = -Math.PI / 2;
   floor.position.set(0, lin.y0, zMid);
   floor.receiveShadow = true;
-  group.add(floor);
+  add(floor);
   const ceil = new THREE.Mesh(plane(lin.x1 - lin.x0, linerDepth), linerMat);
   ceil.rotation.x = Math.PI / 2;
   ceil.position.set(0, lin.y1, zMid);
-  group.add(ceil);
+  add(ceil);
   [lin.x0, lin.x1].forEach((x) => {
     const wall = new THREE.Mesh(plane(linerDepth, lin.y1 - lin.y0), linerMat);
     wall.rotation.y = Math.PI / 2;
     wall.position.set(x, (lin.y0 + lin.y1) / 2, zMid);
-    group.add(wall);
+    add(wall);
   });
   const strip = new THREE.Mesh(
     plane(lin.x1 - lin.x0 - 0.1, 0.05),
@@ -198,12 +230,13 @@ function buildDevice() {
   );
   strip.rotation.x = Math.PI / 2;
   strip.position.set(0, lin.y1 - 0.002, 0.45);
-  group.add(strip);
+  add(strip);
   const bayLight = new THREE.RectAreaLight(0xf3f0ff, 6, lin.x1 - lin.x0, 0.3);
   bayLight.position.set(0, lin.y1 - 0.01, 0.4);
   bayLight.lookAt(0, lin.y0, 0.4);
-  group.add(bayLight);
+  add(bayLight);
 
+  layer = "bay";
   // Back wall of the cartridge bay.
   const bayGeo = track(
     new THREE.ShapeGeometry(
@@ -216,8 +249,9 @@ function buildDevice() {
     track(new THREE.MeshStandardMaterial({ color: 0xe2e4ef, roughness: 0.85 })),
   );
   bay.position.z = -0.1;
-  group.add(bay);
+  add(bay);
 
+  layer = "cartridges";
   // Cartridges: three bases, three actives.
   const bottle = (
     x: number,
@@ -294,7 +328,7 @@ function buildDevice() {
       g.add(tip);
     }
     g.position.set(x, 0, 0.32);
-    group.add(g);
+    add(g);
   };
   bottle(-0.98, 0.56, 0.19, 0xb9c1e2, false);
   bottle(-0.52, 0.56, 0.19, 0xc9cde6, false);
@@ -303,6 +337,7 @@ function buildDevice() {
   bottle(0.66, 0.34, 0.115, 0xeec8cf, true);
   bottle(0.96, 0.34, 0.115, 0xeec8cf, true);
 
+  layer = "glass";
   // Frosted glass over the bay.
   const glass = new THREE.Mesh(
     bayGeo,
@@ -318,8 +353,9 @@ function buildDevice() {
     ),
   );
   glass.position.z = FRONT - 0.08;
-  group.add(glass);
+  add(glass);
 
+  layer = "controls";
   // Display and three buttons.
   const display = new THREE.Mesh(
     track(
@@ -335,7 +371,7 @@ function buildDevice() {
     ),
   );
   display.position.z = FRONT + 0.004;
-  group.add(display);
+  add(display);
   const btnG = track(new THREE.CylinderGeometry(0.065, 0.07, 0.04, 24));
   const btnM = track(
     new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.3 }),
@@ -344,9 +380,10 @@ function buildDevice() {
     const b = new THREE.Mesh(btnG, btnM);
     b.rotation.x = Math.PI / 2;
     b.position.set(x, -0.68, FRONT + 0.02);
-    group.add(b);
+    add(b);
   });
 
+  layer = "tray";
   // Cup tray: a shallow oval bowl at the front right.
   const bowlG = track(
     new THREE.SphereGeometry(
@@ -373,7 +410,7 @@ function buildDevice() {
   bowl.castShadow = true;
   bowl.scale.set(1.45, 0.62, 0.85);
   bowl.position.set(0.6, -0.56, FRONT + 0.2);
-  group.add(bowl);
+  add(bowl);
 
   // The dose: a thin blush disc inside the bowl, visible when lit.
   const doseMat = track(
@@ -392,10 +429,11 @@ function buildDevice() {
   dose.rotation.x = -Math.PI / 2;
   dose.scale.set(1.35, 0.72, 1);
   dose.position.set(0.6, -0.62, FRONT + 0.2);
-  group.add(dose);
+  add(dose);
 
   // ---- Fine detail ----
 
+  layer = "glass";
   // Window frame: a thin raised clear-plastic surround.
   const frameShape = roundedRect(
     WIN.x0 - 0.1,
@@ -436,8 +474,9 @@ function buildDevice() {
     ),
   );
   frame.position.z = FRONT - 0.035;
-  group.add(frame);
+  add(frame);
 
+  layer = "shell";
   // Panel seam around the front face.
   const seamShape = roundedRect(
     -BODY_W / 2 + 0.06,
@@ -466,8 +505,9 @@ function buildDevice() {
     ),
   );
   seam.position.z = FRONT + 0.003;
-  group.add(seam);
+  add(seam);
 
+  layer = "controls";
   // Display screen: the K mark and a "Ready" line, softly backlit.
   const screenTex = track(
     canvasTexture(256, 128, (g) => {
@@ -495,8 +535,9 @@ function buildDevice() {
     track(new THREE.MeshBasicMaterial({ map: screenTex, toneMapped: false })),
   );
   screen.position.set(-1.08, -0.68, FRONT + 0.008);
-  group.add(screen);
+  add(screen);
 
+  layer = "controls";
   // Button rings.
   const ringG = track(new THREE.TorusGeometry(0.082, 0.008, 8, 32));
   const ringM = track(
@@ -505,9 +546,10 @@ function buildDevice() {
   [-0.68, -0.48, -0.28].forEach((x) => {
     const r = new THREE.Mesh(ringG, ringM);
     r.position.set(x, -0.68, FRONT + 0.006);
-    group.add(r);
+    add(r);
   });
 
+  layer = "cartridges";
   // Cartridge labels: base B-01..03, active A-01..03.
   const labelFor = (text: string) =>
     track(
@@ -551,9 +593,10 @@ function buildDevice() {
     );
     const l = new THREE.Mesh(lg, lm);
     l.position.set(x, WIN.y0 + 0.16 + h * 0.42, 0.32);
-    group.add(l);
+    add(l);
   });
 
+  layer = "tray";
   // Cup ledge: the lower lip the cup sits on.
   const ledgeShape = roundedRect(-0.12, -0.45, 1.32, 0.1, 0.14);
   const ledge = new THREE.Mesh(
@@ -573,8 +616,9 @@ function buildDevice() {
   ledge.position.set(0, -1.0, FRONT);
   ledge.castShadow = true;
   ledge.receiveShadow = true;
-  group.add(ledge);
+  add(ledge);
 
+  layer = "feet";
   // Rubber feet.
   const footG = track(new THREE.CylinderGeometry(0.12, 0.13, 0.05, 24));
   const footM = track(
@@ -588,7 +632,7 @@ function buildDevice() {
   ].forEach(([x, z]) => {
     const f = new THREE.Mesh(footG, footM);
     f.position.set(x, -BODY_H / 2 - BEVEL * 0 - 0.17, z);
-    group.add(f);
+    add(f);
   });
 
   return { group, disposables, doseMat };
@@ -612,7 +656,14 @@ export default function DeviceModel({
   boxes,
   className = "",
   onUnsupported,
+  mode = "hero",
+  explode,
+  labels,
 }: {
+  /** "anatomy": pulled apart by `explode` (0-1), turned by dragging. */
+  mode?: "hero" | "anatomy";
+  explode?: MotionValue<number>;
+  labels?: Partial<Record<Layer, RefObject<HTMLElement | null>>>;
   progress?: MotionValue<number>;
   anchors?: Partial<Record<AnchorId, RefObject<HTMLElement | null>>>;
   boxes?: Partial<Record<AnchorId, RefObject<HTMLElement | null>>>;
@@ -686,6 +737,9 @@ export default function DeviceModel({
     scene.add(rimR);
 
     const { group, disposables, doseMat } = buildDevice();
+    const anatomy = mode === "anatomy";
+    const basePos = new Map<THREE.Object3D, THREE.Vector3>();
+    group.children.forEach((c) => basePos.set(c, c.position.clone()));
     const pivot = new THREE.Group();
     pivot.add(group);
     scene.add(pivot);
@@ -726,8 +780,9 @@ export default function DeviceModel({
       // Fit about 4.4 x 3.0 units of model, whichever bound is tighter.
       const vHalf = THREE.MathUtils.degToRad(camera.fov / 2);
       const hHalf = Math.atan(Math.tan(vHalf) * camera.aspect);
+      const room = anatomy ? (camera.aspect < 1 ? 1.45 : 1.9) : 1;
       const dist =
-        Math.max(2.2 / Math.tan(hHalf), 1.5 / Math.tan(vHalf)) * 1.08;
+        Math.max(2.2 / Math.tan(hHalf), 1.5 / Math.tan(vHalf)) * 1.08 * room;
       camera.position.set(0, dist * 0.18, dist);
       camera.lookAt(0, -0.1, 0);
       camera.updateProjectionMatrix();
@@ -785,8 +840,98 @@ export default function DeviceModel({
     const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const clock = new THREE.Clock();
 
+    // Drag to turn (anatomy only), with a little glide after release.
+    let dragYaw = 0;
+    let dragVel = 0;
+    let dragging = false;
+    let lastX = 0;
+    const onDown = (e: PointerEvent) => {
+      dragging = true;
+      lastX = e.clientX;
+      dragVel = 0;
+      container!.setPointerCapture(e.pointerId);
+      container!.style.cursor = "grabbing";
+    };
+    const onMove = (e: PointerEvent) => {
+      if (!dragging) return;
+      const dx = e.clientX - lastX;
+      lastX = e.clientX;
+      dragVel = dx * 0.006;
+      dragYaw += dragVel;
+      if (still) frame();
+    };
+    const onUp = () => {
+      dragging = false;
+      container!.style.cursor = "grab";
+    };
+    if (anatomy) {
+      container.style.cursor = "grab";
+      container.style.touchAction = "pan-y";
+      container.addEventListener("pointerdown", onDown);
+      container.addEventListener("pointermove", onMove);
+      container.addEventListener("pointerup", onUp);
+      container.addEventListener("pointercancel", onUp);
+    }
+
+    const pt = new THREE.Vector3();
+    function frameAnatomy(t: number) {
+      const raw = explode?.get() ?? 1;
+      const e = raw * raw * (3 - 2 * raw); // smoothstep
+      for (const [c, base] of basePos) {
+        const l = c.userData.layer as Layer | undefined;
+        if (!l) continue;
+        const o = EXPLODE[l].offset;
+        c.position.set(base.x + o[0] * e, base.y + o[1] * e, base.z + o[2] * e);
+      }
+      if (!dragging) {
+        dragYaw += dragVel;
+        dragVel *= 0.94;
+        // Ease back to the labelled view once the glide has settled.
+        if (Math.abs(dragVel) < 0.002) dragYaw *= 0.97;
+      }
+      dragYaw = Math.max(-1.1, Math.min(1.1, dragYaw));
+      const drift = still ? 0 : Math.sin(t * 0.4) * 0.05;
+      pivot.rotation.set(0.32, -0.62 + drift + dragYaw, 0);
+      pivot.position.y = 0.3;
+      renderer.render(scene, camera);
+
+      if (!labels) return;
+      const w = container!.clientWidth;
+      const h = container!.clientHeight;
+      group.updateWorldMatrix(true, false);
+      // Labels sit on whichever side of the device their part is on
+      // right now, so turning it never crosses a label over the model.
+      pt.set(0, 0, 0).applyMatrix4(group.matrixWorld).project(camera);
+      const midX = ((pt.x + 1) / 2) * w;
+      for (const l of Object.keys(EXPLODE) as Layer[]) {
+        const el = labels[l]?.current;
+        if (!el) continue;
+        const { offset: o, anchor: a } = EXPLODE[l];
+        pt.set(a[0] + o[0] * e, a[1] + o[1] * e, a[2] + o[2] * e)
+          .applyMatrix4(group.matrixWorld)
+          .project(camera);
+        const sx = ((pt.x + 1) / 2) * w;
+        el.dataset.side = sx < midX ? "left" : "right";
+        el.style.left = `${sx}px`;
+        el.style.top = `${((1 - pt.y) / 2) * h}px`;
+        // Labels belong to the labelled view: they fade while the
+        // device is turned away from it.
+        const turned = Math.max(
+          0,
+          Math.min(1, (Math.abs(dragYaw) - 0.15) / 0.25),
+        );
+        el.style.opacity = String(
+          Math.max(0, (e - 0.55) / 0.45) * (1 - turned),
+        );
+      }
+    }
+
     function frame() {
       const t = clock.getElapsedTime();
+      if (anatomy) {
+        frameAnatomy(t);
+        return;
+      }
       const p = progress?.get() ?? 0.4;
       // Turn: three-quarter from the right, settle to near-front while
       // the parts are read, then swing on through for the close.
@@ -835,14 +980,19 @@ export default function DeviceModel({
     io.observe(container);
 
     // Reduced motion: render on scroll changes only, no idle drift.
+    const driver = progress ?? explode;
     const unsub =
-      still && progress
-        ? progress.on("change", () => visible && frame())
+      still && driver
+        ? driver.on("change", () => visible && frame())
         : undefined;
     frame();
 
     return () => {
       cancelAnimationFrame(raf);
+      container.removeEventListener("pointerdown", onDown);
+      container.removeEventListener("pointermove", onMove);
+      container.removeEventListener("pointerup", onUp);
+      container.removeEventListener("pointercancel", onUp);
       io.disconnect();
       ro.disconnect();
       unsub?.();
@@ -857,7 +1007,12 @@ export default function DeviceModel({
       renderer.dispose();
       renderer.domElement.remove();
     };
-  }, [progress, anchors, boxes, onUnsupported]);
+  }, [progress, anchors, boxes, onUnsupported, mode, explode, labels]);
 
-  return <div ref={containerRef} className={`relative ${className}`} />;
+  return (
+    <div
+      ref={containerRef}
+      className={className.includes("absolute") ? className : `relative ${className}`}
+    />
+  );
 }

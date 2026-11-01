@@ -5,6 +5,7 @@ import Pricing from "@/components/home/Pricing";
 import Close from "@/components/home/Close";
 import Founder from "@/components/home/Founder";
 import HomeHero from "@/components/home/HomeHero";
+import Anatomy from "@/components/home/Anatomy";
 import FormulaLab from "@/components/home/FormulaLab";
 import Inside from "@/components/home/Inside";
 import Process from "@/components/home/Process";
@@ -20,6 +21,7 @@ export default function Home() {
       <AtAGlance />
       <Research />
       <Process />
+      <Anatomy />
       <Inside />
       <FormulaLab />
       <Progress />
