@@ -522,7 +522,12 @@ export default function ParticleField({
     }
 
     function frame() {
+      // The entry gate covers the page: don't spend the GPU underneath it.
       if (!running) return;
+      if (document.documentElement.dataset.gate === "open") {
+        rafId = requestAnimationFrame(frame);
+        return;
+      }
       const t = (performance.now() - startTime) / 1000;
       velocityVariable.material.uniforms.uTime.value = t;
 

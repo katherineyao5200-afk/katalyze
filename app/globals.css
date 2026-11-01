@@ -248,3 +248,142 @@ body {
     transform: scaleX(1);
   }
 }
+
+/* Gate: the pulsing start point of the K's first stroke. */
+@keyframes gate-pulse {
+  0%,
+  100% {
+    r: 7;
+    opacity: 1;
+  }
+  50% {
+    r: 12;
+    opacity: 0.55;
+  }
+}
+.gate-pulse {
+  animation: gate-pulse 1.6s var(--ease-glide) infinite;
+}
+
+/* Formula preview (FormulaLab) */
+.lab-liquid {
+  transition: height 900ms var(--ease-glide);
+}
+.lab-meniscus {
+  animation: lab-wobble 3.2s ease-in-out infinite;
+  transform-origin: center;
+}
+@keyframes lab-wobble {
+  0%,
+  100% {
+    transform: scaleY(1) translateY(0);
+  }
+  50% {
+    transform: scaleY(1.8) translateY(1px);
+  }
+}
+.lab-live {
+  animation: lab-live 1.8s ease-in-out infinite;
+}
+@keyframes lab-live {
+  50% {
+    opacity: 0.25;
+  }
+}
+.lab-drops span {
+  opacity: 0;
+  animation: lab-drop 700ms var(--ease-glide) forwards;
+}
+@keyframes lab-drop {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(42px);
+  }
+}
+.lab-fill {
+  animation: lab-slosh 4s ease-in-out infinite;
+  transform-origin: bottom;
+}
+@keyframes lab-slosh {
+  0%,
+  100% {
+    transform: skewY(0deg);
+  }
+  50% {
+    transform: skewY(-2deg);
+  }
+}
+.lab-range {
+  appearance: none;
+  height: 2px;
+  background: var(--rule-on-dark);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.lab-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--blush);
+  box-shadow: 0 0 0 6px color-mix(in oklab, var(--blush) 20%, transparent);
+  transition: box-shadow var(--dur-fast);
+}
+.lab-range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--blush);
+}
+.lab-range:hover::-webkit-slider-thumb,
+.lab-range:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 10px color-mix(in oklab, var(--blush) 25%, transparent);
+}
+.lab-range:focus-visible {
+  outline: 2px solid var(--blush);
+  outline-offset: 6px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .lab-liquid {
+    transition: none;
+  }
+  .lab-meniscus,
+  .lab-live,
+  .lab-fill,
+  .lab-drops span {
+    animation: none;
+  }
+}
+
+/* Pointer spotlight on cards (PageFX sets --mx/--my/--spot-o). */
+.spot {
+  position: relative;
+  isolation: isolate;
+}
+.spot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: var(--spot-o, 0);
+  transition: opacity var(--dur-base) var(--ease-glide);
+  background: radial-gradient(
+    240px circle at var(--mx, 50%) var(--my, 50%),
+    color-mix(in oklab, var(--periwinkle) 30%, transparent),
+    transparent 70%
+  );
+}
+@media (prefers-reduced-motion: reduce) {
+  .spot::after {
+    display: none;
+  }
+}

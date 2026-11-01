@@ -108,7 +108,7 @@ export default function Pricing() {
           className="grid grid-cols-1 gap-px overflow-hidden border border-[color:var(--rule-on-dark)] bg-[color:var(--rule-on-dark)] md:grid-cols-2 lg:grid-cols-4"
           style={{ borderRadius: "var(--r-lg)" }}
         >
-          <Reveal className="flex flex-col gap-6 bg-[color:var(--canvas-deep)] p-8">
+          <Reveal className="spot flex flex-col gap-6 bg-[color:var(--canvas-deep)] p-8">
             <span
               className="font-mono uppercase text-periwinkle"
               style={{
@@ -149,7 +149,7 @@ export default function Pricing() {
               key={plan.id}
               variant="fade"
               delayMs={(i + 1) * 90}
-              className={`relative flex flex-col gap-6 p-8 ${
+              className={`spot flex flex-col gap-6 p-8 ${
                 "featured" in plan ? "bg-indigo/40" : "bg-midnight"
               }`}
             >

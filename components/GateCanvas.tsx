@@ -39,13 +39,14 @@ uniform sampler2D uVelocity;
 uniform vec2 uPointer;
 uniform vec2 uPointerVelocity;
 uniform float uPointerActive;
+uniform float uAspect;
 
 void main() {
   vec2 vel = texture(uVelocity, vUv).xy;
   vec2 backUv = vUv - vel * ${DT};
   vec2 advected = texture(uVelocity, backUv).xy * ${DISSIPATION};
 
-  float d = distance(vUv, uPointer);
+  float d = length((vUv - uPointer) * vec2(uAspect, 1.0));
   if (uPointerActive > 0.5 && d < ${INJECT_RADIUS}) {
     float falloff = 1.0 - d / ${INJECT_RADIUS};
     advected += uPointerVelocity * falloff * 0.6;
@@ -62,6 +63,7 @@ uniform sampler2D uDye;
 uniform sampler2D uVelocity;
 uniform vec2 uPointer;
 uniform float uPointerActive;
+uniform float uAspect;
 uniform vec3 uInjectColor;
 
 void main() {
@@ -69,7 +71,7 @@ void main() {
   vec2 backUv = vUv - vel * ${DT};
   vec3 advected = texture(uDye, backUv).rgb * ${DYE_DISSIPATION};
 
-  float d = distance(vUv, uPointer);
+  float d = length((vUv - uPointer) * vec2(uAspect, 1.0));
   if (uPointerActive > 0.5 && d < ${INJECT_RADIUS}) {
     float falloff = smoothstep(${INJECT_RADIUS}, 0.0, d);
     advected += uInjectColor * falloff * 0.35;
@@ -93,7 +95,6 @@ void main() {
 
 // Dye palette ramp: midnight -> indigo -> periwinkle -> blush (§11),
 // one hue family, picked by pointer speed like the particle field.
-const MIDNIGHT: [number, number, number] = [0x1f / 255, 0x24 / 255, 0x41 / 255];
 const INDIGO: [number, number, number] = [0x31 / 255, 0x3f / 255, 0x79 / 255];
 const PERIWINKLE: [number, number, number] = [0x8a / 255, 0x8d / 255, 0xb3 / 255];
 const BLUSH: [number, number, number] = [0xe8 / 255, 0xcc / 255, 0xd2 / 255];
@@ -167,17 +168,8 @@ export function canUseFluidGate(): boolean {
   }
 }
 
-interface GateCanvasProps {
-  onPathLength: (delta: number) => void;
-}
-
-export default function GateCanvas({ onPathLength }: GateCanvasProps) {
+export default function GateCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const onPathLengthRef = useRef(onPathLength);
-
-  useEffect(() => {
-    onPathLengthRef.current = onPathLength;
-  });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -253,14 +245,18 @@ export default function GateCanvas({ onPathLength }: GateCanvasProps) {
     let pointerActive = false;
     let pointer = { x: 0.5, y: 0.5 };
     let pointerVel = { x: 0, y: 0 };
-    let lastPointer = { x: 0.5, y: 0.5 };
+    // null until the first event, so the pointer entering from the edge
+    // of the window doesn't register as one huge fling across it.
+    let lastPointer: { x: number; y: number } | null = null;
+    let lastMoveAt = 0;
     let injectColor: [number, number, number] = INDIGO;
 
     function onMove(event: PointerEvent) {
       const rect = canvas!.getBoundingClientRect();
       const x = (event.clientX - rect.left) / rect.width;
       const y = 1 - (event.clientY - rect.top) / rect.height;
-      const prevPointer = lastPointer;
+      const prevPointer = lastPointer ?? { x, y };
+      lastMoveAt = performance.now();
 
       pointerVel = { x: (x - prevPointer.x) * 5, y: (y - prevPointer.y) * 5 };
       lastPointer = { x, y };
@@ -268,19 +264,16 @@ export default function GateCanvas({ onPathLength }: GateCanvasProps) {
       pointerActive = true;
 
       const speed = Math.min(1, Math.hypot(pointerVel.x, pointerVel.y) * 3);
+      // Even a slow, careful trace has to show up, so the ramp starts
+      // between indigo and periwinkle rather than at midnight.
       injectColor =
-        speed > 0.6
-          ? lerp3(PERIWINKLE, BLUSH, (speed - 0.6) / 0.4)
-          : speed > 0.25
-            ? lerp3(INDIGO, PERIWINKLE, (speed - 0.25) / 0.35)
-            : lerp3(MIDNIGHT, INDIGO, speed / 0.25);
-
-      const dxPx = (x - prevPointer.x) * rect.width;
-      const dyPx = (y - prevPointer.y) * rect.height;
-      onPathLengthRef.current(Math.hypot(dxPx, dyPx));
+        speed > 0.45
+          ? lerp3(PERIWINKLE, BLUSH, (speed - 0.45) / 0.55)
+          : lerp3(INDIGO, PERIWINKLE, 0.5 + speed / 0.9);
     }
     function onLeave() {
       pointerActive = false;
+      lastPointer = null;
     }
 
     canvas.addEventListener("pointermove", onMove);
@@ -299,6 +292,10 @@ export default function GateCanvas({ onPathLength }: GateCanvasProps) {
     }
 
     function frame() {
+      // A resting pointer stops painting, and its push fades out,
+      // instead of streaming dye in its last direction forever.
+      if (performance.now() - lastMoveAt > 80) pointerActive = false;
+      pointerVel = { x: pointerVel.x * 0.85, y: pointerVel.y * 0.85 };
       // Velocity step
       const [vRead, vWrite] = velocityFbos;
       gl!.activeTexture(gl!.TEXTURE0);
@@ -315,6 +312,7 @@ export default function GateCanvas({ onPathLength }: GateCanvasProps) {
           gl!.getUniformLocation(velocityProgram, "uPointerActive"),
           pointerActive ? 1 : 0,
         );
+        gl!.uniform1f(gl!.getUniformLocation(velocityProgram, "uAspect"), simW / simH);
       });
       velocityFbos = [vWrite, vRead];
 
@@ -338,6 +336,7 @@ export default function GateCanvas({ onPathLength }: GateCanvasProps) {
           injectColor[1],
           injectColor[2],
         );
+        gl!.uniform1f(gl!.getUniformLocation(dyeProgram, "uAspect"), simW / simH);
       });
       dyeFbos = [dWrite, dRead];
 

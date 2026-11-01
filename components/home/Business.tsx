@@ -207,7 +207,7 @@ export default function Business() {
             {ROADMAP.map((r, i) => (
               <li
                 key={r.phase}
-                className={`flex flex-col gap-4 p-6 ${i === 0 ? "bg-indigo/50" : "bg-midnight"}`}
+                className={`spot flex flex-col gap-4 p-6 ${i === 0 ? "bg-indigo/50" : "bg-midnight"}`}
               >
                 <span
                   className="flex items-center justify-between font-mono uppercase"

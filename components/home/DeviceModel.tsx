@@ -822,7 +822,8 @@ export default function DeviceModel({
     let raf = 0;
     let visible = true;
     const loop = () => {
-      frame();
+      // Skip rendering while the entry gate covers the page.
+      if (document.documentElement.dataset.gate !== "open") frame();
       raf = requestAnimationFrame(loop);
     };
     const io = new IntersectionObserver(([e]) => {

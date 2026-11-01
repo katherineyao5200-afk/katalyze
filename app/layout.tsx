@@ -6,6 +6,7 @@ import "./globals.css";
 
 import Footer from "@/components/Footer";
 import Gate from "@/components/Gate";
+import PageFX from "@/components/PageFX";
 import MotionProvider from "@/components/MotionProvider";
 import Nav from "@/components/Nav";
 import PersistentCTA from "@/components/PersistentCTA";
@@ -79,6 +80,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col">
         <MotionProvider>
           <Gate />
+          <PageFX />
           <SmoothScroll />
           <Nav />
           {children}
