@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
+import StepScene from "@/components/home/StepScene";
 
 const STEPS: { n: string; title: string; body: string }[] = [
   {
@@ -76,20 +77,13 @@ export default function Process() {
 
         {/* cols 1-5: pinned device */}
         <div className="col-span-12 md:col-span-5">
-          <div className="sticky top-24 hidden h-[70vh] flex-col justify-center gap-6 md:flex">
-            {/* The step number, set big: an editorial index, not an icon. */}
-            <div
-              aria-hidden="true"
-              className="overflow-hidden font-display font-extralight text-white tabular-nums"
-              style={{
-                fontSize: "clamp(160px, 20vw, 320px)",
-                lineHeight: 0.85,
-              }}
-            >
-              <span key={active} className="step-num block">
-                {STEPS[active].n}
-              </span>
-            </div>
+          <div className="sticky top-24 hidden h-[78vh] flex-col justify-center gap-6 md:flex">
+            {/* The active step, drawn: replays each time the step changes. */}
+            <StepScene
+              key={active}
+              step={active}
+              className="w-full max-w-[440px]"
+            />
             <div className="flex max-w-xs gap-2" aria-hidden="true">
               {STEPS.map((s, i) => (
                 <span
@@ -107,7 +101,7 @@ export default function Process() {
                 letterSpacing: "var(--track-label)",
               }}
             >
-              {STEPS[active].title} · step {active + 1} of {STEPS.length}
+              {STEPS[active].n} · {STEPS[active].title}
             </p>
           </div>
         </div>
@@ -123,6 +117,11 @@ export default function Process() {
               className="flex flex-col gap-3 border-t border-[color:var(--rule-on-dark)] py-10 transition-opacity duration-[var(--dur-base)] ease-[var(--ease-soft)] md:min-h-[55vh] md:justify-center"
               style={{ opacity: i === active ? 1 : 0.4 }}
             >
+              <StepScene
+                key={i === active ? "on" : "off"}
+                step={i}
+                className="mb-2 w-full max-w-[320px] md:hidden"
+              />
               <span
                 className="font-mono uppercase text-periwinkle"
                 style={{
