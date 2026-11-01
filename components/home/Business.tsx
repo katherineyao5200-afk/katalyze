@@ -1,4 +1,3 @@
-import Chip from "@/components/home/Chip";
 import Reveal from "@/components/Reveal";
 
 // Market and landscape, from the pitch deck (v9, Sep 2026, pp. 10, 18,
@@ -86,7 +85,6 @@ export default function Business() {
         style={{ maxWidth: "var(--max-w)", paddingInline: "var(--margin)" }}
       >
         <Reveal className="flex max-w-3xl flex-col gap-6">
-          <Chip>The business</Chip>
           <h2
             id="business-title"
             className="font-display font-extralight text-white"

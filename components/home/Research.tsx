@@ -1,4 +1,3 @@
-import Chip from "@/components/home/Chip";
 import CountUp from "@/components/CountUp";
 import Reveal from "@/components/Reveal";
 
@@ -32,7 +31,6 @@ export default function Research() {
         }}
       >
         <Reveal className="col-span-12 flex flex-col gap-6 lg:col-span-4">
-          <Chip>The problem</Chip>
           <h2
             className="font-display font-extralight text-white"
             style={{ fontSize: "var(--text-3xl)", lineHeight: "var(--leading-tight)" }}

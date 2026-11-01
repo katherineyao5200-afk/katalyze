@@ -6,6 +6,8 @@ You are building the marketing website for **Katalyze**, a countertop device tha
 
 **Use the `frontend-design` skill (`.claude/skills/frontend-design/`) for any visual or layout work.** Where it disagrees with `docs/DESIGN-SYSTEM.md`, the design system wins. In particular, the mono micro-labels and bracketed readouts are a deliberate choice taken from the reference sites, not template chrome: keep them, but make them do real work (leader lines to the thing they label, real values only).
 
+**The `scroll-craft` skill (`.claude/skills/scroll-craft/`, MIT, from github.com/nateherkai/scroll-craft) is installed for scroll and layout decisions.** Use its taste floor and refuse list (`references/taste.md`): at most one eyebrow label per three sections, no scroll cues or section counters, no identical card grids, varied devices section to section. Its static-HTML engine and kie.ai scripts are not used here; this site stays Next.js. Where it disagrees with `docs/DESIGN-SYSTEM.md` on brand tokens or fonts, the design system wins.
+
 **Before changing any section's layout, open its reference image.** `docs/REFERENCES.md` maps each section to a screenshot in `docs/references/`. Read the image itself, not just the description.
 
 **The full spec is in `docs/PRD.md`. Read it before starting work on any new area of the site.**

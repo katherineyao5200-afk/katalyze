@@ -19,7 +19,6 @@ import {
   type RefObject,
 } from "react";
 
-import Chip from "@/components/home/Chip";
 import DeviceModel, { type AnchorId } from "@/components/home/DeviceModel";
 import HeroHeadline from "@/components/HeroHeadline";
 import WaitlistForm from "@/components/WaitlistForm";
@@ -236,7 +235,6 @@ function ScrollHero() {
             style={{ maxWidth: "var(--max-w)", paddingInline: "var(--margin)" }}
           >
             <div className="flex max-w-xl flex-col gap-6 pt-16">
-              <Chip>Now developing · Working prototype</Chip>
               <HeroHeadline compact />
               <p
                 className="max-w-md text-white/85"
@@ -314,29 +312,6 @@ function ScrollHero() {
           </div>
         </motion.div>
 
-        {/* Progress readout, bottom left so it clears the floating CTA */}
-        <div
-          aria-hidden="true"
-          className="absolute bottom-6 left-[var(--margin)] hidden items-center gap-3 font-mono uppercase text-periwinkle lg:flex"
-          style={{
-            fontSize: "var(--text-2xs)",
-            letterSpacing: "var(--track-label)",
-          }}
-        >
-          <span>[{String(beat).padStart(2, "0")} / 03]</span>
-          <span className="relative block h-px w-24 bg-[color:var(--rule-on-dark)]">
-            <motion.span
-              className="absolute inset-y-0 left-0 block w-full origin-left bg-periwinkle"
-              style={{ scaleX: scrollYProgress }}
-            />
-          </span>
-          <motion.span
-            className="text-[color:var(--faint-on-dark)]"
-            style={{ opacity: introOpacity }}
-          >
-            Scroll to read the device
-          </motion.span>
-        </div>
       </div>
     </section>
   );
@@ -527,7 +502,6 @@ function StaticHero() {
         }}
       >
         <div className="col-span-12 flex flex-col gap-6 lg:col-span-6">
-          <Chip>Now developing · Working prototype</Chip>
           <HeroHeadline compact />
           <p
             className="max-w-md text-white/85"

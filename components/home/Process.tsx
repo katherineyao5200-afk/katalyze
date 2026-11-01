@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
-import Chip from "@/components/home/Chip";
 
 const STEPS: { n: string; title: string; body: string }[] = [
   {
@@ -64,7 +63,6 @@ export default function Process() {
         }}
       >
         <div className="col-span-12 flex flex-col gap-6 md:col-span-8">
-          <Chip tone="dark">How it works</Chip>
           <h2
             className="font-display font-extralight"
             style={{

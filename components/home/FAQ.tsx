@@ -1,4 +1,3 @@
-import Chip from "@/components/home/Chip";
 import Reveal from "@/components/Reveal";
 
 // Plain answers to what a careful visitor asks before trusting a
@@ -47,7 +46,6 @@ export default function FAQ() {
         }}
       >
         <Reveal className="col-span-12 flex flex-col gap-6 lg:col-span-4">
-          <Chip>Questions</Chip>
           <h2
             id="faq-title"
             className="font-display font-extralight text-white"

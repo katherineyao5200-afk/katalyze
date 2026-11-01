@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import Chip from "@/components/home/Chip";
 import Reveal from "@/components/Reveal";
 import { images } from "@/lib/images";
 
@@ -52,7 +51,6 @@ export default function Founder() {
         </Reveal>
 
         <Reveal className="col-span-12 flex flex-col justify-center gap-6 md:col-span-6 md:col-start-7">
-          <Chip>The founder</Chip>
           <p
             className="max-w-lg font-display font-extralight italic text-white"
             style={{

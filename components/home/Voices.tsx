@@ -1,4 +1,3 @@
-import Chip from "@/components/home/Chip";
 import Reveal from "@/components/Reveal";
 
 // Verbatim from the pitch deck (v9, p.17). Don't paraphrase or trim them
@@ -36,7 +35,6 @@ export default function Voices() {
       >
         {/* cols 1-6: the result */}
         <Reveal className="col-span-12 flex flex-col gap-4 lg:col-span-6">
-          <Chip>Recognition</Chip>
           <p
             className="-ml-[0.06em] font-display font-extralight leading-none text-white"
             style={{

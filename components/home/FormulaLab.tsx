@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import Chip from "@/components/home/Chip";
 import Reveal from "@/components/Reveal";
 
 /*
@@ -242,7 +241,6 @@ export default function FormulaLab() {
         }}
       >
         <Reveal className="col-span-12 flex flex-col gap-6 lg:col-span-5">
-          <Chip>Try the engine</Chip>
           <h2
             id="lab-title"
             className="font-display font-extralight"
