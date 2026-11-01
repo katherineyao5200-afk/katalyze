@@ -95,9 +95,7 @@ export default function Business() {
               lineHeight: "var(--leading-tight)",
             }}
           >
-            A big market that still
-            <br />
-            <em className="italic">personalizes only once.</em>
+            A big market that still personalizes only once.
           </h2>
         </Reveal>
 

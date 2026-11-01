@@ -84,9 +84,7 @@ export default function Pricing() {
                 lineHeight: "var(--leading-tight)",
               }}
             >
-              One device.
-              <br />
-              <em className="italic">Refills that match your use.</em>
+              One device. Refills that match how you use it.
             </h2>
           </div>
           <p

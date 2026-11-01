@@ -3,33 +3,28 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
-import DeviceIllustration, { type DevicePart } from "@/components/DeviceIllustration";
 import Chip from "@/components/home/Chip";
 
-const STEPS: { n: string; title: string; body: string; part: DevicePart | null }[] = [
+const STEPS: { n: string; title: string; body: string }[] = [
   {
     n: "01",
     title: "Read",
     body: "Rest a fingertip on the capacitive pad for about three seconds. It tracks whether your skin is drier or more hydrated than your usual. A trend, not a clinical number.",
-    part: null,
   },
   {
     n: "02",
     title: "Mix",
     body: "The app combines that reading with local weather and a quick morning check-in. Rules set at setup keep every blend inside a safe range. Six pumps then measure each ingredient by weight.",
-    part: "window",
   },
   {
     n: "03",
     title: "Apply",
     body: "One dose lands in the cup. You apply it yourself. The device never touches your skin.",
-    part: "tray",
   },
   {
     n: "04",
     title: "Learn",
     body: "Each day's reading and check-in shape the next blend, so the formula keeps up with your skin.",
-    part: "display",
   },
 ];
 
@@ -56,7 +51,10 @@ export default function Process() {
   }, []);
 
   return (
-    <section className="bg-midnight text-white" style={{ paddingBlock: "var(--s-24)" }}>
+    <section
+      className="bg-midnight text-white"
+      style={{ paddingBlock: "var(--s-24)" }}
+    >
       <div
         className="mx-auto grid grid-cols-12"
         style={{
@@ -69,20 +67,50 @@ export default function Process() {
           <Chip tone="dark">How it works</Chip>
           <h2
             className="font-display font-extralight"
-            style={{ fontSize: "var(--text-3xl)", lineHeight: "var(--leading-tight)" }}
+            style={{
+              fontSize: "var(--text-3xl)",
+              lineHeight: "var(--leading-tight)",
+            }}
           >
-            Four steps, every morning.
-            <br />
-            <em className="italic">About a minute.</em>
+            Four steps, about a minute, every morning.
           </h2>
         </div>
 
         {/* cols 1-5: pinned device */}
         <div className="col-span-12 md:col-span-5">
-          <div className="sticky top-24 hidden h-[70vh] items-center md:flex">
-            <div className="device-sway w-full max-w-md">
-              <DeviceIllustration activePart={STEPS[active].part} />
+          <div className="sticky top-24 hidden h-[70vh] flex-col justify-center gap-6 md:flex">
+            {/* The step number, set big: an editorial index, not an icon. */}
+            <div
+              aria-hidden="true"
+              className="overflow-hidden font-display font-extralight text-white tabular-nums"
+              style={{
+                fontSize: "clamp(160px, 20vw, 320px)",
+                lineHeight: 0.85,
+              }}
+            >
+              <span key={active} className="step-num block">
+                {STEPS[active].n}
+              </span>
             </div>
+            <div className="flex max-w-xs gap-2" aria-hidden="true">
+              {STEPS.map((s, i) => (
+                <span
+                  key={s.n}
+                  className={`h-px flex-1 transition-colors duration-[var(--dur-base)] ${
+                    i <= active ? "bg-blush" : "bg-[color:var(--rule-on-dark)]"
+                  }`}
+                />
+              ))}
+            </div>
+            <p
+              className="font-mono uppercase text-periwinkle"
+              style={{
+                fontSize: "var(--text-2xs)",
+                letterSpacing: "var(--track-label)",
+              }}
+            >
+              {STEPS[active].title} · step {active + 1} of {STEPS.length}
+            </p>
           </div>
         </div>
 
@@ -99,19 +127,28 @@ export default function Process() {
             >
               <span
                 className="font-mono uppercase text-periwinkle"
-                style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}
+                style={{
+                  fontSize: "var(--text-2xs)",
+                  letterSpacing: "var(--track-label)",
+                }}
               >
                 [Step {step.n}]
               </span>
               <h3
                 className="font-display font-extralight"
-                style={{ fontSize: "var(--text-display)", lineHeight: "var(--leading-display)" }}
+                style={{
+                  fontSize: "var(--text-display)",
+                  lineHeight: "var(--leading-display)",
+                }}
               >
                 {step.title}
               </h3>
               <p
                 className="max-w-md text-white/75"
-                style={{ fontSize: "var(--text-base)", lineHeight: "var(--leading-body)" }}
+                style={{
+                  fontSize: "var(--text-base)",
+                  lineHeight: "var(--leading-body)",
+                }}
               >
                 {step.body}
               </p>

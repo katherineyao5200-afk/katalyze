@@ -89,9 +89,7 @@ export default function Progress() {
               lineHeight: "var(--leading-tight)",
             }}
           >
-            The prototype works.
-            <br />
-            <em className="italic">Next, real ingredients.</em>
+            The prototype works. Next come real ingredients.
           </h2>
         </Reveal>
 

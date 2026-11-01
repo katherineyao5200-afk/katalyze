@@ -1,5 +1,5 @@
-// Mono pill used as a section opener (alethia) or step number
-// (sharplink). Text only; never an icon.
+// Section label: a short rule and a mono caption, no pill. Read by
+// the eye as an index entry, the way the reference sites mark sections.
 export default function Chip({
   children,
   tone = "dark",
@@ -9,13 +9,18 @@ export default function Chip({
 }) {
   return (
     <span
-      className={`inline-flex w-fit items-center gap-2 rounded-full border px-3 py-1 font-mono uppercase ${
-        tone === "light"
-          ? "border-[color:var(--rule-on-light)] bg-white/70 text-indigo"
-          : "border-[color:var(--rule-on-dark)] bg-[color:var(--panel)] text-periwinkle"
+      className={`inline-flex w-fit items-center gap-3 font-mono uppercase ${
+        tone === "light" ? "text-indigo" : "text-periwinkle"
       }`}
-      style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}
+      style={{
+        fontSize: "var(--text-2xs)",
+        letterSpacing: "var(--track-label)",
+      }}
     >
+      <span
+        aria-hidden="true"
+        className={`h-px w-6 ${tone === "light" ? "bg-indigo" : "bg-blush"}`}
+      />
       {children}
     </span>
   );

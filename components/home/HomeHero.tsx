@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import {
   motion,
   useMotionValueEvent,
@@ -25,11 +24,6 @@ import DeviceModel, { type AnchorId } from "@/components/home/DeviceModel";
 import HeroHeadline from "@/components/HeroHeadline";
 import WaitlistForm from "@/components/WaitlistForm";
 import { images } from "@/lib/images";
-
-// The constellation is WebGL and heavy; load it after first paint.
-const ParticleField = dynamic(() => import("@/components/ParticleField"), {
-  ssr: false,
-});
 
 // Readouts on the device render. Box positions are percentages of the
 // image frame and point at parts that are really there.
@@ -131,12 +125,6 @@ function ScrollHero() {
     [0.35, 0.8, 0.8, 0.3],
   );
 
-  // The constellation thins out once the device is being read.
-  const fieldOpacity = useTransform(
-    p,
-    [0, 0.22, 0.75, 0.9],
-    desktop ? [0.9, 0.18, 0.18, 0.2] : [0.25, 0.18, 0.18, 0.2],
-  );
 
   // Beat 3: the summary line.
   const outroOpacity = useTransform(p, [0.74, 0.84], [0, 1]);
@@ -179,13 +167,6 @@ function ScrollHero() {
           aria-hidden="true"
           className="absolute inset-0 bg-[image:var(--grad-haze-dark)] opacity-60"
         />
-        <motion.div
-          aria-hidden="true"
-          className="absolute inset-0 lg:left-[35%]"
-          style={{ opacity: fieldOpacity }}
-        >
-          <ParticleField />
-        </motion.div>
         <div
           aria-hidden="true"
           className="grain pointer-events-none absolute inset-0"
@@ -214,7 +195,7 @@ function ScrollHero() {
                 anchors={anchors}
                 boxes={boxes}
                 onUnsupported={onUnsupported}
-                className="absolute inset-0"
+                className="absolute inset-0 [mask-image:linear-gradient(to_bottom,black_80%,transparent)]"
               />
             ) : (
               <div className="absolute inset-0 flex justify-center">

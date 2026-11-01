@@ -15,11 +15,8 @@ interface WaitlistFormProps {
   tone?: "dark" | "light";
 }
 
-const inputFocusRing =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush focus-visible:ring-offset-2 focus-visible:ring-offset-midnight";
-
 const buttonFocusRing =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-midnight focus-visible:ring-offset-2 focus-visible:ring-offset-white";
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-midnight";
 
 export default function WaitlistForm({
   source,
@@ -77,7 +74,13 @@ export default function WaitlistForm({
       data-inline-form={trackVisibility ? "" : undefined}
       className={`flex flex-col gap-3 ${className}`}
     >
-      <div className="flex flex-col gap-2 sm:flex-row">
+      <div
+        className={
+          light
+            ? "flex flex-col gap-2 sm:flex-row"
+            : "flex items-center gap-1 rounded-full border border-[color:var(--rule-on-dark)] bg-white/[0.03] p-1.5 transition-colors duration-[var(--dur-fast)] focus-within:border-blush/70 hover:border-white/30 has-[input:focus-visible]:ring-2 has-[input:focus-visible]:ring-blush"
+        }
+      >
         <label htmlFor={inputId} className="sr-only">
           Email address
         </label>
@@ -94,7 +97,7 @@ export default function WaitlistForm({
           className={`min-w-0 flex-1 rounded-[var(--r-sm)] border px-5 py-3 disabled:opacity-60 ${
             light
               ? "border-[color:var(--rule-on-light)] bg-white text-midnight placeholder:text-[color:var(--faint-on-light)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo"
-              : `border-[color:var(--rule-on-dark)] bg-transparent text-white placeholder:text-periwinkle ${inputFocusRing}`
+              : "rounded-full border-0 bg-transparent py-2 pl-4 text-white placeholder:text-periwinkle focus-visible:outline-none"
           }`}
           style={{ fontSize: "var(--text-base)" }}
         />
@@ -119,7 +122,7 @@ export default function WaitlistForm({
           className={`whitespace-nowrap rounded-[var(--r-md)] px-6 py-3 font-medium transition-colors duration-[var(--dur-fast)] ease-[var(--ease-soft)] disabled:opacity-60 ${
             light
               ? "bg-midnight text-white hover:bg-indigo focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-              : `bg-white text-midnight hover:bg-white/85 ${buttonFocusRing}`
+              : `group inline-flex items-center gap-2 rounded-full bg-blush px-5 py-2.5 text-midnight hover:bg-white ${buttonFocusRing}`
           }`}
           style={{ fontSize: "var(--text-base)" }}
         >
@@ -128,6 +131,14 @@ export default function WaitlistForm({
             : isDone
               ? "Joined"
               : "Join the waitlist"}
+          {!light && status !== "loading" && !isDone && (
+            <span
+              aria-hidden="true"
+              className="transition-transform duration-[var(--dur-fast)] group-hover:translate-x-0.5"
+            >
+              →
+            </span>
+          )}
         </button>
       </div>
 

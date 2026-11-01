@@ -5,7 +5,7 @@ import "lenis/dist/lenis.css";
 import "./globals.css";
 
 import Footer from "@/components/Footer";
-import Gate from "@/components/Gate";
+import Intro, { INTRO_BOOT } from "@/components/Intro";
 import PageFX from "@/components/PageFX";
 import MotionProvider from "@/components/MotionProvider";
 import Nav from "@/components/Nav";
@@ -76,10 +76,17 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       className={`${migra.variable} ${inter.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: INTRO_BOOT }} />
+        <noscript>
+          <style>{`.intro{display:none}`}</style>
+        </noscript>
+      </head>
       <body className="min-h-full flex flex-col">
         <MotionProvider>
-          <Gate />
+          <Intro />
           <PageFX />
           <SmoothScroll />
           <Nav />

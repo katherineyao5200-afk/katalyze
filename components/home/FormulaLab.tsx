@@ -253,7 +253,7 @@ export default function FormulaLab() {
           >
             Not a quiz.
             <br />
-            <em className="italic">A conversation.</em>
+            A conversation.
           </h2>
           <p
             className="max-w-md text-[color:var(--muted-on-dark)]"

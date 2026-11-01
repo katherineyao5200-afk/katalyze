@@ -56,9 +56,7 @@ export default function FAQ() {
               lineHeight: "var(--leading-tight)",
             }}
           >
-            Straight
-            <br />
-            <em className="italic">answers.</em>
+            Questions people ask first.
           </h2>
         </Reveal>
         <div className="col-span-12 border-t border-[color:var(--rule-on-dark)] lg:col-span-7 lg:col-start-6">

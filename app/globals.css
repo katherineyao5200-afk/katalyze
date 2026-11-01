@@ -249,22 +249,6 @@ body {
   }
 }
 
-/* Gate: the pulsing start point of the K's first stroke. */
-@keyframes gate-pulse {
-  0%,
-  100% {
-    r: 7;
-    opacity: 1;
-  }
-  50% {
-    r: 12;
-    opacity: 0.55;
-  }
-}
-.gate-pulse {
-  animation: gate-pulse 1.6s var(--ease-glide) infinite;
-}
-
 /* Formula preview (FormulaLab) */
 .lab-liquid {
   transition: height 900ms var(--ease-glide);
@@ -385,5 +369,50 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .spot::after {
     display: none;
+  }
+}
+
+/* Opening intro (components/Intro.tsx) */
+.no-intro .intro {
+  display: none;
+}
+.intro-mark {
+  animation: intro-draw 1300ms cubic-bezier(0.76, 0, 0.24, 1) both;
+}
+@keyframes intro-draw {
+  from {
+    clip-path: inset(100% 0 0 0);
+    transform: translateY(12%);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    transform: none;
+  }
+}
+.intro-word > span {
+  animation: intro-rise 1000ms cubic-bezier(0.16, 1, 0.3, 1) 450ms both;
+}
+@keyframes intro-rise {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* Process: the big step number slides up when the step changes. */
+.step-num {
+  animation: step-num 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes step-num {
+  from {
+    transform: translateY(60%);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .step-num {
+    animation: none;
   }
 }

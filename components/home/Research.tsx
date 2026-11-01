@@ -39,7 +39,7 @@ export default function Research() {
           >
             We measure.
             <br />
-            <em className="italic">They guess.</em>
+            They guess.
           </h2>
           <p
             className="max-w-sm text-[color:var(--muted-on-dark)]"

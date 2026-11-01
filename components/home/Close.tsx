@@ -1,31 +1,62 @@
 import Reveal from "@/components/Reveal";
 import WaitlistForm from "@/components/WaitlistForm";
+import { images } from "@/lib/images";
 
-// Reference: alethia's dark closing block. The vertical brand gradient
-// resolves into light at the bottom; one line, one action, one fact.
+// Reference: alethia's dark closing block. Centered statement, one
+// action, one plain fact, and the mark as a quiet watermark.
 export default function Close() {
   return (
     <section
-      className="grain relative overflow-hidden bg-[image:var(--grad-vertical)]"
-      style={{ paddingBlock: "var(--s-40) var(--s-56)" }}
+      className="relative overflow-hidden bg-[color:var(--canvas-deep)]"
+      style={{ paddingBlock: "var(--s-40)" }}
     >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={images.logo.nav.src}
+        alt=""
+        aria-hidden="true"
+        width={images.logo.nav.width}
+        height={images.logo.nav.height}
+        className="pointer-events-none absolute top-1/2 left-1/2 h-[120%] w-auto -translate-x-1/2 -translate-y-1/2 opacity-[0.035]"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3"
+        style={{
+          background:
+            "radial-gradient(60% 80% at 50% 100%, color-mix(in oklab, var(--indigo) 70%, transparent), transparent)",
+        }}
+      />
       <Reveal
-        className="relative z-10 mx-auto flex flex-col gap-8"
+        className="relative z-10 mx-auto flex flex-col items-center gap-8 text-center"
         style={{ maxWidth: "var(--max-w)", paddingInline: "var(--margin)" }}
       >
         <h2
           className="max-w-4xl font-display font-extralight text-white"
-          style={{ fontSize: "var(--text-display)", lineHeight: "var(--leading-display)" }}
+          style={{
+            fontSize: "var(--text-display)",
+            lineHeight: "var(--leading-display)",
+          }}
         >
           Your catalyst
           <br />
           <em className="italic">to better skin.</em>
         </h2>
-        <p className="max-w-md text-white/85" style={{ fontSize: "var(--text-lg)", lineHeight: "var(--leading-body)" }}>
-          Katalyze isn&apos;t for sale yet. The first production run is
-          limited to about 2,000 units, and the waitlist hears first.
+        <p
+          className="max-w-md text-[color:var(--muted-on-dark)]"
+          style={{
+            fontSize: "var(--text-lg)",
+            lineHeight: "var(--leading-body)",
+          }}
+        >
+          Katalyze isn&apos;t for sale yet. The first production run is limited
+          to about 2,000 units, and the waitlist hears first.
         </p>
-        <WaitlistForm source="closing" trackVisibility className="max-w-md" />
+        <WaitlistForm
+          source="closing"
+          trackVisibility
+          className="w-full max-w-md"
+        />
       </Reveal>
     </section>
   );

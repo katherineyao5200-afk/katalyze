@@ -81,9 +81,7 @@ export default function Inside() {
             className="font-display font-extralight text-midnight"
             style={{ fontSize: "var(--text-3xl)", lineHeight: "var(--leading-tight)" }}
           >
-            Six cartridges.
-            <br />
-            <em className="italic">One dose at a time.</em>
+            Six cartridges, one dose at a time.
           </h2>
           <p
             className="max-w-sm text-[color:var(--muted-on-light)]"
