@@ -1,4 +1,6 @@
-// Section label: a short rule and a mono caption, no pill. Read by
+import Sparkle from "@/components/Sparkle";
+
+// Section label: the sparkle from the mark and a mono caption, no pill. Read by
 // the eye as an index entry, the way the reference sites mark sections.
 export default function Chip({
   children,
@@ -17,9 +19,9 @@ export default function Chip({
         letterSpacing: "var(--track-label)",
       }}
     >
-      <span
-        aria-hidden="true"
-        className={`h-px w-6 ${tone === "light" ? "bg-indigo" : "bg-blush"}`}
+      <Sparkle
+        size={9}
+        className={tone === "light" ? "text-indigo" : "text-blush"}
       />
       {children}
     </span>

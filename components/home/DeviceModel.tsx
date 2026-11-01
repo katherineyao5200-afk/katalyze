@@ -780,7 +780,13 @@ export default function DeviceModel({
       // Fit about 4.4 x 3.0 units of model, whichever bound is tighter.
       const vHalf = THREE.MathUtils.degToRad(camera.fov / 2);
       const hHalf = Math.atan(Math.tan(vHalf) * camera.aspect);
-      const room = anatomy ? (camera.aspect < 1 ? 1.45 : 1.9) : 1;
+      const room = anatomy
+        ? camera.aspect < 1
+          ? 1.45
+          : 1.9
+        : camera.aspect < 1
+          ? 1.3
+          : 1.45;
       const dist =
         Math.max(2.2 / Math.tan(hHalf), 1.5 / Math.tan(vHalf)) * 1.08 * room;
       camera.position.set(0, dist * 0.18, dist);
@@ -1012,7 +1018,9 @@ export default function DeviceModel({
   return (
     <div
       ref={containerRef}
-      className={className.includes("absolute") ? className : `relative ${className}`}
+      className={
+        className.includes("absolute") ? className : `relative ${className}`
+      }
     />
   );
 }

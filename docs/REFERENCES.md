@@ -13,7 +13,7 @@ Migra and Inter.
 
 | Image | What to take from it | Katalyze section |
 |---|---|---|
-| `zero-hero-gate.jpg` | A full-screen interactive gate before the site, with the mark drawn by the visitor | `Gate.tsx` ("Trace the K") |
+| `zero-hero-gate.jpg` | A full-screen moment before the site. kat found tracing the K tedious (2026-11-01), so it is now an automatic intro: the K draws itself | `Intro.tsx` |
 | `alethia-hero-specimens.jpg` | Floating objects with thin annotation readouts pointing at them, plus a left-aligned headline | `home/HomeHero.tsx`, `home/Inside.tsx` |
 | `alethia-photo-text-overlay.jpg` | Text set over a soft, blurred photo that sharpens on scroll | Not used yet |
 | `alethia-centered-statement.jpg` | A small mono chip above a centered display statement | Section openers (`home/Chip.tsx`) |

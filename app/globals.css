@@ -450,3 +450,74 @@ body {
   align-items: flex-end;
   text-align: right;
 }
+
+/* Star motif: the hero's celestial ring and twinkling sparkles. */
+.star-ring {
+  animation: star-turn 240s linear infinite;
+}
+@keyframes star-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.star-twinkle {
+  animation: star-twinkle 4.5s ease-in-out infinite;
+}
+@keyframes star-twinkle {
+  50% {
+    opacity: 0.15;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .star-ring,
+  .star-twinkle {
+    animation: none;
+  }
+}
+
+/* Skin chart: the constellation draws in, then the stars appear. */
+.chart-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 2400ms var(--ease-glide) 200ms;
+}
+[data-revealed="true"] .chart-line {
+  stroke-dashoffset: 0;
+}
+.chart-star {
+  opacity: 0;
+}
+[data-revealed="true"] .chart-star {
+  animation: chart-star 600ms var(--ease-glide) forwards;
+}
+@keyframes chart-star {
+  to {
+    opacity: 1;
+  }
+}
+.chart-star:focus-visible circle:first-child {
+  stroke: var(--blush);
+  stroke-width: 2;
+}
+@media (prefers-reduced-motion: reduce) {
+  .chart-line {
+    transition: none;
+    stroke-dashoffset: 0;
+  }
+  .chart-star,
+  [data-revealed="true"] .chart-star {
+    animation: none;
+    opacity: 1;
+  }
+}
+.intro-ring {
+  animation:
+    intro-ring 1600ms cubic-bezier(0.16, 1, 0.3, 1) both,
+    star-turn 240s linear infinite;
+}
+@keyframes intro-ring {
+  from {
+    opacity: 0;
+    scale: 0.85;
+  }
+}

@@ -7,6 +7,7 @@ import Founder from "@/components/home/Founder";
 import HomeHero from "@/components/home/HomeHero";
 import Anatomy from "@/components/home/Anatomy";
 import FormulaLab from "@/components/home/FormulaLab";
+import SkinChart from "@/components/home/SkinChart";
 import Inside from "@/components/home/Inside";
 import Process from "@/components/home/Process";
 import Progress from "@/components/home/Progress";
@@ -24,6 +25,7 @@ export default function Home() {
       <Anatomy />
       <Inside />
       <FormulaLab />
+      <SkinChart />
       <Progress />
       <Business />
       <Pricing />

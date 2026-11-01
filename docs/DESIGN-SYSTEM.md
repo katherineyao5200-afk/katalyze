@@ -426,4 +426,4 @@ Reference: [why.zero.university](https://why.zero.university/) — a fixed full-
 - [ ] Particle field: WebGPU path, WebGL2 fallback, and static image fallback all verified
 - [ ] Field holds 60fps on an M1 at DPR 1.5, pauses when off-screen
 - [ ] Two or more pinned sequences, each 2.5 viewports or longer
-- [ ] Gate (if built) is skippable within 2s, keyboard-first, bypassed on touch and reduced-motion
+- [ ] Intro is under 3s, skippable by any key, scroll or click, and never plays under reduced motion or on deep links

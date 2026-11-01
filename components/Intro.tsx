@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
+import StarRing from "@/components/home/StarRing";
 import { images } from "@/lib/images";
 
 export const INTRO_KEY = "katalyze-intro-seen";
@@ -96,6 +97,10 @@ export default function Intro() {
         className="absolute inset-0"
         style={{ background: "var(--grad-haze-dark)", opacity: 0.7 }}
       />
+
+      <div className="absolute inset-0 flex items-center justify-center">
+        <StarRing className="intro-ring h-[78vmin] w-[78vmin]" />
+      </div>
 
       {/* centre: the mark draws up, the wordmark settles beside it */}
       <div

@@ -21,6 +21,7 @@ import {
 
 import DeviceModel, { type AnchorId } from "@/components/home/DeviceModel";
 import HeroHeadline from "@/components/HeroHeadline";
+import StarRing from "@/components/home/StarRing";
 import WaitlistForm from "@/components/WaitlistForm";
 import { images } from "@/lib/images";
 
@@ -124,7 +125,6 @@ function ScrollHero() {
     [0.35, 0.8, 0.8, 0.3],
   );
 
-
   // Beat 3: the summary line.
   const outroOpacity = useTransform(p, [0.74, 0.84], [0, 1]);
   const outroY = useTransform(p, [0.74, 0.86], ["4vh", "0vh"]);
@@ -183,6 +183,9 @@ function ScrollHero() {
               height: desktop ? "76vh" : "54svh",
             }}
           >
+            <div className="absolute inset-0 flex items-center justify-center">
+              <StarRing className="aspect-square h-[125%] max-w-none shrink-0" />
+            </div>
             <motion.span
               aria-hidden="true"
               className="absolute inset-[10%] bg-[image:var(--grad-point)] blur-3xl"
@@ -311,7 +314,6 @@ function ScrollHero() {
             </p>
           </div>
         </motion.div>
-
       </div>
     </section>
   );
