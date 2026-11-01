@@ -23,12 +23,8 @@ export default function PageHero({
         <DitherField
           variant="aura"
           center={[0.78, 0.62]}
-          density={0.75}
+          density={0.85}
           className="absolute inset-x-0 top-0 !h-[48%] md:!h-full"
-        />
-        <DitherField
-          density={0.6}
-          className="absolute inset-0 opacity-60 [mask-image:linear-gradient(100deg,transparent_0%,transparent_35%,black_75%)]"
         />
         <div className="grain absolute inset-0" />
       </div>

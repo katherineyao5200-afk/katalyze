@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from "react";
 
+import { afterIntro } from "@/lib/afterIntro";
+
 /*
  * A living background drawn as a grid of small dithered cells: a slow
  * nebula of brand colour drifts underneath, a few cells twinkle like
@@ -120,7 +122,6 @@ void main() {
 }
 `;
 
-
 // "aura": a soft glowing form that folds and breathes, navy at the edge
 // through indigo and periwinkle to a blush core, with live film grain and
 // a faint vertical smear. Leans toward the pointer. Reference: kat's
@@ -219,161 +220,186 @@ export default function DitherField({
   const [cx, cy] = center;
 
   useEffect(() => {
-    const canvas = ref.current;
-    if (!canvas) return;
-    const gl = canvas.getContext("webgl", {
-      premultipliedAlpha: true,
-      antialias: false,
+    // Heavy WebGL setup waits until the intro has lifted, so the intro
+    // stays smooth.
+    let cleanup: (() => void) | undefined;
+    const cancel = afterIntro(() => {
+      cleanup = init();
     });
-    if (!gl) return;
-
-    const compile = (type: number, src: string) => {
-      const s = gl.createShader(type)!;
-      gl.shaderSource(s, src);
-      gl.compileShader(s);
-      return s;
-    };
-    const prog = gl.createProgram()!;
-    const vs = compile(gl.VERTEX_SHADER, VERT);
-    const fs = compile(gl.FRAGMENT_SHADER, variant === "aura" ? AURA : FRAG);
-    gl.attachShader(prog, vs);
-    gl.attachShader(prog, fs);
-    gl.linkProgram(prog);
-    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return;
-    gl.useProgram(prog);
-
-    const buf = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-    gl.bufferData(
-      gl.ARRAY_BUFFER,
-      new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]),
-      gl.STATIC_DRAW,
-    );
-    const loc = gl.getAttribLocation(prog, "a");
-    gl.enableVertexAttribArray(loc);
-    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-
-    const u = (n: string) => gl.getUniformLocation(prog, n);
-    const uRes = u("uRes");
-    const uTime = u("uTime");
-    const uCell = u("uCell");
-    const uDensity = u("uDensity");
-    const uMouse = u("uMouse");
-    const uRip = u("uRip");
-    const uCenter = u("uCenter");
-    // The aura leans a little toward the pointer, smoothed.
-    const lean = { x: 0, y: 0 };
-
-    const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-    const ripples = new Float32Array(MAX_RIPPLES * 3).fill(-1);
-    let ripIdx = 0;
-    const mouse = { x: -10, y: -10 };
-    let lastRip = { x: -1e4, y: -1e4, t: -10 };
-    const start = performance.now();
-    const now = () => (performance.now() - start) / 1000;
-
-    function resize() {
-      const w = canvas!.clientWidth;
-      const h = canvas!.clientHeight;
-      if (!w || !h) return;
-      canvas!.width = Math.round(w * dpr);
-      canvas!.height = Math.round(h * dpr);
-      gl!.viewport(0, 0, canvas!.width, canvas!.height);
-    }
-    resize();
-    const ro = new ResizeObserver(() => {
-      resize();
-      if (still) draw();
-    });
-    ro.observe(canvas);
-
-    function draw() {
-      gl!.uniform2f(uRes, canvas!.width, canvas!.height);
-      gl!.uniform1f(uTime, still ? 12 : now());
-      gl!.uniform1f(uCell, cell * dpr);
-      gl!.uniform1f(uDensity, density);
-      gl!.uniform2f(uMouse, mouse.x, mouse.y);
-      gl!.uniform3fv(uRip, ripples);
-      const W = canvas!.width;
-      const H = canvas!.height;
-      const tx = mouse.x > -1 ? (mouse.x - W * cx) * 0.08 : 0;
-      const ty = mouse.y > -1 ? (mouse.y - H * cy) * 0.08 : 0;
-      lean.x += (tx - lean.x) * 0.04;
-      lean.y += (ty - lean.y) * 0.04;
-      gl!.uniform2f(uCenter, W * cx + lean.x, H * cy + lean.y);
-      gl!.clearColor(0, 0, 0, 0);
-      gl!.clear(gl!.COLOR_BUFFER_BIT);
-      gl!.drawArrays(gl!.TRIANGLE_STRIP, 0, 4);
-    }
-
-    const addRipple = (x: number, y: number) => {
-      ripples.set([x, y, now()], ripIdx * 3);
-      ripIdx = (ripIdx + 1) % MAX_RIPPLES;
-    };
-    const local = (e: PointerEvent) => {
-      const r = canvas!.getBoundingClientRect();
-      return {
-        x: (e.clientX - r.left) * dpr,
-        y: (e.clientY - r.top) * dpr,
-        inside:
-          e.clientX >= r.left &&
-          e.clientX <= r.right &&
-          e.clientY >= r.top &&
-          e.clientY <= r.bottom,
-      };
-    };
-    const onMove = (e: PointerEvent) => {
-      const p = local(e);
-      if (!p.inside) {
-        mouse.x = mouse.y = -10;
-        return;
-      }
-      mouse.x = p.x;
-      mouse.y = p.y;
-      // A wake: a new ripple every so often as the pointer travels.
-      const t = now();
-      const dist = Math.hypot(p.x - lastRip.x, p.y - lastRip.y);
-      if (dist > 140 * dpr && t - lastRip.t > 0.18) {
-        addRipple(p.x, p.y);
-        lastRip = { x: p.x, y: p.y, t };
-      }
-    };
-    const onDown = (e: PointerEvent) => {
-      const p = local(e);
-      if (p.inside) addRipple(p.x, p.y);
-    };
-    if (!still) {
-      window.addEventListener("pointermove", onMove, { passive: true });
-      window.addEventListener("pointerdown", onDown, { passive: true });
-    }
-
-    let raf = 0;
-    let visible = true;
-    const loop = () => {
-      if (document.documentElement.dataset.gate !== "open") draw();
-      raf = requestAnimationFrame(loop);
-    };
-    const io = new IntersectionObserver(([e]) => {
-      visible = e.isIntersecting;
-      cancelAnimationFrame(raf);
-      if (visible && !still) raf = requestAnimationFrame(loop);
-      else if (visible) draw();
-    });
-    io.observe(canvas);
-    draw();
-
     return () => {
-      cancelAnimationFrame(raf);
-      io.disconnect();
-      ro.disconnect();
-      window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("pointerdown", onDown);
-      gl.deleteProgram(prog);
-      gl.deleteShader(vs);
-      gl.deleteShader(fs);
-      gl.deleteBuffer(buf);
+      cancel();
+      cleanup?.();
     };
+
+    function init(): (() => void) | undefined {
+      const canvas = ref.current;
+      if (!canvas) return;
+      const gl = canvas.getContext("webgl", {
+        premultipliedAlpha: true,
+        antialias: false,
+      });
+      if (!gl) return;
+
+      const compile = (type: number, src: string) => {
+        const s = gl.createShader(type)!;
+        gl.shaderSource(s, src);
+        gl.compileShader(s);
+        return s;
+      };
+      const prog = gl.createProgram()!;
+      const vs = compile(gl.VERTEX_SHADER, VERT);
+      const fs = compile(gl.FRAGMENT_SHADER, variant === "aura" ? AURA : FRAG);
+      gl.attachShader(prog, vs);
+      gl.attachShader(prog, fs);
+      gl.linkProgram(prog);
+      if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return;
+      gl.useProgram(prog);
+
+      const buf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(
+        gl.ARRAY_BUFFER,
+        new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]),
+        gl.STATIC_DRAW,
+      );
+      const loc = gl.getAttribLocation(prog, "a");
+      gl.enableVertexAttribArray(loc);
+      gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+      const u = (n: string) => gl.getUniformLocation(prog, n);
+      const uRes = u("uRes");
+      const uTime = u("uTime");
+      const uCell = u("uCell");
+      const uDensity = u("uDensity");
+      const uMouse = u("uMouse");
+      const uRip = u("uRip");
+      const uCenter = u("uCenter");
+      // The aura leans a little toward the pointer, smoothed.
+      const lean = { x: 0, y: 0 };
+
+      const still = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      // The aura is soft, so it renders at half resolution; the grid
+      // needs crisp cells but never more than 1.25x.
+      const dpr =
+        variant === "aura" ? 0.5 : Math.min(window.devicePixelRatio || 1, 1.25);
+      const ripples = new Float32Array(MAX_RIPPLES * 3).fill(-1);
+      let ripIdx = 0;
+      const mouse = { x: -10, y: -10 };
+      let lastRip = { x: -1e4, y: -1e4, t: -10 };
+      const start = performance.now();
+      const now = () => (performance.now() - start) / 1000;
+
+      function resize() {
+        const w = canvas!.clientWidth;
+        const h = canvas!.clientHeight;
+        if (!w || !h) return;
+        canvas!.width = Math.round(w * dpr);
+        canvas!.height = Math.round(h * dpr);
+        gl!.viewport(0, 0, canvas!.width, canvas!.height);
+      }
+      resize();
+      const ro = new ResizeObserver(() => {
+        resize();
+        if (still) draw();
+      });
+      ro.observe(canvas);
+
+      function draw() {
+        gl!.uniform2f(uRes, canvas!.width, canvas!.height);
+        gl!.uniform1f(uTime, still ? 12 : now());
+        gl!.uniform1f(uCell, cell * dpr);
+        gl!.uniform1f(uDensity, density);
+        gl!.uniform2f(uMouse, mouse.x, mouse.y);
+        gl!.uniform3fv(uRip, ripples);
+        const W = canvas!.width;
+        const H = canvas!.height;
+        const tx = mouse.x > -1 ? (mouse.x - W * cx) * 0.08 : 0;
+        const ty = mouse.y > -1 ? (mouse.y - H * cy) * 0.08 : 0;
+        lean.x += (tx - lean.x) * 0.04;
+        lean.y += (ty - lean.y) * 0.04;
+        gl!.uniform2f(uCenter, W * cx + lean.x, H * cy + lean.y);
+        gl!.clearColor(0, 0, 0, 0);
+        gl!.clear(gl!.COLOR_BUFFER_BIT);
+        gl!.drawArrays(gl!.TRIANGLE_STRIP, 0, 4);
+      }
+
+      const addRipple = (x: number, y: number) => {
+        ripples.set([x, y, now()], ripIdx * 3);
+        ripIdx = (ripIdx + 1) % MAX_RIPPLES;
+      };
+      const local = (e: PointerEvent) => {
+        const r = canvas!.getBoundingClientRect();
+        return {
+          x: (e.clientX - r.left) * dpr,
+          y: (e.clientY - r.top) * dpr,
+          inside:
+            e.clientX >= r.left &&
+            e.clientX <= r.right &&
+            e.clientY >= r.top &&
+            e.clientY <= r.bottom,
+        };
+      };
+      const onMove = (e: PointerEvent) => {
+        const p = local(e);
+        if (!p.inside) {
+          mouse.x = mouse.y = -10;
+          return;
+        }
+        mouse.x = p.x;
+        mouse.y = p.y;
+        // A wake: a new ripple every so often as the pointer travels.
+        const t = now();
+        const dist = Math.hypot(p.x - lastRip.x, p.y - lastRip.y);
+        if (dist > 140 * dpr && t - lastRip.t > 0.18) {
+          addRipple(p.x, p.y);
+          lastRip = { x: p.x, y: p.y, t };
+        }
+      };
+      const onDown = (e: PointerEvent) => {
+        const p = local(e);
+        if (p.inside) addRipple(p.x, p.y);
+      };
+      if (!still) {
+        window.addEventListener("pointermove", onMove, { passive: true });
+        window.addEventListener("pointerdown", onDown, { passive: true });
+      }
+
+      let raf = 0;
+      let visible = true;
+      let tick = 0;
+      const loop = () => {
+        // The aura moves slowly: 30 frames a second is plenty.
+        tick++;
+        if (
+          document.documentElement.dataset.gate !== "open" &&
+          (variant !== "aura" || tick % 2 === 0)
+        )
+          draw();
+        raf = requestAnimationFrame(loop);
+      };
+      const io = new IntersectionObserver(([e]) => {
+        visible = e.isIntersecting;
+        cancelAnimationFrame(raf);
+        if (visible && !still) raf = requestAnimationFrame(loop);
+        else if (visible) draw();
+      });
+      io.observe(canvas);
+      draw();
+
+      return () => {
+        cancelAnimationFrame(raf);
+        io.disconnect();
+        ro.disconnect();
+        window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("pointerdown", onDown);
+        gl.deleteProgram(prog);
+        gl.deleteShader(vs);
+        gl.deleteShader(fs);
+        gl.deleteBuffer(buf);
+      };
+    }
   }, [cell, density, variant, cx, cy]);
 
   return (

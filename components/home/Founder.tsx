@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import DitherField from "@/components/DitherField";
 import Reveal from "@/components/Reveal";
 import { images } from "@/lib/images";
 
@@ -25,10 +26,14 @@ export default function Founder() {
         {/* The whole portrait at its own 2:3 shape, so nothing is cropped. */}
         <Reveal variant="scale" className="col-span-12 md:col-span-5">
           <figure className="relative mx-auto w-full max-w-sm md:max-w-none">
-            <span
-              aria-hidden="true"
-              className="absolute -inset-[12%] bg-[image:var(--grad-point)] opacity-30 blur-3xl"
-            />
+            {/* The glowing aura, as a halo behind the portrait. */}
+            <span aria-hidden="true" className="absolute -inset-[14%]">
+              <DitherField
+                variant="aura"
+                density={0.75}
+                className="absolute inset-0 [mask-image:radial-gradient(closest-side,black_60%,transparent)]"
+              />
+            </span>
             <Image
               src={portrait.src}
               alt={portrait.alt}

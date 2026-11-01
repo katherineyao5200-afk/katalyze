@@ -56,7 +56,12 @@ export default function Intro() {
       delete root.dataset.gate;
       root.style.overflow = "";
       setPhase("lift");
-      timers.current = [window.setTimeout(() => setPhase("gone"), LIFT_MS)];
+      timers.current = [
+        window.setTimeout(() => {
+          setPhase("gone");
+          root.classList.add("intro-done");
+        }, LIFT_MS),
+      ];
     };
     timers.current.push(window.setTimeout(lift, COUNT_MS + HOLD_MS));
 
@@ -74,6 +79,7 @@ export default function Intro() {
       window.removeEventListener("keydown", skip);
       delete root.dataset.gate;
       root.style.overflow = "";
+      root.classList.add("intro-done");
     };
   }, []);
 

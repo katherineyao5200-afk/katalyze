@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import DitherField from "@/components/DitherField";
 import PageHero from "@/components/PageHero";
 import Reveal from "@/components/Reveal";
 import Sparkle from "@/components/Sparkle";
@@ -326,12 +327,15 @@ export default function PricingPage() {
       >
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-full"
-          style={{
-            background:
-              "radial-gradient(60% 80% at 50% 100%, color-mix(in oklab, var(--indigo) 70%, transparent), transparent)",
-          }}
-        />
+          className="pointer-events-none absolute inset-0"
+        >
+          <DitherField
+            variant="aura"
+            center={[0.5, 1.08]}
+            density={0.8}
+            className="absolute inset-0"
+          />
+        </div>
         <Reveal
           className="relative mx-auto flex flex-col items-center gap-6 text-center"
           style={{ maxWidth: "var(--max-w)", paddingInline: "var(--margin)" }}
@@ -352,8 +356,8 @@ export default function PricingPage() {
               lineHeight: "var(--leading-body)",
             }}
           >
-            Join the waitlist to hear first when pricing is final and when
-            ship windows open.
+            Join the waitlist to hear first when pricing is final and when ship
+            windows open.
           </p>
           <WaitlistForm
             source="pricing"

@@ -3,6 +3,8 @@
 import type { MotionValue } from "motion/react";
 import { useEffect, useRef, type RefObject } from "react";
 import * as THREE from "three";
+
+import { afterIntro } from "@/lib/afterIntro";
 import { RectAreaLightUniformsLib } from "three/examples/jsm/lights/RectAreaLightUniformsLib.js";
 
 /**
@@ -827,348 +829,376 @@ export default function DeviceModel({
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    let renderer: THREE.WebGLRenderer;
-    try {
-      renderer = new THREE.WebGLRenderer({
-        antialias: true,
-        alpha: true,
-        powerPreference: "high-performance",
-      });
-    } catch {
-      onUnsupported?.();
-      return;
-    }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.toneMapping = THREE.NeutralToneMapping;
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.VSMShadowMap;
-    RectAreaLightUniformsLib.init();
-    renderer.toneMappingExposure = 1.0;
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.domElement.style.width = "100%";
-    renderer.domElement.style.height = "100%";
-    renderer.domElement.setAttribute("aria-hidden", "true");
-    container.appendChild(renderer.domElement);
-
-    const scene = new THREE.Scene();
-    const pmrem = new THREE.PMREMGenerator(renderer);
-    const studio = studioEnvironment();
-    const envTex = pmrem.fromScene(studio.scene, 0.02).texture;
-    studio.dispose();
-    scene.environment = envTex;
-    scene.environmentIntensity = 1.05;
-
-    const camera = new THREE.PerspectiveCamera(28, 1, 0.1, 100);
-
-    // Light: cool key from above left, blush and periwinkle rims.
-    scene.add(new THREE.HemisphereLight(0xdfe3ff, 0x1f2441, 0.2));
-    const key = new THREE.DirectionalLight(0xfff8f4, 2.6);
-    key.position.set(-2.5, 8, 3.5);
-    key.castShadow = true;
-    key.shadow.mapSize.set(2048, 2048);
-    key.shadow.radius = 14;
-    key.shadow.blurSamples = 16;
-    key.shadow.bias = -0.0005;
-    const sc = key.shadow.camera;
-    sc.left = -7;
-    sc.right = 7;
-    sc.top = 7;
-    sc.bottom = -7;
-    sc.near = 1;
-    sc.far = 20;
-    scene.add(key);
-    // Studio softbox overhead: the long soft highlight across the top.
-    const softbox = new THREE.RectAreaLight(0xffffff, 3.2, 7, 2.5);
-    softbox.position.set(0, 5, 2.5);
-    softbox.lookAt(0, 0, 0);
-    scene.add(softbox);
-    const rimL = new THREE.PointLight(0x8a8db3, 18, 12);
-    rimL.position.set(-4, 1, -2);
-    scene.add(rimL);
-    const rimR = new THREE.PointLight(0xe8ccd2, 14, 12);
-    rimR.position.set(4, 0.5, -1.5);
-    scene.add(rimR);
-
-    const { group, disposables, doseMat } = buildDevice();
-    const anatomy = mode === "anatomy";
-    const basePos = new Map<THREE.Object3D, THREE.Vector3>();
-    group.children.forEach((c) => basePos.set(c, c.position.clone()));
-    const pivot = new THREE.Group();
-    pivot.add(group);
-    scene.add(pivot);
-
-    const cupLight = new THREE.PointLight(0xe8ccd2, 0, 2.5);
-    cupLight.position.set(0.6, -0.2, FRONT + 0.5);
-    group.add(cupLight);
-
-    const shadowTex = shadowTexture();
-    const shadowMat = new THREE.MeshBasicMaterial({
-      map: shadowTex,
-      transparent: true,
-      depthWrite: false,
+    // Heavy WebGL setup waits until the intro has lifted, so the intro
+    // stays smooth.
+    let cleanup: (() => void) | undefined;
+    const cancel = afterIntro(() => {
+      cleanup = init();
     });
-    const shadowGeo = new THREE.PlaneGeometry(5.4, 2.6);
-    const shadow = new THREE.Mesh(shadowGeo, shadowMat);
-    shadow.rotation.x = -Math.PI / 2;
-    shadow.position.y = -BODY_H / 2 - 0.2;
-    pivot.add(shadow);
-    // Soft cast shadow from the key light on an invisible floor.
-    const floorGeo = new THREE.PlaneGeometry(10, 10);
-    const floorMat = new THREE.ShadowMaterial({
-      opacity: 0.28,
-      color: 0x0a0c1c,
-    });
-    const ground = new THREE.Mesh(floorGeo, floorMat);
-    ground.rotation.x = -Math.PI / 2;
-    ground.position.y = -BODY_H / 2 - 0.19;
-    ground.receiveShadow = true;
-    pivot.add(ground);
-
-    function resize() {
-      const w = container!.clientWidth;
-      const h = container!.clientHeight;
-      if (!w || !h) return;
-      renderer.setSize(w, h, false);
-      camera.aspect = w / h;
-      // Fit about 4.4 x 3.0 units of model, whichever bound is tighter.
-      const vHalf = THREE.MathUtils.degToRad(camera.fov / 2);
-      const hHalf = Math.atan(Math.tan(vHalf) * camera.aspect);
-      const room = anatomy
-        ? camera.aspect < 1
-          ? 1.45
-          : 1.9
-        : camera.aspect < 1
-          ? 1.3
-          : 1.45;
-      const dist =
-        Math.max(2.2 / Math.tan(hHalf), 1.5 / Math.tan(vHalf)) * 1.08 * room;
-      camera.position.set(0, dist * 0.18, dist);
-      camera.lookAt(0, -0.1, 0);
-      camera.updateProjectionMatrix();
-    }
-    resize();
-    const ro = new ResizeObserver(resize);
-    ro.observe(container);
-
-    // Project each part's 3D bounds to a screen rectangle; the box
-    // element takes the rectangle, the label anchors to its side.
-    const corner = new THREE.Vector3();
-    function placeAnchors() {
-      if (!anchors && !boxes) return;
-      const w = container!.clientWidth;
-      const h = container!.clientHeight;
-      group.updateWorldMatrix(true, false);
-      for (const id of Object.keys(PART_BOUNDS) as AnchorId[]) {
-        const bb = PART_BOUNDS[id];
-        let x0 = Infinity,
-          y0 = Infinity,
-          x1 = -Infinity,
-          y1 = -Infinity;
-        for (let i = 0; i < 8; i++) {
-          corner
-            .set(
-              i & 1 ? bb.max.x : bb.min.x,
-              i & 2 ? bb.max.y : bb.min.y,
-              i & 4 ? bb.max.z : bb.min.z,
-            )
-            .applyMatrix4(group.matrixWorld)
-            .project(camera);
-          const sx = ((corner.x + 1) / 2) * w;
-          const sy = ((1 - corner.y) / 2) * h;
-          x0 = Math.min(x0, sx);
-          x1 = Math.max(x1, sx);
-          y0 = Math.min(y0, sy);
-          y1 = Math.max(y1, sy);
-        }
-        const box = boxes?.[id]?.current;
-        if (box) {
-          box.style.left = `${x0}px`;
-          box.style.top = `${y0}px`;
-          box.style.width = `${x1 - x0}px`;
-          box.style.height = `${y1 - y0}px`;
-        }
-        const el = anchors?.[id]?.current;
-        if (el) {
-          const left = el.dataset.side === "left";
-          el.style.left = `${left ? x0 : x1}px`;
-          el.style.top = `${(y0 + y1) / 2}px`;
-        }
-      }
-    }
-
-    const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const clock = new THREE.Clock();
-
-    // Drag to turn (anatomy only), with a little glide after release.
-    let dragYaw = 0;
-    let dragVel = 0;
-    let dragging = false;
-    let lastX = 0;
-    const onDown = (e: PointerEvent) => {
-      dragging = true;
-      lastX = e.clientX;
-      dragVel = 0;
-      container!.setPointerCapture(e.pointerId);
-      container!.style.cursor = "grabbing";
+    return () => {
+      cancel();
+      cleanup?.();
     };
-    const onMove = (e: PointerEvent) => {
-      if (!dragging) return;
-      const dx = e.clientX - lastX;
-      lastX = e.clientX;
-      dragVel = dx * 0.006;
-      dragYaw += dragVel;
-      if (still) frame();
-    };
-    const onUp = () => {
-      dragging = false;
-      container!.style.cursor = "grab";
-    };
-    if (anatomy) {
-      container.style.cursor = "grab";
-      container.style.touchAction = "pan-y";
-      container.addEventListener("pointerdown", onDown);
-      container.addEventListener("pointermove", onMove);
-      container.addEventListener("pointerup", onUp);
-      container.addEventListener("pointercancel", onUp);
-    }
 
-    const pt = new THREE.Vector3();
-    function frameAnatomy(t: number) {
-      const raw = explode?.get() ?? 1;
-      const e = raw * raw * (3 - 2 * raw); // smoothstep
-      for (const [c, base] of basePos) {
-        const l = c.userData.layer as Layer | undefined;
-        if (!l) continue;
-        const o = EXPLODE[l].offset;
-        c.position.set(base.x + o[0] * e, base.y + o[1] * e, base.z + o[2] * e);
-      }
-      if (!dragging) {
-        dragYaw += dragVel;
-        dragVel *= 0.94;
-        // Ease back to the labelled view once the glide has settled.
-        if (Math.abs(dragVel) < 0.002) dragYaw *= 0.97;
-      }
-      dragYaw = Math.max(-1.1, Math.min(1.1, dragYaw));
-      const drift = still ? 0 : Math.sin(t * 0.4) * 0.05;
-      pivot.rotation.set(0.32, -0.62 + drift + dragYaw, 0);
-      pivot.position.y = 0.3;
-      renderer.render(scene, camera);
+    function init(): (() => void) | undefined {
+      const container = containerRef.current;
+      if (!container) return;
 
-      if (!labels) return;
-      const w = container!.clientWidth;
-      const h = container!.clientHeight;
-      group.updateWorldMatrix(true, false);
-      // Labels sit on whichever side of the device their part is on
-      // right now, so turning it never crosses a label over the model.
-      pt.set(0, 0, 0).applyMatrix4(group.matrixWorld).project(camera);
-      const midX = ((pt.x + 1) / 2) * w;
-      for (const l of Object.keys(EXPLODE) as Layer[]) {
-        const el = labels[l]?.current;
-        if (!el) continue;
-        const { offset: o, anchor: a } = EXPLODE[l];
-        pt.set(a[0] + o[0] * e, a[1] + o[1] * e, a[2] + o[2] * e)
-          .applyMatrix4(group.matrixWorld)
-          .project(camera);
-        const sx = ((pt.x + 1) / 2) * w;
-        el.dataset.side = sx < midX ? "left" : "right";
-        el.style.left = `${sx}px`;
-        el.style.top = `${((1 - pt.y) / 2) * h}px`;
-        // Labels belong to the labelled view: they fade while the
-        // device is turned away from it.
-        const turned = Math.max(
-          0,
-          Math.min(1, (Math.abs(dragYaw) - 0.15) / 0.25),
-        );
-        el.style.opacity = String(
-          Math.max(0, (e - 0.55) / 0.45) * (1 - turned),
-        );
-      }
-    }
-
-    function frame() {
-      const t = clock.getElapsedTime();
-      if (anatomy) {
-        frameAnatomy(t);
+      let renderer: THREE.WebGLRenderer;
+      try {
+        renderer = new THREE.WebGLRenderer({
+          antialias: true,
+          alpha: true,
+          powerPreference: "high-performance",
+        });
+      } catch {
+        onUnsupported?.();
         return;
       }
-      const p = progress?.get() ?? 0.4;
-      // Turn: three-quarter from the right, settle to near-front while
-      // the parts are read, then swing on through for the close.
-      const yaw = keyframe(p, [
-        [0, -0.75],
-        [0.26, -0.32],
-        [0.72, -0.12],
-        [1, 0.9],
-      ]);
-      const pitch = keyframe(p, [
-        [0, 0.16],
-        [0.26, 0.1],
-        [1, 0.22],
-      ]);
-      const drift = still ? 0 : Math.sin(t * 0.5) * 0.035;
-      pivot.rotation.set(pitch, yaw + drift, 0);
-      pivot.position.y = still ? 0 : Math.sin(t * 0.7) * 0.03;
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.toneMapping = THREE.NeutralToneMapping;
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.VSMShadowMap;
+      RectAreaLightUniformsLib.init();
+      renderer.toneMappingExposure = 1.0;
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.domElement.style.width = "100%";
+      renderer.domElement.style.height = "100%";
+      renderer.domElement.setAttribute("aria-hidden", "true");
+      // Fades in once it has drawn, rather than popping in.
+      renderer.domElement.style.opacity = "0";
+      renderer.domElement.style.transition =
+        "opacity 900ms cubic-bezier(.16,1,.3,1)";
+      container.appendChild(renderer.domElement);
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => {
+          renderer.domElement.style.opacity = "1";
+        }),
+      );
 
-      const dose = keyframe(p, [
-        [0.54, 0],
-        [0.62, 1],
-        [0.72, 1],
-        [0.8, 0],
-      ]);
-      cupLight.intensity = dose * 0.8;
-      doseMat.opacity = dose * 0.9;
-      doseMat.emissiveIntensity = dose * 0.6;
+      const scene = new THREE.Scene();
+      const pmrem = new THREE.PMREMGenerator(renderer);
+      const studio = studioEnvironment();
+      const envTex = pmrem.fromScene(studio.scene, 0.02).texture;
+      studio.dispose();
+      scene.environment = envTex;
+      scene.environmentIntensity = 1.05;
 
-      renderer.render(scene, camera);
-      placeAnchors();
+      const camera = new THREE.PerspectiveCamera(28, 1, 0.1, 100);
+
+      // Light: cool key from above left, blush and periwinkle rims.
+      scene.add(new THREE.HemisphereLight(0xdfe3ff, 0x1f2441, 0.2));
+      const key = new THREE.DirectionalLight(0xfff8f4, 2.6);
+      key.position.set(-2.5, 8, 3.5);
+      key.castShadow = true;
+      key.shadow.mapSize.set(2048, 2048);
+      key.shadow.radius = 14;
+      key.shadow.blurSamples = 16;
+      key.shadow.bias = -0.0005;
+      const sc = key.shadow.camera;
+      sc.left = -7;
+      sc.right = 7;
+      sc.top = 7;
+      sc.bottom = -7;
+      sc.near = 1;
+      sc.far = 20;
+      scene.add(key);
+      // Studio softbox overhead: the long soft highlight across the top.
+      const softbox = new THREE.RectAreaLight(0xffffff, 3.2, 7, 2.5);
+      softbox.position.set(0, 5, 2.5);
+      softbox.lookAt(0, 0, 0);
+      scene.add(softbox);
+      const rimL = new THREE.PointLight(0x8a8db3, 18, 12);
+      rimL.position.set(-4, 1, -2);
+      scene.add(rimL);
+      const rimR = new THREE.PointLight(0xe8ccd2, 14, 12);
+      rimR.position.set(4, 0.5, -1.5);
+      scene.add(rimR);
+
+      const { group, disposables, doseMat } = buildDevice();
+      const anatomy = mode === "anatomy";
+      const basePos = new Map<THREE.Object3D, THREE.Vector3>();
+      group.children.forEach((c) => basePos.set(c, c.position.clone()));
+      const pivot = new THREE.Group();
+      pivot.add(group);
+      scene.add(pivot);
+
+      const cupLight = new THREE.PointLight(0xe8ccd2, 0, 2.5);
+      cupLight.position.set(0.6, -0.2, FRONT + 0.5);
+      group.add(cupLight);
+
+      const shadowTex = shadowTexture();
+      const shadowMat = new THREE.MeshBasicMaterial({
+        map: shadowTex,
+        transparent: true,
+        depthWrite: false,
+      });
+      const shadowGeo = new THREE.PlaneGeometry(5.4, 2.6);
+      const shadow = new THREE.Mesh(shadowGeo, shadowMat);
+      shadow.rotation.x = -Math.PI / 2;
+      shadow.position.y = -BODY_H / 2 - 0.2;
+      pivot.add(shadow);
+      // Soft cast shadow from the key light on an invisible floor.
+      const floorGeo = new THREE.PlaneGeometry(10, 10);
+      const floorMat = new THREE.ShadowMaterial({
+        opacity: 0.28,
+        color: 0x0a0c1c,
+      });
+      const ground = new THREE.Mesh(floorGeo, floorMat);
+      ground.rotation.x = -Math.PI / 2;
+      ground.position.y = -BODY_H / 2 - 0.19;
+      ground.receiveShadow = true;
+      pivot.add(ground);
+
+      function resize() {
+        const w = container!.clientWidth;
+        const h = container!.clientHeight;
+        if (!w || !h) return;
+        renderer.setSize(w, h, false);
+        camera.aspect = w / h;
+        // Fit about 4.4 x 3.0 units of model, whichever bound is tighter.
+        const vHalf = THREE.MathUtils.degToRad(camera.fov / 2);
+        const hHalf = Math.atan(Math.tan(vHalf) * camera.aspect);
+        const room = anatomy
+          ? camera.aspect < 1
+            ? 1.45
+            : 1.9
+          : camera.aspect < 1
+            ? 1.3
+            : 1.45;
+        const dist =
+          Math.max(2.2 / Math.tan(hHalf), 1.5 / Math.tan(vHalf)) * 1.08 * room;
+        camera.position.set(0, dist * 0.18, dist);
+        camera.lookAt(0, -0.1, 0);
+        camera.updateProjectionMatrix();
+      }
+      resize();
+      const ro = new ResizeObserver(resize);
+      ro.observe(container);
+
+      // Project each part's 3D bounds to a screen rectangle; the box
+      // element takes the rectangle, the label anchors to its side.
+      const corner = new THREE.Vector3();
+      function placeAnchors() {
+        if (!anchors && !boxes) return;
+        const w = container!.clientWidth;
+        const h = container!.clientHeight;
+        group.updateWorldMatrix(true, false);
+        for (const id of Object.keys(PART_BOUNDS) as AnchorId[]) {
+          const bb = PART_BOUNDS[id];
+          let x0 = Infinity,
+            y0 = Infinity,
+            x1 = -Infinity,
+            y1 = -Infinity;
+          for (let i = 0; i < 8; i++) {
+            corner
+              .set(
+                i & 1 ? bb.max.x : bb.min.x,
+                i & 2 ? bb.max.y : bb.min.y,
+                i & 4 ? bb.max.z : bb.min.z,
+              )
+              .applyMatrix4(group.matrixWorld)
+              .project(camera);
+            const sx = ((corner.x + 1) / 2) * w;
+            const sy = ((1 - corner.y) / 2) * h;
+            x0 = Math.min(x0, sx);
+            x1 = Math.max(x1, sx);
+            y0 = Math.min(y0, sy);
+            y1 = Math.max(y1, sy);
+          }
+          const box = boxes?.[id]?.current;
+          if (box) {
+            box.style.left = `${x0}px`;
+            box.style.top = `${y0}px`;
+            box.style.width = `${x1 - x0}px`;
+            box.style.height = `${y1 - y0}px`;
+          }
+          const el = anchors?.[id]?.current;
+          if (el) {
+            const left = el.dataset.side === "left";
+            el.style.left = `${left ? x0 : x1}px`;
+            el.style.top = `${(y0 + y1) / 2}px`;
+          }
+        }
+      }
+
+      const still = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      const clock = new THREE.Clock();
+
+      // Drag to turn (anatomy only), with a little glide after release.
+      let dragYaw = 0;
+      let dragVel = 0;
+      let dragging = false;
+      let lastX = 0;
+      const onDown = (e: PointerEvent) => {
+        dragging = true;
+        lastX = e.clientX;
+        dragVel = 0;
+        container!.setPointerCapture(e.pointerId);
+        container!.style.cursor = "grabbing";
+      };
+      const onMove = (e: PointerEvent) => {
+        if (!dragging) return;
+        const dx = e.clientX - lastX;
+        lastX = e.clientX;
+        dragVel = dx * 0.006;
+        dragYaw += dragVel;
+        if (still) frame();
+      };
+      const onUp = () => {
+        dragging = false;
+        container!.style.cursor = "grab";
+      };
+      if (anatomy) {
+        container.style.cursor = "grab";
+        container.style.touchAction = "pan-y";
+        container.addEventListener("pointerdown", onDown);
+        container.addEventListener("pointermove", onMove);
+        container.addEventListener("pointerup", onUp);
+        container.addEventListener("pointercancel", onUp);
+      }
+
+      const pt = new THREE.Vector3();
+      function frameAnatomy(t: number) {
+        const raw = explode?.get() ?? 1;
+        const e = raw * raw * (3 - 2 * raw); // smoothstep
+        for (const [c, base] of basePos) {
+          const l = c.userData.layer as Layer | undefined;
+          if (!l) continue;
+          const o = EXPLODE[l].offset;
+          c.position.set(
+            base.x + o[0] * e,
+            base.y + o[1] * e,
+            base.z + o[2] * e,
+          );
+        }
+        if (!dragging) {
+          dragYaw += dragVel;
+          dragVel *= 0.94;
+          // Ease back to the labelled view once the glide has settled.
+          if (Math.abs(dragVel) < 0.002) dragYaw *= 0.97;
+        }
+        dragYaw = Math.max(-1.1, Math.min(1.1, dragYaw));
+        const drift = still ? 0 : Math.sin(t * 0.4) * 0.05;
+        pivot.rotation.set(0.32, -0.62 + drift + dragYaw, 0);
+        pivot.position.y = 0.3;
+        renderer.render(scene, camera);
+
+        if (!labels) return;
+        const w = container!.clientWidth;
+        const h = container!.clientHeight;
+        group.updateWorldMatrix(true, false);
+        // Labels sit on whichever side of the device their part is on
+        // right now, so turning it never crosses a label over the model.
+        pt.set(0, 0, 0).applyMatrix4(group.matrixWorld).project(camera);
+        const midX = ((pt.x + 1) / 2) * w;
+        for (const l of Object.keys(EXPLODE) as Layer[]) {
+          const el = labels[l]?.current;
+          if (!el) continue;
+          const { offset: o, anchor: a } = EXPLODE[l];
+          pt.set(a[0] + o[0] * e, a[1] + o[1] * e, a[2] + o[2] * e)
+            .applyMatrix4(group.matrixWorld)
+            .project(camera);
+          const sx = ((pt.x + 1) / 2) * w;
+          el.dataset.side = sx < midX ? "left" : "right";
+          el.style.left = `${sx}px`;
+          el.style.top = `${((1 - pt.y) / 2) * h}px`;
+          // Labels belong to the labelled view: they fade while the
+          // device is turned away from it.
+          const turned = Math.max(
+            0,
+            Math.min(1, (Math.abs(dragYaw) - 0.15) / 0.25),
+          );
+          el.style.opacity = String(
+            Math.max(0, (e - 0.55) / 0.45) * (1 - turned),
+          );
+        }
+      }
+
+      function frame() {
+        const t = clock.getElapsedTime();
+        if (anatomy) {
+          frameAnatomy(t);
+          return;
+        }
+        const p = progress?.get() ?? 0.4;
+        // Turn: three-quarter from the right, settle to near-front while
+        // the parts are read, then swing on through for the close.
+        const yaw = keyframe(p, [
+          [0, -0.75],
+          [0.26, -0.32],
+          [0.72, -0.12],
+          [1, 0.9],
+        ]);
+        const pitch = keyframe(p, [
+          [0, 0.16],
+          [0.26, 0.1],
+          [1, 0.22],
+        ]);
+        const drift = still ? 0 : Math.sin(t * 0.5) * 0.035;
+        pivot.rotation.set(pitch, yaw + drift, 0);
+        pivot.position.y = still ? 0 : Math.sin(t * 0.7) * 0.03;
+
+        const dose = keyframe(p, [
+          [0.54, 0],
+          [0.62, 1],
+          [0.72, 1],
+          [0.8, 0],
+        ]);
+        cupLight.intensity = dose * 0.8;
+        doseMat.opacity = dose * 0.9;
+        doseMat.emissiveIntensity = dose * 0.6;
+
+        renderer.render(scene, camera);
+        placeAnchors();
+      }
+
+      let raf = 0;
+      let visible = true;
+      const loop = () => {
+        // Skip rendering while the entry gate covers the page.
+        if (document.documentElement.dataset.gate !== "open") frame();
+        raf = requestAnimationFrame(loop);
+      };
+      const io = new IntersectionObserver(([e]) => {
+        visible = e.isIntersecting;
+        cancelAnimationFrame(raf);
+        if (visible && !still) raf = requestAnimationFrame(loop);
+        else if (visible) frame();
+      });
+      io.observe(container);
+
+      // Reduced motion: render on scroll changes only, no idle drift.
+      const driver = progress ?? explode;
+      const unsub =
+        still && driver
+          ? driver.on("change", () => visible && frame())
+          : undefined;
+      frame();
+
+      return () => {
+        cancelAnimationFrame(raf);
+        container.removeEventListener("pointerdown", onDown);
+        container.removeEventListener("pointermove", onMove);
+        container.removeEventListener("pointerup", onUp);
+        container.removeEventListener("pointercancel", onUp);
+        io.disconnect();
+        ro.disconnect();
+        unsub?.();
+        disposables.forEach((d) => d.dispose());
+        shadowGeo.dispose();
+        floorGeo.dispose();
+        floorMat.dispose();
+        shadowMat.dispose();
+        shadowTex.dispose();
+        envTex.dispose();
+        pmrem.dispose();
+        renderer.dispose();
+        renderer.domElement.remove();
+      };
     }
-
-    let raf = 0;
-    let visible = true;
-    const loop = () => {
-      // Skip rendering while the entry gate covers the page.
-      if (document.documentElement.dataset.gate !== "open") frame();
-      raf = requestAnimationFrame(loop);
-    };
-    const io = new IntersectionObserver(([e]) => {
-      visible = e.isIntersecting;
-      cancelAnimationFrame(raf);
-      if (visible && !still) raf = requestAnimationFrame(loop);
-      else if (visible) frame();
-    });
-    io.observe(container);
-
-    // Reduced motion: render on scroll changes only, no idle drift.
-    const driver = progress ?? explode;
-    const unsub =
-      still && driver
-        ? driver.on("change", () => visible && frame())
-        : undefined;
-    frame();
-
-    return () => {
-      cancelAnimationFrame(raf);
-      container.removeEventListener("pointerdown", onDown);
-      container.removeEventListener("pointermove", onMove);
-      container.removeEventListener("pointerup", onUp);
-      container.removeEventListener("pointercancel", onUp);
-      io.disconnect();
-      ro.disconnect();
-      unsub?.();
-      disposables.forEach((d) => d.dispose());
-      shadowGeo.dispose();
-      floorGeo.dispose();
-      floorMat.dispose();
-      shadowMat.dispose();
-      shadowTex.dispose();
-      envTex.dispose();
-      pmrem.dispose();
-      renderer.dispose();
-      renderer.domElement.remove();
-    };
   }, [progress, anchors, boxes, onUnsupported, mode, explode, labels]);
 
   return (
