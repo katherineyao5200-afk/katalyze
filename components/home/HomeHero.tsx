@@ -32,6 +32,7 @@ type Annotation = {
   id: AnchorId;
   label: string;
   value: string;
+  detail?: string; // a second, quieter line
   side: "left" | "right";
   at: number; // scroll progress where it appears
 };
@@ -40,7 +41,8 @@ const ANNOTATIONS: Annotation[] = [
   {
     id: "cartridges",
     label: "[01 · 6 cartridges]",
-    value: "3 base · 3 active",
+    value: "3 base: the tall bottles",
+    detail: "3 active: the small droppers",
     side: "right",
     at: 0.3,
   },
@@ -411,8 +413,9 @@ function AnnotationMark({
               className="block h-px w-24 bg-periwinkle/80"
               style={{ scaleX: line, originX: right ? 0 : 1 }}
             />
+            {/* A dark plate keeps the label readable over the glow. */}
             <span
-              className={`flex flex-col whitespace-nowrap ${right ? "ml-3" : "mr-3 items-end text-right"}`}
+              className={`flex flex-col gap-0.5 whitespace-nowrap rounded-md border border-white/10 bg-[color:var(--canvas-deep)]/85 px-3 py-2 shadow-[0_8px_24px_rgb(10_12_28/0.5)] backdrop-blur-md ${right ? "ml-3" : "mr-3 items-end text-right"}`}
             >
               <span
                 className="font-mono uppercase text-periwinkle"
@@ -429,6 +432,14 @@ function AnnotationMark({
               >
                 {a.value}
               </span>
+              {a.detail && (
+                <span
+                  className="text-white"
+                  style={{ fontSize: "var(--text-base)" }}
+                >
+                  {a.detail}
+                </span>
+              )}
             </span>
           </div>
         )}
@@ -468,6 +479,11 @@ function PhoneCaption({
       <span className="text-white" style={{ fontSize: "var(--text-base)" }}>
         {a.value}
       </span>
+      {a.detail && (
+        <span className="text-white" style={{ fontSize: "var(--text-base)" }}>
+          {a.detail}
+        </span>
+      )}
     </motion.div>
   );
 }
@@ -560,6 +576,12 @@ function StaticHero() {
                   style={{ fontSize: "var(--text-xs)" }}
                 >
                   {a.value}
+                  {a.detail && (
+                    <>
+                      <br />
+                      {a.detail}
+                    </>
+                  )}
                 </dd>
               </div>
             ))}

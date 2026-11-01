@@ -696,6 +696,52 @@ function buildDevice() {
   add(statusRing);
 
   layer = "shell";
+  // Printed above the window: which three are bases, which three are
+  // actives, each with a bracket over its group.
+  const groupTex = track(
+    canvasTexture(1024, 48, (g) => {
+      g.clearRect(0, 0, 1024, 48);
+      // model x -1.34..1.34 maps to 0..1024
+      const px = (x: number) => ((x + 1.34) / 2.68) * 1024;
+      g.strokeStyle = "rgba(49,63,121,0.5)";
+      g.lineWidth = 3;
+      g.font = "600 24px ui-monospace, Menlo, monospace";
+      g.textBaseline = "middle";
+      const groups: [string, number, number][] = [
+        ["BASE · 3", -1.19, 0.15],
+        ["ACTIVE · 3", 0.22, 1.09],
+      ];
+      for (const [label, a, b] of groups) {
+        const x0 = px(a);
+        const x1 = px(b);
+        g.beginPath();
+        g.moveTo(x0, 42);
+        g.lineTo(x0, 30);
+        g.lineTo(x1, 30);
+        g.lineTo(x1, 42);
+        g.stroke();
+        const w = g.measureText(label).width;
+        const cx = (x0 + x1) / 2;
+        g.clearRect(cx - w / 2 - 12, 14, w + 24, 32);
+        g.fillStyle = "#313f79";
+        g.fillText(label, cx - w / 2, 30);
+      }
+    }),
+  );
+  const groupMark = new THREE.Mesh(
+    track(new THREE.PlaneGeometry(2.68, 0.1256)),
+    track(
+      new THREE.MeshStandardMaterial({
+        map: groupTex,
+        transparent: true,
+        roughness: 0.5,
+      }),
+    ),
+  );
+  groupMark.position.set(0, 0.975, FRONT + 0.004);
+  add(groupMark);
+
+  layer = "shell";
   // Wordmark pad-printed on the navy base band.
   const markTex = track(
     canvasTexture(512, 64, (g) => {

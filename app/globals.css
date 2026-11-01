@@ -510,15 +510,72 @@ body {
     opacity: 1;
   }
 }
-.intro-ring {
-  animation:
-    intro-ring 1600ms cubic-bezier(0.16, 1, 0.3, 1) both,
-    star-turn 240s linear infinite;
+/* Intro dial: the lit ring is revealed clockwise by a conic mask while a
+   star rides its leading edge. CSS only, so it runs from first paint.
+   Timing matches COUNT_MS in Intro.tsx. */
+@property --sweep {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
 }
-@keyframes intro-ring {
+.intro-dial {
+  animation: intro-dial 1200ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes intro-dial {
   from {
     opacity: 0;
-    scale: 0.85;
+    scale: 0.9;
+  }
+}
+.intro-sweep {
+  -webkit-mask: conic-gradient(
+    #000 calc(var(--sweep) - 10deg),
+    transparent var(--sweep)
+  );
+  mask: conic-gradient(
+    #000 calc(var(--sweep) - 10deg),
+    transparent var(--sweep)
+  );
+  animation: intro-sweep 1800ms cubic-bezier(0.33, 1, 0.68, 1) both;
+}
+@keyframes intro-sweep {
+  from {
+    --sweep: 0deg;
+  }
+  to {
+    --sweep: 370deg;
+  }
+}
+.intro-comet {
+  animation: intro-comet 1800ms cubic-bezier(0.33, 1, 0.68, 1) both;
+}
+@keyframes intro-comet {
+  from {
+    transform: rotate(0deg);
+  }
+  90% {
+    opacity: 1;
+  }
+  to {
+    transform: rotate(360deg);
+    opacity: 0;
+  }
+}
+/* Done: the ring flares outward and the curtain lifts. */
+.intro {
+  transition: transform 900ms cubic-bezier(0.76, 0, 0.24, 1) 120ms;
+}
+.intro-lifting {
+  transform: translateY(-100%);
+  pointer-events: none;
+}
+.intro-lifting .intro-dial {
+  animation: intro-flare 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes intro-flare {
+  to {
+    scale: 1.18;
+    opacity: 0;
   }
 }
 
