@@ -19,6 +19,7 @@ import {
   type RefObject,
 } from "react";
 
+import DitherField from "@/components/DitherField";
 import DeviceModel, { type AnchorId } from "@/components/home/DeviceModel";
 import HeroHeadline from "@/components/HeroHeadline";
 import StarRing from "@/components/home/StarRing";
@@ -170,6 +171,9 @@ function ScrollHero() {
           aria-hidden="true"
           className="grain pointer-events-none absolute inset-0"
         />
+        {/* Living dithered field: drifts, twinkles, ripples under the
+            pointer. Quieter behind the copy so the words stay clean. */}
+        <DitherField className="absolute inset-0 [mask-image:linear-gradient(100deg,rgb(0_0_0/0.3)_0%,rgb(0_0_0/0.3)_32%,black_62%)]" />
 
         {/* The device, in 3D. Labels are pinned to its parts. */}
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center pt-16">

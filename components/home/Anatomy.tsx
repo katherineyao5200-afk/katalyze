@@ -52,7 +52,7 @@ const PARTS: {
     layer: "shell",
     n: "05",
     name: "Housing",
-    note: "Soft-matte moulded shell. Six pumps, one per channel, sit inside.",
+    note: "Soft-matte shell on a navy base, with the fingertip sensor set into the top. Six pumps sit inside.",
     side: "right",
   },
 ];

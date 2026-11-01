@@ -3,7 +3,6 @@
 import type { MotionValue } from "motion/react";
 import { useEffect, useRef, type RefObject } from "react";
 import * as THREE from "three";
-import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { RectAreaLightUniformsLib } from "three/examples/jsm/lights/RectAreaLightUniformsLib.js";
 
 /**
@@ -66,6 +65,8 @@ const BEVEL = 0.2;
 const FRONT = DEPTH / 2 + BEVEL; // z of the front face
 
 const WIN = { x0: -1.34, x1: 1.34, y0: -0.3, y1: 0.8, r: 0.16 };
+const BAND_Y = -0.85; // top of the navy base band
+const TOP_Y = BODY_H / 2 + 0.16; // the flat top surface
 
 function roundedRect(
   x0: number,
@@ -158,7 +159,6 @@ function buildDevice() {
       sheen: 0.4,
       sheenColor: new THREE.Color(0xe8ccd2),
       roughnessMap: track(grainTexture()),
-      bumpMap: undefined,
     }),
   );
   shell.bumpMap = shell.roughnessMap;
@@ -185,7 +185,36 @@ function buildDevice() {
     }),
   );
   bodyGeo.translate(0, 0, -DEPTH / 2);
-  const bodyMesh = new THREE.Mesh(bodyGeo, shell);
+  // The body shares the shell finish, with the navy ABS base band from
+  // the spec (#1f2441) and a fine parting line where the two meet.
+  const bodyMat = track(shell.clone());
+  bodyMat.onBeforeCompile = (sh) => {
+    sh.vertexShader = sh.vertexShader
+      .replace("#include <common>", "#include <common>\nvarying float vLY;")
+      .replace(
+        "#include <begin_vertex>",
+        "#include <begin_vertex>\nvLY = position.y;",
+      );
+    sh.fragmentShader = sh.fragmentShader
+      .replace("#include <common>", "#include <common>\nvarying float vLY;")
+      .replace(
+        "#include <color_fragment>",
+        `#include <color_fragment>
+        float band = 1.0 - smoothstep(${(BAND_Y - 0.004).toFixed(3)}, ${(BAND_Y + 0.004).toFixed(3)}, vLY);
+        float seamLine = 1.0 - smoothstep(0.0, 0.012, abs(vLY - ${(BAND_Y + 0.012).toFixed(3)}));
+        diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.026, 0.032, 0.085), band);
+        diffuseColor.rgb *= 1.0 - 0.45 * seamLine;`,
+      )
+      .replace(
+        "#include <roughnessmap_fragment>",
+        "#include <roughnessmap_fragment>\nroughnessFactor = mix(roughnessFactor, 0.62, band);",
+      )
+      .replace(
+        "#include <lights_physical_fragment>",
+        "#include <lights_physical_fragment>\nmaterial.clearcoat *= 1.0 - 0.75 * band;",
+      );
+  };
+  const bodyMesh = new THREE.Mesh(bodyGeo, bodyMat);
   bodyMesh.castShadow = true;
   bodyMesh.receiveShadow = true;
   add(bodyMesh);
@@ -342,13 +371,17 @@ function buildDevice() {
   const glass = new THREE.Mesh(
     bayGeo,
     track(
+      // Frosted PMMA: diffuses what's behind it, still shows each
+      // cartridge's colour, with a glossy outer face.
       new THREE.MeshPhysicalMaterial({
-        color: 0xf4f5fb,
-        roughness: 0.4,
-        transparent: true,
-        opacity: 0.12,
+        color: 0xf6f6fb,
+        roughness: 0.13,
+        transmission: 1,
+        thickness: 0.04,
+        ior: 1.49,
         clearcoat: 1,
-        clearcoatRoughness: 0.05,
+        clearcoatRoughness: 0.04,
+        specularIntensity: 0.6,
       }),
     ),
   );
@@ -618,6 +651,78 @@ function buildDevice() {
   ledge.receiveShadow = true;
   add(ledge);
 
+  layer = "shell";
+  // Fingertip sensor: two brushed-steel half-disc electrodes set flush
+  // into the top surface, inside a faint status-light ring.
+  const PAD = { x: 0.68, z: 0.02, r: 0.19 };
+  const steel = track(
+    new THREE.MeshPhysicalMaterial({
+      color: 0xd9dbe4,
+      metalness: 0.9,
+      roughness: 0.38,
+      anisotropy: 0.8,
+      clearcoat: 0.4,
+    }),
+  );
+  [0, Math.PI].forEach((start) => {
+    const half = new THREE.Mesh(
+      track(new THREE.CircleGeometry(PAD.r, 40, start + 0.06, Math.PI - 0.12)),
+      steel,
+    );
+    half.rotation.x = -Math.PI / 2;
+    half.position.set(PAD.x, TOP_Y + 0.003, PAD.z);
+    add(half);
+  });
+  const padWell = new THREE.Mesh(
+    track(new THREE.RingGeometry(PAD.r, PAD.r + 0.035, 48)),
+    track(new THREE.MeshStandardMaterial({ color: 0xc9cad6, roughness: 0.7 })),
+  );
+  padWell.rotation.x = -Math.PI / 2;
+  padWell.position.set(PAD.x, TOP_Y + 0.002, PAD.z);
+  add(padWell);
+  const statusRing = new THREE.Mesh(
+    track(new THREE.RingGeometry(PAD.r + 0.035, PAD.r + 0.05, 64)),
+    track(
+      new THREE.MeshBasicMaterial({
+        color: new THREE.Color(0xe8ccd2).multiplyScalar(1.4),
+        toneMapped: false,
+      }),
+    ),
+  );
+  statusRing.rotation.x = -Math.PI / 2;
+  statusRing.position.set(PAD.x, TOP_Y + 0.0025, PAD.z);
+  add(statusRing);
+
+  layer = "shell";
+  // Wordmark pad-printed on the navy base band.
+  const markTex = track(
+    canvasTexture(512, 64, (g) => {
+      g.clearRect(0, 0, 512, 64);
+      g.fillStyle = "#f5eff7";
+      g.font = "300 34px Inter, Helvetica, Arial, sans-serif";
+      g.textBaseline = "middle";
+      const text = "KATALYZE";
+      let x = 4;
+      for (const ch of text) {
+        g.fillText(ch, x, 34);
+        x += g.measureText(ch).width + 14;
+      }
+    }),
+  );
+  const mark = new THREE.Mesh(
+    track(new THREE.PlaneGeometry(0.72, 0.09)),
+    track(
+      new THREE.MeshStandardMaterial({
+        map: markTex,
+        transparent: true,
+        roughness: 0.5,
+        opacity: 0.85,
+      }),
+    ),
+  );
+  mark.position.set(-0.92, -0.99, FRONT + 0.002);
+  add(mark);
+
   layer = "feet";
   // Rubber feet.
   const footG = track(new THREE.CylinderGeometry(0.12, 0.13, 0.05, 24));
@@ -636,6 +741,55 @@ function buildDevice() {
   });
 
   return { group, disposables, doseMat };
+}
+
+// A photo-studio reflection environment: a dim navy room with a large
+// overhead softbox, two tall strip lights and a faint warm bounce card.
+// This is what the glossy shell and steel reflect.
+function studioEnvironment() {
+  const scene = new THREE.Scene();
+  const geos: THREE.BufferGeometry[] = [];
+  const mats: THREE.Material[] = [];
+  const room = new THREE.BoxGeometry(30, 30, 30);
+  const roomMat = new THREE.MeshBasicMaterial({
+    color: 0x272c48,
+    side: THREE.BackSide,
+  });
+  geos.push(room);
+  mats.push(roomMat);
+  scene.add(new THREE.Mesh(room, roomMat));
+  const panel = (
+    w: number,
+    h: number,
+    color: number,
+    strength: number,
+    pos: [number, number, number],
+  ) => {
+    const g = new THREE.PlaneGeometry(w, h);
+    const m = new THREE.MeshBasicMaterial({
+      color: new THREE.Color(color).multiplyScalar(strength),
+      side: THREE.DoubleSide,
+    });
+    geos.push(g);
+    mats.push(m);
+    const mesh = new THREE.Mesh(g, m);
+    mesh.position.set(...pos);
+    mesh.lookAt(0, 0, 0);
+    scene.add(mesh);
+  };
+  panel(14, 6, 0xffffff, 4, [0, 12, 2]); // overhead softbox
+  panel(2.2, 12, 0xffffff, 3, [-11, 1, 5]); // key strip, left
+  panel(1.6, 10, 0xeef0ff, 2, [11, 0, 3]); // fill strip, right
+  panel(8, 4, 0xe8ccd2, 0.6, [4, -2, -12]); // warm bounce behind
+  panel(30, 3, 0xffffff, 0.35, [0, -1, 14]); // soft horizon front
+  panel(12, 5, 0xffffff, 2.2, [0, 9, -9]); // high back light, for the top
+  return {
+    scene,
+    dispose() {
+      geos.forEach((g) => g.dispose());
+      mats.forEach((m) => m.dispose());
+    },
+  };
 }
 
 function shadowTexture() {
@@ -688,7 +842,7 @@ export default function DeviceModel({
       return;
     }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMapping = THREE.NeutralToneMapping;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.VSMShadowMap;
     RectAreaLightUniformsLib.init();
@@ -701,9 +855,11 @@ export default function DeviceModel({
 
     const scene = new THREE.Scene();
     const pmrem = new THREE.PMREMGenerator(renderer);
-    const envTex = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+    const studio = studioEnvironment();
+    const envTex = pmrem.fromScene(studio.scene, 0.02).texture;
+    studio.dispose();
     scene.environment = envTex;
-    scene.environmentIntensity = 0.45;
+    scene.environmentIntensity = 1.05;
 
     const camera = new THREE.PerspectiveCamera(28, 1, 0.1, 100);
 
