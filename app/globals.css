@@ -905,3 +905,12 @@ a.glass:active {
     transition: none !important;
   }
 }
+
+/* Journey headlines leave with a soft colour split in the brand's two
+   light colours (blush one way, periwinkle the other), set by --split. */
+.chroma {
+  --split: 0px;
+  text-shadow:
+    calc(var(--split) * -1) 0 0 rgb(232 204 210 / 0.55),
+    var(--split) 0 0 rgb(138 141 179 / 0.55);
+}

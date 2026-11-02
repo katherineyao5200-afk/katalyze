@@ -9,7 +9,7 @@ import Anatomy from "@/components/home/Anatomy";
 import FormulaLab from "@/components/home/FormulaLab";
 import SkinChart from "@/components/home/SkinChart";
 import Inside from "@/components/home/Inside";
-import Process from "@/components/home/Process";
+import Journey from "@/components/home/Journey";
 import Progress from "@/components/home/Progress";
 import Research from "@/components/home/Research";
 import Voices from "@/components/home/Voices";
@@ -21,7 +21,7 @@ export default function Home() {
       <HomeHero />
       <AtAGlance />
       <Research />
-      <Process />
+      <Journey />
       <Anatomy />
       <Inside />
       <FormulaLab />
