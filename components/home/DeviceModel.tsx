@@ -6,6 +6,7 @@ import * as THREE from "three";
 
 import { afterIntro } from "@/lib/afterIntro";
 import { RectAreaLightUniformsLib } from "three/examples/jsm/lights/RectAreaLightUniformsLib.js";
+import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 
 /**
  * The Katalyze device, modelled in code from the product render:
@@ -915,6 +916,224 @@ function studioEnvironment() {
   };
 }
 
+// The counter scene: a white stone worktop against a navy tiled wall,
+// window light falling across both, and a few things you'd find there.
+function buildCounter(scene: THREE.Scene, renderer: THREE.WebGLRenderer) {
+  const disposables: { dispose(): void }[] = [];
+  const track = <T extends { dispose(): void }>(x: T) => {
+    disposables.push(x);
+    return x;
+  };
+  const topY = -BODY_H / 2 - 0.19;
+  const tex = (w: number, h: number, draw: (g: CanvasRenderingContext2D) => void) => {
+    const t = track(canvasTexture(w, h, draw));
+    t.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    return t;
+  };
+
+  // Worktop: honed white stone with soft grey-lilac veins.
+  const r = rng2(7);
+  const stone = tex(1024, 512, (g) => {
+    g.fillStyle = "#ecebf0";
+    g.fillRect(0, 0, 1024, 512);
+    g.filter = "blur(3px)";
+    for (let i = 0; i < 26; i++) {
+      g.strokeStyle = `rgba(${130 + r() * 30},${130 + r() * 25},${160 + r() * 20},${0.08 + r() * 0.14})`;
+      g.lineWidth = 0.6 + r() * 2.4;
+      g.beginPath();
+      let x = r() * 1024;
+      let y = r() * 512;
+      g.moveTo(x, y);
+      for (let k = 0; k < 6; k++) {
+        const nx = x + 80 + r() * 140;
+        const ny = y + (r() - 0.5) * 120;
+        g.quadraticCurveTo(x + (r() - 0.3) * 120, y + (r() - 0.5) * 140, nx, ny);
+        x = nx;
+        y = ny;
+      }
+      g.stroke();
+    }
+    g.filter = "none";
+  });
+  const slab = new THREE.Mesh(
+    track(new THREE.BoxGeometry(14, 0.32, 5.5)),
+    track(
+      new THREE.MeshPhysicalMaterial({
+        map: stone,
+        roughness: 0.32,
+        clearcoat: 0.35,
+        clearcoatRoughness: 0.3,
+      }),
+    ),
+  );
+  slab.position.set(0, topY - 0.16, 0.6);
+  slab.receiveShadow = true;
+  scene.add(slab);
+
+  // Wall: tall navy tiles, each glazed slightly differently.
+  const tiles = tex(1024, 1024, (g) => {
+    const cols = 8;
+    const rows = 4;
+    const w = 1024 / cols;
+    const h = 1024 / rows;
+    g.fillStyle = "#11142a";
+    g.fillRect(0, 0, 1024, 1024);
+    for (let c = 0; c < cols; c++)
+      for (let k = 0; k < rows; k++) {
+        const v = r() * 10;
+        g.fillStyle = `rgb(${28 + v},${33 + v},${66 + v * 1.4})`;
+        g.fillRect(c * w + 3, k * h + 3, w - 6, h - 6);
+        const sh = g.createLinearGradient(c * w, 0, c * w + w, 0);
+        sh.addColorStop(0, "rgba(255,255,255,0.05)");
+        sh.addColorStop(0.5, "rgba(255,255,255,0)");
+        g.fillStyle = sh;
+        g.fillRect(c * w + 3, k * h + 3, w - 6, h - 6);
+      }
+  });
+  tiles.wrapS = tiles.wrapT = THREE.RepeatWrapping;
+  tiles.repeat.set(2.5, 1.5);
+  const wall = new THREE.Mesh(
+    track(new THREE.PlaneGeometry(16, 8)),
+    track(new THREE.MeshPhysicalMaterial({ map: tiles, roughness: 0.28, clearcoat: 0.6 })),
+  );
+  wall.position.set(0, topY + 4, -1.6);
+  wall.receiveShadow = true;
+  scene.add(wall);
+
+  // Window light thrown across the wall and worktop.
+  const shaft = tex(512, 512, (g) => {
+    g.clearRect(0, 0, 512, 512);
+    g.filter = "blur(14px)";
+    g.fillStyle = "rgba(225,232,255,0.55)";
+    const pane = (x: number) => {
+      g.beginPath();
+      g.moveTo(x, 40);
+      g.lineTo(x + 120, 40);
+      g.lineTo(x + 200, 470);
+      g.lineTo(x + 80, 470);
+      g.closePath();
+      g.fill();
+    };
+    pane(60);
+    pane(210);
+    g.filter = "none";
+  });
+  const lightMat = track(
+    new THREE.MeshBasicMaterial({
+      map: shaft,
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      opacity: 0.5,
+    }),
+  );
+  const patch = new THREE.Mesh(track(new THREE.PlaneGeometry(6, 5)), lightMat);
+  patch.position.set(-3.2, topY + 2.6, -1.58);
+  scene.add(patch);
+  const pool = new THREE.Mesh(track(new THREE.PlaneGeometry(6, 3.4)), lightMat);
+  pool.rotation.x = -Math.PI / 2;
+  pool.rotation.z = 0.5;
+  pool.position.set(-2.4, topY + 0.004, 0.4);
+  scene.add(pool);
+
+  // A glass of water.
+  const glassPts = [
+    [0, 0],
+    [0.24, 0],
+    [0.26, 0.04],
+    [0.28, 0.72],
+    [0.265, 0.72],
+    [0.245, 0.06],
+    [0, 0.06],
+  ].map(([x, y]) => new THREE.Vector2(x, y));
+  const glassMat = track(
+    new THREE.MeshPhysicalMaterial({
+      color: 0xffffff,
+      roughness: 0.03,
+      transmission: 1,
+      thickness: 0.08,
+      ior: 1.5,
+      clearcoat: 1,
+    }),
+  );
+  const glass = new THREE.Mesh(track(new THREE.LatheGeometry(glassPts, 48)), glassMat);
+  glass.position.set(-2.55, topY, 0.9);
+  glass.castShadow = true;
+  scene.add(glass);
+  const water = new THREE.Mesh(
+    track(new THREE.CylinderGeometry(0.245, 0.24, 0.42, 40)),
+    track(
+      new THREE.MeshPhysicalMaterial({
+        color: 0xe8f0ff,
+        roughness: 0.02,
+        transmission: 1,
+        thickness: 0.4,
+        ior: 1.33,
+      }),
+    ),
+  );
+  water.position.set(-2.55, topY + 0.27, 0.9);
+  scene.add(water);
+
+  // A small stoneware pot with a trailing plant.
+  const potMat = track(
+    new THREE.MeshStandardMaterial({ color: 0xd9d3cf, roughness: 0.85 }),
+  );
+  const pot = new THREE.Mesh(
+    track(new THREE.CylinderGeometry(0.42, 0.34, 0.62, 40)),
+    potMat,
+  );
+  pot.position.set(2.75, topY + 0.31, -0.7);
+  pot.castShadow = true;
+  scene.add(pot);
+  const leafMat = track(
+    new THREE.MeshStandardMaterial({ color: 0x2f4a3f, roughness: 0.6, side: THREE.DoubleSide }),
+  );
+  const leafG = track(new THREE.SphereGeometry(0.16, 12, 8));
+  const plant = new THREE.Group();
+  for (let i = 0; i < 26; i++) {
+    const a = r() * Math.PI * 2;
+    const h = 0.2 + r() * 1.1;
+    const leaf = new THREE.Mesh(leafG, leafMat);
+    leaf.scale.set(1, 0.18, 0.55);
+    leaf.position.set(Math.cos(a) * (0.1 + h * 0.35), h, Math.sin(a) * (0.1 + h * 0.3));
+    leaf.rotation.set(r() - 0.5, a, 0.4 + r() * 0.6);
+    leaf.castShadow = true;
+    plant.add(leaf);
+  }
+  plant.position.set(2.75, topY + 0.6, -0.7);
+  scene.add(plant);
+
+  // A folded towel.
+  const towel = new THREE.Mesh(
+    track(new RoundedBoxGeometry(1.3, 0.22, 0.75, 4, 0.1)),
+    track(new THREE.MeshStandardMaterial({ color: 0xe8ccd2, roughness: 0.95 })),
+  );
+  towel.position.set(2.1, topY + 0.11, 1.15);
+  towel.rotation.y = 0.25;
+  towel.castShadow = true;
+  towel.receiveShadow = true;
+  scene.add(towel);
+
+  return {
+    tick(t: number) {
+      lightMat.opacity = 0.44 + Math.sin(t * 0.3) * 0.06;
+      plant.rotation.y = Math.sin(t * 0.4) * 0.03;
+    },
+    dispose() {
+      disposables.forEach((d) => d.dispose());
+    },
+  };
+}
+
+function rng2(seed: number) {
+  let s = seed >>> 0;
+  return () => {
+    s = (s * 1664525 + 1013904223) >>> 0;
+    return s / 4294967296;
+  };
+}
+
 function shadowTexture() {
   const c = document.createElement("canvas");
   c.width = c.height = 128;
@@ -938,7 +1157,7 @@ export default function DeviceModel({
   labels,
 }: {
   /** "anatomy": pulled apart by `explode` (0-1), turned by dragging. */
-  mode?: "hero" | "anatomy";
+  mode?: "hero" | "anatomy" | "counter";
   explode?: MotionValue<number>;
   labels?: Partial<Record<Layer, RefObject<HTMLElement | null>>>;
   progress?: MotionValue<number>;
@@ -1050,6 +1269,7 @@ export default function DeviceModel({
 
       const { group, disposables, doseMat, streamMat } = buildDevice();
       const anatomy = mode === "anatomy";
+      const counter = mode === "counter";
       const basePos = new Map<THREE.Object3D, THREE.Vector3>();
       group.children.forEach((c) => basePos.set(c, c.position.clone()));
       const pivot = new THREE.Group();
@@ -1082,6 +1302,16 @@ export default function DeviceModel({
       ground.position.y = -BODY_H / 2 - 0.19;
       ground.receiveShadow = true;
       pivot.add(ground);
+      const room = counter ? buildCounter(scene, renderer) : undefined;
+      if (counter) {
+        shadow.visible = false;
+        ground.visible = false;
+        scene.environmentIntensity = 0.8;
+        key.position.set(-6, 7, 2);
+        key.color.set(0xe4e9ff);
+        key.intensity = 3.2;
+        rimL.intensity = 4;
+      }
 
       function resize() {
         const w = container!.clientWidth;
@@ -1101,8 +1331,15 @@ export default function DeviceModel({
             : 1.45;
         const dist =
           Math.max(2.2 / Math.tan(hHalf), 1.5 / Math.tan(vHalf)) * 1.08 * room;
-        camera.position.set(0, dist * 0.18, dist);
-        camera.lookAt(0, -0.1, 0);
+        if (counter) {
+          const narrow = camera.aspect < 1;
+          const d = narrow ? dist * 0.8 : dist * 1.05;
+          camera.position.set(0.4, 0.9, d);
+          camera.lookAt(narrow ? 0.2 : -1.7, narrow ? 1.5 : 0.15, 0);
+        } else {
+          camera.position.set(0, dist * 0.18, dist);
+          camera.lookAt(0, -0.1, 0);
+        }
         camera.updateProjectionMatrix();
       }
       resize();
@@ -1265,6 +1502,16 @@ export default function DeviceModel({
           frameAnatomy(t);
           return;
         }
+        if (counter) {
+          // Morning: the device sits still; the light breathes and the
+          // camera drifts a little, as if handheld.
+          pivot.rotation.set(0, -0.38, 0);
+          camera.position.x = 0.4 + (still ? 0 : Math.sin(t * 0.18) * 0.25);
+          if (!still) room?.tick(t);
+          markShadow(0);
+          renderer.render(scene, camera);
+          return;
+        }
         const p = progress?.get() ?? 0.4;
         // Turn: three-quarter from the right, settle to near-front while
         // the parts are read, then swing on through for the close.
@@ -1358,6 +1605,7 @@ export default function DeviceModel({
         shadowMat.dispose();
         shadowTex.dispose();
         envTex.dispose();
+        room?.dispose();
         pmrem.dispose();
         renderer.dispose();
         renderer.domElement.remove();

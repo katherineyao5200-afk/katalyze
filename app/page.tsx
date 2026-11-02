@@ -3,6 +3,7 @@ import Business from "@/components/home/Business";
 import FAQ from "@/components/home/FAQ";
 import Pricing from "@/components/home/Pricing";
 import Close from "@/components/home/Close";
+import Counter from "@/components/home/Counter";
 import Founder from "@/components/home/Founder";
 import HomeHero from "@/components/home/HomeHero";
 import Anatomy from "@/components/home/Anatomy";
@@ -22,6 +23,7 @@ export default function Home() {
       <AtAGlance />
       <Research />
       <Journey />
+      <Counter />
       <Anatomy />
       <Inside />
       <FormulaLab />
