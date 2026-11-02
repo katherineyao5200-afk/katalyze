@@ -28,6 +28,26 @@ export default function Nav() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [hover, setHover] = useState<string | null>(null);
+  // Over a light section the bar turns to dark-on-frost.
+  const [light, setLight] = useState(false);
+  useEffect(() => {
+    const els = document.querySelectorAll("[data-nav='light']");
+    if (!els.length) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setLight(false);
+      return;
+    }
+    const on = new Set<Element>();
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => (e.isIntersecting ? on.add(e.target) : on.delete(e.target)));
+        setLight(on.size > 0);
+      },
+      { rootMargin: "0px 0px -94% 0px" },
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, [pathname]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -54,18 +74,18 @@ export default function Nav() {
           className={`inline-flex min-h-11 items-center rounded-full ${focusRing}`}
         >
           <Image
-            src={images.logo.nav.src}
+            src={light ? images.logo.navDark.src : images.logo.nav.src}
             alt={images.logo.nav.alt}
             width={images.logo.nav.width}
             height={images.logo.nav.height}
             priority
-            className="h-8 w-auto"
+            className="h-8 w-auto transition-opacity duration-500"
           />
         </Link>
 
         <LayoutGroup id="nav">
           <ul
-            className="glass flex items-center rounded-full p-1"
+            className={`glass flex items-center rounded-full p-1 ${light ? "glass-light" : ""}`}
             onMouseLeave={() => setHover(null)}
           >
             {NAV_LINKS.map((link) => {
@@ -76,7 +96,11 @@ export default function Nav() {
                     <motion.span
                       layoutId="nav-pane"
                       aria-hidden="true"
-                      className="absolute inset-0 rounded-full bg-white/[0.11] shadow-[inset_0_1px_0_rgb(255_255_255/0.18)]"
+                      className={`absolute inset-0 rounded-full ${
+                        light
+                          ? "bg-midnight/[0.08]"
+                          : "bg-white/[0.11] shadow-[inset_0_1px_0_rgb(255_255_255/0.18)]"
+                      }`}
                       transition={{ type: "spring", stiffness: 420, damping: 36 }}
                     />
                   )}
@@ -85,7 +109,13 @@ export default function Nav() {
                     aria-current={isActive ? "page" : undefined}
                     onMouseEnter={() => setHover(link.href)}
                     className={`relative inline-flex min-h-9 items-center whitespace-nowrap rounded-full px-2.5 transition-colors duration-300 sm:px-4 ${
-                      isActive ? "text-white" : "text-white/65 hover:text-white"
+                      light
+                        ? isActive
+                          ? "text-midnight"
+                          : "text-midnight/60 hover:text-midnight"
+                        : isActive
+                          ? "text-white"
+                          : "text-white/65 hover:text-white"
                     } ${focusRing}`}
                     style={{ fontSize: "var(--text-sm)" }}
                   >
