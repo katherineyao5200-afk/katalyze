@@ -986,3 +986,49 @@ a.glass:active {
     transition: none;
   }
 }
+
+/* Blueprint mark (footer): construction lines draw in, then the star fills. */
+.blueprint-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.blueprint-node,
+.blueprint-label,
+.blueprint-fill {
+  opacity: 0;
+  transition: opacity 900ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.blueprint-label {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 1.9px;
+  letter-spacing: 0.1em;
+  fill: var(--periwinkle);
+}
+.blueprint-fill {
+  transform-origin: 12px 12px;
+  transform: scale(0.6);
+  transition:
+    opacity 900ms 1300ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 1200ms 1300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.blueprint[data-on] .blueprint-line {
+  stroke-dashoffset: 0;
+}
+.blueprint[data-on] .blueprint-node,
+.blueprint[data-on] .blueprint-label {
+  opacity: 1;
+  transition-delay: 900ms;
+}
+.blueprint[data-on] .blueprint-fill {
+  opacity: 1;
+  transform: scale(1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .blueprint-line,
+  .blueprint-node,
+  .blueprint-label,
+  .blueprint-fill {
+    transition: none;
+  }
+}

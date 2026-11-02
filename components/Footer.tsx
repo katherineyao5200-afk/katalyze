@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import BlueprintMark from "@/components/BlueprintMark";
+
 const FOOTER_LINKS = [
   { href: "/", label: "Home" },
   { href: "/how-it-works", label: "How It Works" },
@@ -31,9 +33,7 @@ export default function Footer() {
         }}
       >
         <div className="col-span-12 flex flex-col gap-4 md:col-span-5">
-          <p className="font-mono uppercase text-periwinkle" style={label}>
-            Katalyze
-          </p>
+          <BlueprintMark className="-ml-4 mb-2 h-36 w-36" />
           <p
             className="max-w-sm text-white"
             style={{
