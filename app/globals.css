@@ -214,3 +214,1196 @@ body {
     animation: none;
   }
 }
+
+/* Dotted vertical column rules on the light homepage grounds — the
+   sharplink reference's grid made visible, at the quarter lines. */
+.column-rules::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(to bottom, var(--rule-on-dark) 0 2px, transparent 2px 6px),
+    repeating-linear-gradient(to bottom, var(--rule-on-dark) 0 2px, transparent 2px 6px),
+    repeating-linear-gradient(to bottom, var(--rule-on-dark) 0 2px, transparent 2px 6px);
+  background-size: 1px 100%;
+  background-repeat: no-repeat;
+  background-position: 25% 0, 50% 0, 75% 0;
+}
+
+/* Annotation leader lines draw in from the label toward the object. */
+.leader {
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform var(--dur-slow) var(--ease-glide);
+}
+
+[data-revealed="true"] .leader {
+  transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .leader {
+    transition: none;
+    transform: scaleX(1);
+  }
+}
+
+/* Formula preview (FormulaLab) */
+.lab-liquid {
+  transition: height 900ms var(--ease-glide);
+}
+.lab-meniscus {
+  animation: lab-wobble 3.2s ease-in-out infinite;
+  transform-origin: center;
+}
+@keyframes lab-wobble {
+  0%,
+  100% {
+    transform: scaleY(1) translateY(0);
+  }
+  50% {
+    transform: scaleY(1.8) translateY(1px);
+  }
+}
+.lab-live {
+  animation: lab-live 1.8s ease-in-out infinite;
+}
+@keyframes lab-live {
+  50% {
+    opacity: 0.25;
+  }
+}
+.lab-drops span {
+  opacity: 0;
+  animation: lab-drop 700ms var(--ease-glide) forwards;
+}
+@keyframes lab-drop {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(42px);
+  }
+}
+.lab-fill {
+  animation: lab-slosh 4s ease-in-out infinite;
+  transform-origin: bottom;
+}
+@keyframes lab-slosh {
+  0%,
+  100% {
+    transform: skewY(0deg);
+  }
+  50% {
+    transform: skewY(-2deg);
+  }
+}
+.lab-range {
+  appearance: none;
+  height: 2px;
+  background: var(--rule-on-dark);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.lab-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--blush);
+  box-shadow: 0 0 0 6px color-mix(in oklab, var(--blush) 20%, transparent);
+  transition: box-shadow var(--dur-fast);
+}
+.lab-range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--blush);
+}
+.lab-range:hover::-webkit-slider-thumb,
+.lab-range:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 10px color-mix(in oklab, var(--blush) 25%, transparent);
+}
+.lab-range:focus-visible {
+  outline: 2px solid var(--blush);
+  outline-offset: 6px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .lab-liquid {
+    transition: none;
+  }
+  .lab-meniscus,
+  .lab-live,
+  .lab-fill,
+  .lab-drops span {
+    animation: none;
+  }
+}
+
+/* Pointer spotlight on cards (PageFX sets --mx/--my/--spot-o). */
+.spot {
+  position: relative;
+  isolation: isolate;
+}
+.spot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: var(--spot-o, 0);
+  transition: opacity var(--dur-base) var(--ease-glide);
+  background: radial-gradient(
+    240px circle at var(--mx, 50%) var(--my, 50%),
+    color-mix(in oklab, var(--periwinkle) 30%, transparent),
+    transparent 70%
+  );
+}
+@media (prefers-reduced-motion: reduce) {
+  .spot::after {
+    display: none;
+  }
+}
+
+/* Opening intro (components/Intro.tsx) */
+.no-intro .intro {
+  display: none;
+}
+.intro-mark {
+  animation: intro-draw 1300ms cubic-bezier(0.76, 0, 0.24, 1) both;
+}
+@keyframes intro-draw {
+  from {
+    clip-path: inset(100% 0 0 0);
+    transform: translateY(12%);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    transform: none;
+  }
+}
+.intro-word > span {
+  animation: intro-rise 1000ms cubic-bezier(0.16, 1, 0.3, 1) 450ms both;
+}
+@keyframes intro-rise {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* Process: the big step number slides up when the step changes. */
+.step-num {
+  animation: step-num 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes step-num {
+  from {
+    transform: translateY(60%);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .step-num {
+    animation: none;
+  }
+}
+
+/* Anatomy labels: DeviceModel flips data-side as the device turns. */
+.anat-line {
+  position: absolute;
+  top: 0;
+  width: 4rem;
+  height: 1px;
+  background: rgb(255 255 255 / 0.4);
+}
+.anat-text {
+  position: absolute;
+  top: -0.75rem;
+  display: flex;
+  width: 14rem;
+  flex-direction: column;
+  gap: 0.25rem;
+  text-shadow:
+    0 0 14px var(--canvas-deep),
+    0 0 4px var(--canvas-deep);
+}
+.anat-label[data-side="right"] .anat-line {
+  left: 0;
+}
+.anat-label[data-side="right"] .anat-text {
+  left: 5rem;
+}
+.anat-label[data-side="left"] .anat-line {
+  right: 0;
+}
+.anat-label[data-side="left"] .anat-text {
+  right: 5rem;
+  align-items: flex-end;
+  text-align: right;
+}
+
+/* Star motif: the hero's celestial ring and twinkling sparkles. */
+.star-ring {
+  animation: star-turn 240s linear infinite;
+}
+@keyframes star-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.star-twinkle {
+  animation: star-twinkle 4.5s ease-in-out infinite;
+}
+@keyframes star-twinkle {
+  50% {
+    opacity: 0.15;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .star-ring,
+  .star-twinkle {
+    animation: none;
+  }
+}
+
+/* Skin chart: the constellation draws in, then the stars appear. */
+.chart-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 2400ms var(--ease-glide) 200ms;
+}
+[data-revealed="true"] .chart-line {
+  stroke-dashoffset: 0;
+}
+.chart-star {
+  opacity: 0;
+}
+[data-revealed="true"] .chart-star {
+  animation: chart-star 600ms var(--ease-glide) forwards;
+}
+@keyframes chart-star {
+  to {
+    opacity: 1;
+  }
+}
+.chart-star:focus-visible circle:first-child {
+  stroke: var(--blush);
+  stroke-width: 2;
+}
+@media (prefers-reduced-motion: reduce) {
+  .chart-line {
+    transition: none;
+    stroke-dashoffset: 0;
+  }
+  .chart-star,
+  [data-revealed="true"] .chart-star {
+    animation: none;
+    opacity: 1;
+  }
+}
+/* Intro dial: the lit ring is revealed clockwise by a conic mask while a
+   star rides its leading edge. CSS only, so it runs from first paint.
+   Timing matches COUNT_MS in Intro.tsx. */
+@property --sweep {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+.intro-dial {
+  animation: intro-dial 1200ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes intro-dial {
+  from {
+    opacity: 0;
+    scale: 0.9;
+  }
+}
+.intro-sweep {
+  -webkit-mask: conic-gradient(
+    #000 calc(var(--sweep) - 10deg),
+    transparent var(--sweep)
+  );
+  mask: conic-gradient(
+    #000 calc(var(--sweep) - 10deg),
+    transparent var(--sweep)
+  );
+  animation: intro-sweep 1800ms cubic-bezier(0.33, 1, 0.68, 1) both;
+}
+@keyframes intro-sweep {
+  from {
+    --sweep: 0deg;
+  }
+  to {
+    --sweep: 370deg;
+  }
+}
+.intro-comet {
+  animation: intro-comet 1800ms cubic-bezier(0.33, 1, 0.68, 1) both;
+}
+@keyframes intro-comet {
+  from {
+    transform: rotate(0deg);
+  }
+  90% {
+    opacity: 1;
+  }
+  to {
+    transform: rotate(360deg);
+    opacity: 0;
+  }
+}
+/* Done: the ring flares outward and the curtain lifts. */
+.intro {
+  transition: transform 900ms cubic-bezier(0.76, 0, 0.24, 1) 120ms;
+}
+.intro-lifting {
+  transform: translateY(-100%);
+  pointer-events: none;
+}
+.intro-lifting .intro-dial {
+  animation: intro-flare 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes intro-flare {
+  to {
+    scale: 1.18;
+    opacity: 0;
+  }
+}
+
+/* How it works: step scenes (StepScene.tsx). Resting styles are the
+   finished picture; animations only play the way in. */
+.ss-finger {
+  animation: ss-finger 1100ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes ss-finger {
+  from {
+    transform: translateY(-70px);
+    opacity: 0;
+  }
+}
+.ss-pulse {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ss-pulse 1800ms cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+@keyframes ss-pulse {
+  0% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.2);
+  }
+}
+.ss-fade {
+  animation: ss-fade 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes ss-fade {
+  from {
+    opacity: 0;
+  }
+}
+.ss-grow {
+  transform-box: fill-box;
+  transform-origin: left;
+  animation: ss-grow 3000ms linear both;
+}
+@keyframes ss-grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+.ss-draw {
+  stroke-dasharray: 1;
+  animation: ss-draw 1200ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes ss-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.ss-level {
+  animation: ss-level 1000ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes ss-level {
+  from {
+    transform: scaleY(0);
+  }
+}
+.ss-drop {
+  opacity: 0;
+  animation: ss-drop 1500ms cubic-bezier(0.5, 0, 0.75, 0) infinite;
+}
+@keyframes ss-drop {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), 46px);
+  }
+}
+.ss-fill {
+  animation: ss-fill 1600ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes ss-fill {
+  from {
+    transform: translateY(140px);
+  }
+}
+.ss-stir {
+  animation: ss-stir 2600ms ease-in-out infinite;
+}
+@keyframes ss-stir {
+  50% {
+    transform: rotate(14deg) scaleX(0.9);
+  }
+}
+.ss-pop {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ss-pop 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes ss-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ss-finger,
+  .ss-fade,
+  .ss-grow,
+  .ss-draw,
+  .ss-level,
+  .ss-fill,
+  .ss-stir,
+  .ss-pop,
+  .ss-pulse,
+  .ss-drop {
+    animation: none;
+  }
+}
+
+/* Waitlist pop-up (components/WaitlistModal.tsx) */
+.waitlist-modal::backdrop {
+  background: rgb(10 12 28 / 0.6);
+  backdrop-filter: blur(6px);
+}
+.waitlist-modal[open] {
+  animation: waitlist-in 420ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.waitlist-modal[open]::backdrop {
+  animation: waitlist-fade 300ms ease-out;
+}
+@keyframes waitlist-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+}
+@keyframes waitlist-fade {
+  from {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .waitlist-modal[open],
+  .waitlist-modal[open]::backdrop {
+    animation: none;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Glass. One material for every control: a thin, cool pane with a lit
+   top edge and a specular highlight that follows the pointer (set by
+   GlassLight as --gx / --gy). Two weights only:
+   .btn-primary  filled blush, the one action on a screen
+   .glass        clear pane, for everything else (nav, chips, secondary)
+   ------------------------------------------------------------------ */
+.glass,
+.btn-primary {
+  --gx: 50%;
+  --gy: 0%;
+  isolation: isolate;
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  backdrop-filter: blur(18px) saturate(160%);
+}
+.glass {
+  background:
+    radial-gradient(120% 140% at var(--gx) var(--gy), rgb(255 255 255 / 0.1), transparent 55%),
+    linear-gradient(180deg, rgb(255 255 255 / 0.07), rgb(255 255 255 / 0.02));
+  border: 1px solid rgb(255 255 255 / 0.12);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.16),
+    inset 0 -1px 0 rgb(255 255 255 / 0.03),
+    0 1px 2px rgb(10 12 28 / 0.4),
+    0 18px 40px -14px rgb(10 12 28 / 0.75),
+    0 0 0 0.5px rgb(138 141 179 / 0.12);
+}
+.btn-primary {
+  color: var(--midnight);
+  background:
+    radial-gradient(90% 160% at var(--gx) var(--gy), rgb(255 255 255 / 0.55), transparent 60%),
+    linear-gradient(180deg, #f1dde2 0%, var(--blush) 55%, #dcbcc4 100%);
+  border: 1px solid rgb(255 255 255 / 0.5);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.75),
+    inset 0 -2px 6px rgb(49 63 121 / 0.12),
+    0 0 28px -4px rgb(232 204 210 / 0.55),
+    0 10px 30px -10px rgb(232 204 210 / 0.45),
+    0 2px 6px rgb(10 12 28 / 0.3);
+}
+.glass,
+.btn-primary {
+  transition:
+    transform 500ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 500ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 300ms ease,
+    background-color 300ms ease;
+}
+.btn-primary:hover {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.85),
+    inset 0 -2px 6px rgb(49 63 121 / 0.12),
+    0 0 40px -2px rgb(232 204 210 / 0.75),
+    0 14px 40px -10px rgb(232 204 210 / 0.6),
+    0 2px 6px rgb(10 12 28 / 0.3);
+}
+.glass:hover {
+  border-color: rgb(255 255 255 / 0.22);
+}
+.btn-primary:active,
+button.glass:active,
+a.glass:active {
+  transform: scale(0.97);
+  transition-duration: 120ms;
+}
+.btn-primary:focus-visible,
+.glass:focus-visible {
+  outline: 2px solid var(--blush);
+  outline-offset: 3px;
+}
+.btn-primary:disabled {
+  opacity: 0.6;
+}
+/* The arrow inside a button nudges, it doesn't bounce. */
+.btn-arrow {
+  display: inline-block;
+  transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+:is(.btn-primary, .glass):hover .btn-arrow {
+  transform: translateX(3px);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass {
+    background-color: rgb(31 36 65 / 0.92);
+  }
+}
+
+/* ------------------------------------------------------------------
+   Motion language. Content "reads in": each block is uncovered top to
+   bottom behind a soft-edged mask while it settles 14px, children one
+   after another, like a reading being taken. Images unveil the same way,
+   slower, with the picture settling from a slight zoom. One curve
+   (expo out) and three durations, nowhere else.
+   ------------------------------------------------------------------ */
+.rv > *,
+.rv-self {
+  --rv-delay: var(--rv-base, 0ms);
+  -webkit-mask-image: linear-gradient(180deg, #000 45%, transparent 55%);
+  mask-image: linear-gradient(180deg, #000 45%, transparent 55%);
+  -webkit-mask-size: 100% 220%;
+  mask-size: 100% 220%;
+  -webkit-mask-position: 0 100%;
+  mask-position: 0 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  transform: translateY(14px);
+  transition:
+    -webkit-mask-position 1100ms cubic-bezier(0.16, 1, 0.3, 1) var(--rv-delay),
+    mask-position 1100ms cubic-bezier(0.16, 1, 0.3, 1) var(--rv-delay),
+    transform 1100ms cubic-bezier(0.16, 1, 0.3, 1) var(--rv-delay);
+}
+.rv[data-revealed="true"] > *,
+.rv-self[data-revealed="true"] {
+  -webkit-mask-position: 0 0;
+  mask-position: 0 0;
+  transform: none;
+}
+/* After the reveal, drop the mask so nothing stays clipped. */
+.rv[data-settled="true"] > *,
+.rv-self[data-settled="true"] {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+.rv > :nth-child(2) { --rv-delay: calc(var(--rv-base, 0ms) + 90ms); }
+.rv > :nth-child(3) { --rv-delay: calc(var(--rv-base, 0ms) + 180ms); }
+.rv > :nth-child(4) { --rv-delay: calc(var(--rv-base, 0ms) + 270ms); }
+.rv > :nth-child(5) { --rv-delay: calc(var(--rv-base, 0ms) + 360ms); }
+.rv > :nth-child(n + 6) { --rv-delay: calc(var(--rv-base, 0ms) + 420ms); }
+.rv[data-variant="slide"] > *,
+.rv-self[data-variant="slide"] {
+  -webkit-mask-image: linear-gradient(90deg, #000 45%, transparent 55%);
+  mask-image: linear-gradient(90deg, #000 45%, transparent 55%);
+  -webkit-mask-size: 220% 100%;
+  mask-size: 220% 100%;
+  -webkit-mask-position: 100% 0;
+  mask-position: 100% 0;
+  transform: translateX(-10px);
+}
+.rv[data-variant="fade"] > *,
+.rv-self[data-variant="fade"] {
+  -webkit-mask-image: none;
+  mask-image: none;
+  opacity: 0;
+  transform: none;
+  transition: opacity 900ms cubic-bezier(0.16, 1, 0.3, 1) var(--rv-delay);
+}
+.rv[data-variant="fade"][data-revealed="true"] > *,
+.rv-self[data-variant="fade"][data-revealed="true"] {
+  opacity: 1;
+}
+/* Unveil: the frame uncovers, the picture inside settles from 1.06x. */
+.rv[data-variant="scale"] > *,
+.rv-self[data-variant="scale"] {
+  transform: none;
+  transition-duration: 1400ms;
+}
+.rv[data-variant="scale"] :is(img, video),
+.rv-self[data-variant="scale"] :is(img, video) {
+  transform: scale(1.06);
+  transition: transform 1800ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.rv[data-variant="scale"][data-revealed="true"] :is(img, video),
+.rv-self[data-variant="scale"][data-revealed="true"] :is(img, video) {
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .rv > *,
+  .rv-self,
+  .rv :is(img, video),
+  .rv-self :is(img, video) {
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+    transition: none !important;
+  }
+}
+
+/* Journey headlines leave with a soft colour split in the brand's two
+   light colours (blush one way, periwinkle the other), set by --split. */
+.chroma {
+  --split: 0px;
+  text-shadow:
+    calc(var(--split) * -1) 0 0 rgb(232 204 210 / 0.55),
+    var(--split) 0 0 rgb(138 141 179 / 0.55);
+}
+
+/* Frosted-glass cartridge vials (Inside). The pane is real frosted glass:
+   it blurs the liquid behind it, with a lit top edge and a soft inner
+   glow; opening it slides the pane down and sharpens the colour. */
+.vial-pane {
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.55), rgb(255 255 255 / 0.32));
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+  backdrop-filter: blur(22px) saturate(170%);
+  border: 1px solid rgb(255 255 255 / 0.85);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.95),
+    inset 0 -18px 40px -24px rgb(49 63 121 / 0.3),
+    inset 1px 0 0 rgb(255 255 255 / 0.7),
+    0 2px 4px rgb(31 36 65 / 0.12),
+    0 34px 60px -26px rgb(31 36 65 / 0.55);
+  transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.vial-liquid {
+  filter: saturate(1.1);
+  box-shadow:
+    inset 10px 0 18px -8px rgb(255 255 255 / 0.75),
+    inset -12px 0 22px -10px rgb(31 36 65 / 0.35),
+    0 30px 50px -24px rgb(49 63 121 / 0.55);
+  transition:
+    transform 700ms cubic-bezier(0.16, 1, 0.3, 1),
+    filter 700ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.vial:is(:hover, :focus-visible) .vial-pane {
+  transform: translateY(14px);
+}
+.vial:is(:hover, :focus-visible) .vial-liquid {
+  transform: translateY(-6px);
+  filter: saturate(1.3) brightness(1.04);
+}
+.vial:focus-visible .vial-pane {
+  outline: 2px solid var(--indigo);
+  outline-offset: 3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .vial-pane,
+  .vial-liquid {
+    transition: none;
+  }
+}
+/* The nav's glass over a light section: frost instead of smoke. */
+.glass.glass-light {
+  background:
+    radial-gradient(120% 140% at var(--gx) var(--gy), rgb(255 255 255 / 0.7), transparent 55%),
+    linear-gradient(180deg, rgb(255 255 255 / 0.7), rgb(255 255 255 / 0.45));
+  border-color: rgb(31 36 65 / 0.1);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.9),
+    0 12px 32px -16px rgb(31 36 65 / 0.35);
+}
+
+.dot-stat {
+  transition:
+    background 500ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 500ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.orbit-spin {
+  animation: orbit-spin 16s linear infinite;
+  transform-origin: 0 0;
+}
+@keyframes orbit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .orbit-spin {
+    animation: none;
+  }
+  .dot-stat {
+    transition: none;
+  }
+}
+
+/* Blueprint mark (footer): construction lines draw in, then the star fills. */
+.blueprint-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.blueprint-node,
+.blueprint-label,
+.blueprint-fill {
+  opacity: 0;
+  transition: opacity 900ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.blueprint-label {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 1.9px;
+  letter-spacing: 0.1em;
+  fill: var(--periwinkle);
+}
+.blueprint-fill {
+  transform-origin: 12px 12px;
+  transform: scale(0.6);
+  transition:
+    opacity 900ms 1300ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 1200ms 1300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.blueprint[data-on] .blueprint-line {
+  stroke-dashoffset: 0;
+}
+.blueprint[data-on] .blueprint-node,
+.blueprint[data-on] .blueprint-label {
+  opacity: 1;
+  transition-delay: 900ms;
+}
+.blueprint[data-on] .blueprint-fill {
+  opacity: 1;
+  transform: scale(1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .blueprint-line,
+  .blueprint-node,
+  .blueprint-label,
+  .blueprint-fill {
+    transition: none;
+  }
+}
+
+/* Blend demo as a small game: pad halo, flowing lines, the mix call. */
+.lab-pad-idle::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklab, var(--blush) 60%, transparent);
+  box-shadow: 0 0 24px color-mix(in oklab, var(--blush) 35%, transparent);
+  animation: lab-halo 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  pointer-events: none;
+}
+@keyframes lab-halo {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.25);
+    opacity: 0;
+  }
+}
+.lab-flow {
+  stroke-dasharray: 6 10;
+  animation: lab-flow 600ms linear infinite;
+}
+@keyframes lab-flow {
+  to {
+    stroke-dashoffset: -16;
+  }
+}
+.lab-swirl {
+  background: conic-gradient(
+    from 0deg,
+    transparent,
+    rgb(255 255 255 / 0.35),
+    transparent 40%
+  );
+  animation: lab-spin 900ms linear infinite;
+  mix-blend-mode: soft-light;
+}
+@keyframes lab-spin {
+  to {
+    transform: rotate(360deg) scale(1.6);
+  }
+}
+.lab-cup-ready {
+  filter: drop-shadow(0 0 18px color-mix(in oklab, var(--blush) 55%, transparent));
+  transition: filter 600ms var(--ease-glide);
+}
+.lab-cta {
+  animation: lab-cta 2.6s ease-in-out infinite;
+}
+@keyframes lab-cta {
+  50% {
+    box-shadow:
+      0 0 0 6px color-mix(in oklab, var(--blush) 18%, transparent),
+      0 0 32px color-mix(in oklab, var(--blush) 45%, transparent);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lab-pad-idle::before,
+  .lab-flow,
+  .lab-swirl,
+  .lab-cta {
+    animation: none;
+  }
+}
+
+/* Glowing cursor (components/CursorGlow.tsx) */
+.cursor-glow,
+.cursor-ring {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+:root[data-cursor-glow] .cursor-glow,
+:root[data-cursor-glow] .cursor-ring {
+  opacity: 1;
+}
+.cursor-glow {
+  width: 0;
+  height: 0;
+  mix-blend-mode: screen;
+}
+.cursor-glow::before {
+  content: "";
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  left: -180px;
+  top: -180px;
+  border-radius: 999px;
+  background: radial-gradient(
+    circle,
+    rgb(138 141 179 / 0.22),
+    rgb(138 141 179 / 0.08) 35%,
+    transparent 68%
+  );
+}
+.cursor-glow::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  left: -5px;
+  top: -5px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.9);
+  box-shadow: 0 0 14px 4px rgb(232 204 210 / 0.55);
+  opacity: 0.7;
+}
+.cursor-ring {
+  width: 0;
+  height: 0;
+}
+.cursor-ring::before {
+  content: "";
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  left: -22px;
+  top: -22px;
+  border-radius: 999px;
+  border: 1px solid rgb(232 204 210 / 0.8);
+  box-shadow:
+    0 0 18px rgb(232 204 210 / 0.45),
+    inset 0 0 10px rgb(232 204 210 / 0.25);
+  transform: scale(0.2);
+  opacity: 0;
+  transition:
+    transform 450ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 300ms;
+}
+.cursor-ring[data-state="hover"]::before,
+.cursor-ring[data-state="label"]::before {
+  transform: scale(1);
+  opacity: 1;
+}
+.cursor-ring[data-press]::before {
+  transform: scale(0.8);
+}
+.cursor-tag {
+  position: absolute;
+  left: 28px;
+  top: 14px;
+  white-space: nowrap;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blush);
+  text-shadow: 0 0 10px rgb(232 204 210 / 0.6);
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 300ms,
+    transform 450ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.cursor-ring[data-state="label"] .cursor-tag {
+  opacity: 1;
+  transform: none;
+}
+
+/* Hint tag dot: a slow ping so interactive parts announce themselves. */
+.hint-dot {
+  box-shadow: 0 0 8px var(--blush);
+}
+.hint-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: var(--blush);
+  animation: hint-ping 2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+@keyframes hint-ping {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(3.2);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hint-dot::after {
+    animation: none;
+  }
+}
+
+/* Focal glow: a soft light on the one thing each screen leads with. */
+.focal {
+  text-shadow:
+    0 0 28px rgb(198 201 236 / 0.45),
+    0 0 72px rgb(138 141 179 / 0.35);
+}
+.chroma .focal {
+  text-shadow:
+    calc(var(--split) * -1) 0 0 rgb(232 204 210 / 0.55),
+    var(--split) 0 0 rgb(138 141 179 / 0.55),
+    0 0 28px rgb(198 201 236 / 0.45),
+    0 0 72px rgb(138 141 179 / 0.35);
+}
+
+/* Gallery (components/Gallery.tsx) */
+.gallery-track {
+  scrollbar-width: none;
+}
+.gallery-track::-webkit-scrollbar {
+  display: none;
+}
+.gallery-photo {
+  box-shadow: 0 24px 60px -24px rgb(5 6 18 / 0.8);
+  transition: box-shadow 600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.group:hover .gallery-photo {
+  box-shadow:
+    0 24px 60px -24px rgb(5 6 18 / 0.8),
+    0 0 40px -6px rgb(198 201 236 / 0.35);
+}
+.gallery-float {
+  transform: translateY(var(--lift)) rotate(var(--tilt));
+  animation: gallery-drift 9s ease-in-out infinite;
+  transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.gallery-float:hover {
+  animation-play-state: paused;
+}
+@keyframes gallery-drift {
+  0%,
+  100% {
+    transform: translateY(var(--lift)) rotate(var(--tilt));
+  }
+  50% {
+    transform: translateY(calc(var(--lift) - 12px)) rotate(calc(var(--tilt) * 0.6));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gallery-float {
+    animation: none;
+  }
+}
+/* Ingredient constellations: faint at rest, drawn in on hover/focus. */
+.vial-sky line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0.65;
+  transition: stroke-dashoffset 900ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.vial-sky circle {
+  opacity: 0.55;
+  transition: opacity 500ms;
+}
+.vial:is(:hover, :focus-visible) .vial-sky line {
+  stroke-dashoffset: 0;
+}
+.vial:is(:hover, :focus-visible) .vial-sky circle {
+  opacity: 1;
+  filter: drop-shadow(0 0 2px rgb(49 63 121 / 0.6));
+}
+@media (prefers-reduced-motion: reduce) {
+  .vial-sky line {
+    stroke-dashoffset: 0;
+    transition: none;
+  }
+}
+
+/* ------------------------------------------------------------------
+   How it works close-ups: a phone with real depth (a lit bezel, a
+   side edge, a long soft shadow) and the small motions inside each.
+   ------------------------------------------------------------------ */
+.phone {
+  border-radius: 42px;
+  background: linear-gradient(145deg, #4a5490, #1f2441 40%, #0e1024);
+  box-shadow:
+    0 50px 90px -30px rgb(0 0 0 / 0.75),
+    0 0 0 1px rgb(255 255 255 / 0.12),
+    inset 0 1px 1px rgb(255 255 255 / 0.35),
+    inset -3px 0 0 rgb(0 0 0 / 0.35),
+    0 0 80px rgb(138 141 179 / 0.18);
+}
+.phone-screen {
+  background:
+    radial-gradient(120% 60% at 50% 0%, rgb(49 63 121 / 0.75), transparent 70%),
+    #15182e;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.06);
+}
+.step-float {
+  animation: step-float 7s ease-in-out infinite;
+}
+@keyframes step-float {
+  50% { transform: translateY(-8px) rotateZ(-0.6deg); }
+}
+.pad-ripple {
+  border: 1.5px solid rgb(232 204 210 / 0.55);
+  animation: pad-ripple 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+@keyframes pad-ripple {
+  from { transform: scale(0.6); opacity: 0.9; }
+  to { transform: scale(1.35); opacity: 0; }
+}
+.fingertip {
+  animation: fingertip 4.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+@keyframes fingertip {
+  0%, 100% { transform: translateY(-10%); }
+  30%, 70% { transform: translateY(18%); }
+}
+.blend-bar {
+  transform-origin: left;
+  animation: blend-bar 1.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes blend-bar {
+  from { transform: scaleX(0); }
+}
+.scoop-finger {
+  animation: scoop 5.5s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+@keyframes scoop {
+  0%, 100% { transform: translate(0, 0) rotate(28deg); }
+  45%, 60% { transform: translate(-6%, 8%) rotate(22deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .step-float, .pad-ripple, .fingertip, .blend-bar, .scoop-finger {
+    animation: none;
+  }
+}
+
+/* Skincare section: the face drawing draws itself in once, the dab of
+   product glows, and the skin swatches sit like small glossy tiles. */
+.skin-face .draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: skin-draw 2.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.rv[data-revealed="false"] .skin-face .draw { animation-play-state: paused; }
+@keyframes skin-draw { to { stroke-dashoffset: 0; } }
+.skin-dab { animation: skin-dab 4s ease-in-out infinite; filter: drop-shadow(0 0 6px rgb(255 255 255 / 0.8)); }
+@keyframes skin-dab { 50% { opacity: 0.7; } }
+.skin-glow { animation: skin-dab 6s ease-in-out infinite; }
+.skin-swatch {
+  box-shadow:
+    0 24px 40px -18px rgb(0 0 0 / 0.7),
+    0 0 0 1px rgb(255 255 255 / 0.18),
+    inset 0 1px 0 rgb(255 255 255 / 0.5);
+  transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.skin-tile:hover .skin-swatch { transform: translateY(-6px) rotateX(6deg); }
+@media (prefers-reduced-motion: reduce) {
+  .skin-face .draw { animation: none; stroke-dashoffset: 0; }
+  .skin-dab, .skin-glow { animation: none; }
+}
+
+/* Photo statements: film grain over the blurred photo, so generated
+   imagery reads as texture rather than as a render. */
+.photo-grain {
+  opacity: 0.22;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}

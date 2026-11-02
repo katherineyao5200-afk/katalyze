@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { getSupabaseServerClient } from "@/lib/supabase";
+import { describeSupabaseConfig, getSupabaseServerClient } from "@/lib/supabase";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
@@ -23,6 +23,42 @@ function isRateLimited(ip: string) {
   timestamps.push(now);
   requestLog.set(ip, timestamps);
   return false;
+}
+
+// Health check, safe to open in a browser: says whether this deployment
+// has its Supabase settings and can reach the waitlist table. It never
+// returns keys, emails or counts.
+export async function GET() {
+  const configured = Boolean(
+    process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY,
+  );
+  if (!configured) {
+    return NextResponse.json({
+      configured: false,
+      database: "not checked",
+      hint: "SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY is not set for this Vercel environment.",
+    });
+  }
+  try {
+    const supabase = getSupabaseServerClient();
+    const { error } = await supabase.from("waitlist").select("id").limit(0);
+    if (error) {
+      return NextResponse.json({
+        configured: true,
+        database: "error",
+        code: error.code ?? null,
+        detail: error.message,
+        ...describeSupabaseConfig(),
+      });
+    }
+    return NextResponse.json({ configured: true, database: "ok" });
+  } catch (error) {
+    return NextResponse.json({
+      configured: true,
+      database: "unreachable",
+      detail: error instanceof Error ? error.message : String(error),
+    });
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -74,8 +110,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true, duplicate: false });
   } catch (error) {
     console.error("waitlist insert failed", error);
+    const reason =
+      error instanceof Error && error.message.startsWith("Missing SUPABASE")
+        ? "config"
+        : typeof error === "object" && error && "code" in error
+          ? String((error as { code: unknown }).code)
+          : "unknown";
     return NextResponse.json(
-      { ok: false, error: "Something went wrong. Please try again." },
+      { ok: false, reason, error: "Something went wrong. Please try again." },
       { status: 500 },
     );
   }

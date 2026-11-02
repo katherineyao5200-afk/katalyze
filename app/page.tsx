@@ -1,27 +1,42 @@
-import Analysis from "@/components/sections/Analysis";
-import ClosingCTA from "@/components/sections/ClosingCTA";
-import DeviceShowcase from "@/components/sections/DeviceShowcase";
-import Formulation from "@/components/sections/Formulation";
-import Freshness from "@/components/sections/Freshness";
-import Hero from "@/components/sections/Hero";
-import HowItWorks from "@/components/sections/HowItWorks";
-import NotAQuiz from "@/components/sections/NotAQuiz";
-import Proof from "@/components/sections/Proof";
-import Thesis from "@/components/sections/Thesis";
+import Business from "@/components/home/Business";
+import Mission from "@/components/home/Mission";
+import Model from "@/components/home/Model";
+import FAQ from "@/components/home/FAQ";
+import Pricing from "@/components/home/Pricing";
+import Close from "@/components/home/Close";
+import Founder from "@/components/home/Founder";
+import SkinRitual from "@/components/home/SkinRitual";
+import HomeHero from "@/components/home/HomeHero";
+import Anatomy from "@/components/home/Anatomy";
+import FormulaLab from "@/components/home/FormulaLab";
+import SkinChart from "@/components/home/SkinChart";
+import Inside from "@/components/home/Inside";
+import Journey from "@/components/home/Journey";
+import Progress from "@/components/home/Progress";
+import Research from "@/components/home/Research";
+import Voices from "@/components/home/Voices";
 
+// Section map and the reference behind each one: docs/REFERENCES.md.
 export default function Home() {
   return (
-    <main className="flex flex-1 flex-col">
-      <Hero />
-      <Thesis />
-      <Analysis />
-      <DeviceShowcase />
-      <HowItWorks />
-      <Formulation />
-      <Freshness />
-      <NotAQuiz />
-      <Proof />
-      <ClosingCTA />
+    <main className="flex flex-1 flex-col bg-midnight">
+      <HomeHero />
+      <SkinRitual />
+      <Mission />
+      <Research />
+      <Journey />
+      <Anatomy />
+      <Inside />
+      <FormulaLab />
+      <SkinChart />
+      <Progress />
+      <Model />
+      <Business />
+      <Pricing />
+      <Voices />
+      <Founder />
+      <FAQ />
+      <Close />
     </main>
   );
 }

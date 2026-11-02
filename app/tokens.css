@@ -21,6 +21,29 @@
   --rule-on-light: rgb(31 36 65 / 0.14);
   --panel: rgb(49 63 121 / 0.28); /* translucent card over gradient */
 
+  /* ---- Light ground (homepage redesign, Oct 2026) ----
+     kat asked for a redesign that merges her reference sites; two of the
+     four (sharplink, truekind) sit on pale airy grounds, and the device
+     render is shot on white. These derive only from the brand core. */
+  --muted-on-light: rgb(31 36 65 / 0.7);
+  --faint-on-light: rgb(31 36 65 / 0.5);
+  --panel-light: rgb(255 255 255 / 0.6);
+  --grad-haze: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    rgb(138 141 179 / 0.16) 58%,
+    rgb(232 204 210 / 0.32) 100%
+  );
+
+  /* Dark homepage ground: midnight to indigo and back, nothing new. */
+  --canvas-deep: #15182e;
+  --grad-haze-dark: linear-gradient(
+    180deg,
+    #1f2441 0%,
+    #283260 55%,
+    #1f2441 100%
+  );
+
   /* ---- The brand gradient (sampled from the kit) ---- */
   --grad-atmosphere: linear-gradient(
     100deg,

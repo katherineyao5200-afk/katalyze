@@ -5,9 +5,18 @@ import "lenis/dist/lenis.css";
 import "./globals.css";
 
 import Footer from "@/components/Footer";
-import Gate from "@/components/Gate";
+import Intro, { INTRO_BOOT } from "@/components/Intro";
+import PageFX from "@/components/PageFX";
+import MotionProvider from "@/components/MotionProvider";
+import CursorGlow from "@/components/CursorGlow";
+import QuietOnQuick from "@/components/QuietOnQuick";
+import QuickReadButton from "@/components/QuickReadButton";
+import ScrollProgress from "@/components/ScrollProgress";
+import GlassLight from "@/components/GlassLight";
+import ShootingStars from "@/components/ShootingStars";
 import Nav from "@/components/Nav";
 import PersistentCTA from "@/components/PersistentCTA";
+import WaitlistModal from "@/components/WaitlistModal";
 import SmoothScroll from "@/components/SmoothScroll";
 
 const migra = localFont({
@@ -46,6 +55,9 @@ const title = "Katalyze";
 const description = "Your catalyst to better skin.";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.katalyzeskin.com",
+  ),
   title: {
     default: title,
     template: "%s | Katalyze",
@@ -71,14 +83,34 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       className={`${migra.variable} ${inter.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: INTRO_BOOT }} />
+        <noscript>
+          <style>{`.intro{display:none}`}</style>
+        </noscript>
+      </head>
       <body className="min-h-full flex flex-col">
-        <Gate />
-        <SmoothScroll />
-        <Nav />
-        {children}
-        <Footer />
-        <PersistentCTA />
+        <MotionProvider>
+          <Intro />
+          <PageFX />
+          <QuietOnQuick>
+            <SmoothScroll />
+          </QuietOnQuick>
+          <Nav />
+          {children}
+          <Footer />
+          <PersistentCTA />
+          <WaitlistModal />
+          <GlassLight />
+          <QuietOnQuick>
+            <ShootingStars />
+            <CursorGlow />
+          </QuietOnQuick>
+          <QuickReadButton />
+          <ScrollProgress />
+        </MotionProvider>
       </body>
     </html>
   );

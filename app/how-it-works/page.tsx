@@ -1,121 +1,115 @@
 import type { Metadata } from "next";
 
+import Close from "@/components/home/Close";
+import FormulaLab from "@/components/home/FormulaLab";
+import PageHero from "@/components/PageHero";
+import Reveal from "@/components/Reveal";
+import StepDeck from "@/components/StepDeck";
+
 export const metadata: Metadata = {
   title: "How It Works",
   description:
-    "Read, mix, apply, learn — how Katalyze turns a fingertip reading into a fresh, personalized dose.",
+    "Read, mix, apply, learn: how Katalyze turns a fingertip reading into a fresh, personalized dose.",
 };
 
 const STEPS = [
   {
     title: "Read",
-    description:
-      "A capacitive pad reads your skin's relative hydration — trends over time, not a clinically calibrated absolute value. We never claim clinical precision, and we don't measure sebum.",
+    time: "About 3 seconds",
+    body: "Rest a fingertip on the pad on top. Katalyze compares the reading with your own usual, so it can tell a drier day from a more hydrated one.",
+    facts: ["Two-electrode pad", "Fingertip contact only", "Compared with your own baseline"],
   },
   {
     title: "Mix",
-    description:
-      "Six independent channels — three base formulas, three actives — dispense by weight, then mix.",
+    time: "Under a minute",
+    body: "Your reading, the local weather and a quick check-in go to a rules engine that picks the blend, always inside pre-set safe ranges. Six pumps, one per cartridge, dose each ingredient by weight.",
+    facts: ["Toner, serum, cream + 3 actives", "Dosed by weight", "Rules set the formula, not AI"],
   },
   {
     title: "Apply",
-    description:
-      "One dose, made for one use. It pours into a cup, and you apply it yourself, like a serum. The device never touches your skin.",
+    time: "One dose",
+    body: "One fresh dose lands in a small dish. Scoop it out with a fingertip and apply it like any serum. The device never touches your skin.",
+    facts: ["Dispenses into a dish", "Made for one use", "You apply it yourself"],
   },
   {
     title: "Learn",
-    description:
-      "You log how your skin feels. That, plus local weather, shapes tomorrow's blend.",
+    time: "Every morning",
+    body: "Tell it how your skin feels. That, the reading and the weather shape tomorrow's blend, so your formula changes when your skin does.",
+    facts: ["Daily check-in", "Local weather", "Tomorrow's blend follows the trend"],
   },
+];
+
+const NOT = [
+  ["It doesn't scan your face.", "The only reading is a fingertip on a small pad."],
+  ["It isn't a medical device.", "Readings are relative trends, never clinical numbers."],
+  ["It never touches your skin.", "Each dose goes into a small dish, and you scoop it out yourself."],
+  ["AI doesn't pick your formula.", "Rules within safe ranges do. AI only explains the blend in plain words."],
 ];
 
 export default function HowItWorksPage() {
   return (
-    <main className="flex flex-1 flex-col bg-midnight">
-      <section style={{ paddingInline: "var(--margin)", paddingBlock: "var(--s-24)" }}>
-        <div
-          className="mx-auto flex flex-col gap-3"
-          style={{ maxWidth: "var(--max-w)" }}
-        >
-          <h1
-            className="font-display font-extralight text-white"
-            style={{ fontSize: "var(--text-3xl)", lineHeight: "var(--leading-tight)" }}
-          >
-            How Katalyze works.
-          </h1>
-          <p
-            className="font-display font-extralight italic text-periwinkle"
-            style={{ fontSize: "var(--text-lg)" }}
-          >
-            Not a quiz. A conversation.
-          </p>
-          <p
-            className="max-w-lg text-white/60"
-            style={{ fontSize: "var(--text-sm)", lineHeight: "var(--leading-body)" }}
-          >
-            Closer to a skincare printer than a subscription box: it reads,
-            mixes, and dispenses one fresh dose, on demand.
-          </p>
-        </div>
-      </section>
+    <main className="flex flex-1 flex-col bg-midnight text-white">
+      <PageHero
+        label="How it works"
+        title={
+          <>
+            From one fingertip
+            <br />
+            to one fresh dose.
+          </>
+        }
+        lede="Think of it as a printer for skincare. Each morning it checks your skin, mixes one dose and leaves it in a small dish for you."
+      />
 
-      <section style={{ paddingInline: "var(--margin)", paddingBlock: "var(--s-16)" }}>
+      {/* The four steps: a deck of cards beside the live device. */}
+      <StepDeck steps={STEPS} />
+
+      {/* Try the rules yourself. */}
+      <FormulaLab />
+
+      {/* What it deliberately doesn't do. */}
+      <section
+        className="bg-[color:var(--canvas-deep)]"
+        style={{ paddingBlock: "var(--s-24)" }}
+      >
         <div
-          className="mx-auto flex flex-col divide-y divide-[color:var(--rule-on-dark)]"
-          style={{ maxWidth: "var(--max-w)" }}
+          className="mx-auto grid grid-cols-1 gap-12 md:grid-cols-12 md:gap-x-[var(--gutter)]"
+          style={{ maxWidth: "var(--max-w)", paddingInline: "var(--margin)" }}
         >
-          {STEPS.map((step, i) => (
-            <div
-              key={step.title}
-              className="flex flex-col gap-2 py-8 first:pt-0 last:pb-0 sm:flex-row sm:items-baseline sm:gap-8"
+          <Reveal className="md:col-span-4">
+            <h2
+              className="font-display font-extralight"
+              style={{
+                fontSize: "var(--text-3xl)",
+                lineHeight: "var(--leading-tight)",
+              }}
             >
-              <span
-                className="font-mono text-periwinkle"
-                style={{ fontSize: "var(--text-xs)", minWidth: "2.5ch" }}
+              What it deliberately doesn&apos;t do.
+            </h2>
+          </Reveal>
+          <dl className="flex flex-col md:col-span-7 md:col-start-6">
+            {NOT.map(([t, d]) => (
+              <Reveal
+                key={t}
+                className="grid grid-cols-1 gap-2 border-t border-[color:var(--rule-on-dark)] py-6 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] sm:gap-8"
               >
-                0{i + 1}
-              </span>
-              <div className="flex flex-col gap-2">
-                <h2
-                  className="font-display font-extrabold text-white"
-                  style={{ fontSize: "var(--text-2xl)" }}
+                <dt style={{ fontSize: "var(--text-lg)" }}>{t}</dt>
+                <dd
+                  className="text-[color:var(--muted-on-dark)]"
+                  style={{
+                    fontSize: "var(--text-base)",
+                    lineHeight: "var(--leading-body)",
+                  }}
                 >
-                  {step.title}
-                </h2>
-                <p
-                  className="max-w-xl text-white/70"
-                  style={{ fontSize: "var(--text-lg)", lineHeight: "var(--leading-body)" }}
-                >
-                  {step.description}
-                </p>
-              </div>
-            </div>
-          ))}
+                  {d}
+                </dd>
+              </Reveal>
+            ))}
+          </dl>
         </div>
       </section>
 
-      <section className="bg-indigo" style={{ paddingInline: "var(--margin)", paddingBlock: "var(--s-24)" }}>
-        <div
-          className="mx-auto flex flex-col gap-4"
-          style={{ maxWidth: "var(--measure)" }}
-        >
-          <h2
-            className="font-display font-extralight text-white"
-            style={{ fontSize: "var(--text-2xl)", lineHeight: "var(--leading-tight)" }}
-          >
-            Rule-based, on purpose.
-          </h2>
-          <p
-            className="text-white/80"
-            style={{ fontSize: "var(--text-lg)", lineHeight: "var(--leading-body)" }}
-          >
-            Every formula is generated within pre-set safe ranges — not
-            open-ended guessing. Our AI writes the plain-language explanation
-            of your blend; it never decides the formula itself. That
-            boundary is a deliberate safety choice, not a limitation.
-          </p>
-        </div>
-      </section>
+      <Close />
     </main>
   );
 }

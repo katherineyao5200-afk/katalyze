@@ -4,6 +4,12 @@ You are building the marketing website for **Katalyze**, a countertop device tha
 
 **Read `docs/DESIGN-SYSTEM.md` first, in full, before this file or any other doc.** It is the active design system and working agreement — tokens, layout rules, typography, motion, and the three signature interactive systems — and it supersedes the brand tokens, typography, and design-principles sections below wherever the two disagree. The sections of this file that don't overlap with it (product accuracy rules, compliance rules, team accuracy, build order) still apply in full.
 
+**Use the `frontend-design` skill (`.claude/skills/frontend-design/`) for any visual or layout work.** Where it disagrees with `docs/DESIGN-SYSTEM.md`, the design system wins. In particular, the mono micro-labels and bracketed readouts are a deliberate choice taken from the reference sites, not template chrome: keep them, but make them do real work (leader lines to the thing they label, real values only).
+
+**The `scroll-craft` skill (`.claude/skills/scroll-craft/`, MIT, from github.com/nateherkai/scroll-craft) is installed for scroll and layout decisions.** Use its taste floor and refuse list (`references/taste.md`): at most one eyebrow label per three sections, no scroll cues or section counters, no identical card grids, varied devices section to section. Its static-HTML engine and kie.ai scripts are not used here; this site stays Next.js. Where it disagrees with `docs/DESIGN-SYSTEM.md` on brand tokens or fonts, the design system wins.
+
+**Before changing any section's layout, open its reference image.** `docs/REFERENCES.md` maps each section to a screenshot in `docs/references/`. Read the image itself, not just the description.
+
 **The full spec is in `docs/PRD.md`. Read it before starting work on any new area of the site.**
 
 Product/hardware facts live in `docs/product-engineering-spec.md`. Consult it before writing any copy that describes how the device works.
@@ -75,8 +81,8 @@ All headings use `clamp()` for fluid scaling.
 - The sensor is a **capacitive pad read by fingertip contact**. It measures **relative hydration trends**, not absolute clinical values.
 - **Never claim** clinical-grade precision, absolute hydration numbers, or sebum measurement.
 - **Never depict or imply facial scanning.** The device does not scan faces. Points-of-light imagery is atmosphere and abstraction only.
-- The device **dispenses into a cup**. The user applies the product themselves. The device never touches skin.
-- **Six cartridges: three base + three active.** Not six actives.
+- The device **dispenses one dose into a small dish** that the user scoops from with a fingertip (not a cup). The user applies the product themselves. The device never touches skin.
+- **Six cartridges: three base + three active.** Not six actives. The bases are a **toner, a serum and a cream**; the actives are hyaluronic acid, niacinamide and ceramide. Cartridge colours live in `lib/tints.ts`.
 - Formula generation is **rule-based within pre-set safe ranges**, running app-side. AI generates the natural-language *explanation* only, not the formula.
 
 ### Claims and compliance
