@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -20,11 +21,17 @@ import {
 } from "react";
 
 import DitherField from "@/components/DitherField";
-import DeviceModel, { type AnchorId } from "@/components/home/DeviceModel";
+import type { AnchorId } from "@/components/home/DeviceModel";
 import HeroHeadline from "@/components/HeroHeadline";
 import StarRing from "@/components/home/StarRing";
 import WaitlistForm from "@/components/WaitlistForm";
 import { images } from "@/lib/images";
+
+// three.js is large: load it in its own chunk after the page is up, so it
+// never delays the first paint or the page becoming interactive.
+const DeviceModel = dynamic(() => import("@/components/home/DeviceModel"), {
+  ssr: false,
+});
 
 // Readouts on the device render. Box positions are percentages of the
 // image frame and point at parts that are really there.

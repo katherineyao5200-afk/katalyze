@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useMotionValue, useScroll, useTransform } from "motion/react";
 import {
   useCallback,
@@ -9,7 +10,13 @@ import {
   useSyncExternalStore,
 } from "react";
 
-import DeviceModel, { type Layer } from "@/components/home/DeviceModel";
+import type { Layer } from "@/components/home/DeviceModel";
+
+// three.js is large: load it in its own chunk after the page is up, so it
+// never delays the first paint or the page becoming interactive.
+const DeviceModel = dynamic(() => import("@/components/home/DeviceModel"), {
+  ssr: false,
+});
 
 // The planned design, part by part. Facts from the product engineering
 // spec; nothing here claims a finished, tested product.

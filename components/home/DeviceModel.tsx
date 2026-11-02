@@ -877,12 +877,24 @@ export default function DeviceModel({
   useEffect(() => {
     // Heavy WebGL setup waits until the intro has lifted, so the intro
     // stays smooth.
+    // It also waits until the device is close to the viewport, so a model
+    // further down the page costs nothing until you scroll near it.
     let cleanup: (() => void) | undefined;
-    const cancel = afterIntro(() => {
-      cleanup = init();
-    });
+    let cancelIntro = () => {};
+    const near = new IntersectionObserver(
+      ([e]) => {
+        if (!e.isIntersecting) return;
+        near.disconnect();
+        cancelIntro = afterIntro(() => {
+          cleanup = init();
+        });
+      },
+      { rootMargin: "60% 0px" },
+    );
+    if (containerRef.current) near.observe(containerRef.current);
     return () => {
-      cancel();
+      near.disconnect();
+      cancelIntro();
       cleanup?.();
     };
 
@@ -901,10 +913,16 @@ export default function DeviceModel({
         onUnsupported?.();
         return;
       }
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      // 1.5x is visually indistinguishable from 2x behind the soft
+      // materials here, at a little over half the pixels.
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+      // The frosted parts refract a half-resolution copy of the scene.
+      renderer.transmissionResolutionScale = 0.5;
       renderer.toneMapping = THREE.NeutralToneMapping;
       renderer.shadowMap.enabled = true;
-      renderer.shadowMap.type = THREE.VSMShadowMap;
+      renderer.shadowMap.type = THREE.PCFShadowMap;
+      // The shadow is redrawn only when the device has actually moved.
+      renderer.shadowMap.autoUpdate = false;
       RectAreaLightUniformsLib.init();
       renderer.toneMappingExposure = 1.0;
       renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -916,11 +934,6 @@ export default function DeviceModel({
       renderer.domElement.style.transition =
         "opacity 900ms cubic-bezier(.16,1,.3,1)";
       container.appendChild(renderer.domElement);
-      requestAnimationFrame(() =>
-        requestAnimationFrame(() => {
-          renderer.domElement.style.opacity = "1";
-        }),
-      );
 
       const scene = new THREE.Scene();
       const pmrem = new THREE.PMREMGenerator(renderer);
@@ -937,9 +950,8 @@ export default function DeviceModel({
       const key = new THREE.DirectionalLight(0xfff8f4, 2.6);
       key.position.set(-2.5, 8, 3.5);
       key.castShadow = true;
-      key.shadow.mapSize.set(2048, 2048);
-      key.shadow.radius = 14;
-      key.shadow.blurSamples = 16;
+      key.shadow.mapSize.set(1024, 1024);
+      key.shadow.radius = 6;
       key.shadow.bias = -0.0005;
       const sc = key.shadow.camera;
       sc.left = -7;
@@ -1106,6 +1118,14 @@ export default function DeviceModel({
         container.addEventListener("pointercancel", onUp);
       }
 
+      let lastPose = NaN;
+      function markShadow(pose: number) {
+        if (Math.abs(pose - lastPose) > 0.004 || Number.isNaN(lastPose)) {
+          renderer.shadowMap.needsUpdate = true;
+          lastPose = pose;
+        }
+      }
+
       const pt = new THREE.Vector3();
       function frameAnatomy(t: number) {
         const raw = explode?.get() ?? 1;
@@ -1130,6 +1150,7 @@ export default function DeviceModel({
         const drift = still ? 0 : Math.sin(t * 0.4) * 0.05;
         pivot.rotation.set(0.32, -0.62 + drift + dragYaw, 0);
         pivot.position.y = 0.3;
+        markShadow(drift + dragYaw + e * 7);
         renderer.render(scene, camera);
 
         if (!labels) return;
@@ -1186,6 +1207,7 @@ export default function DeviceModel({
         const drift = still ? 0 : Math.sin(t * 0.5) * 0.035;
         pivot.rotation.set(pitch, yaw + drift, 0);
         pivot.position.y = still ? 0 : Math.sin(t * 0.7) * 0.03;
+        markShadow(pitch + yaw + drift);
 
         const dose = keyframe(p, [
           [0.54, 0],
@@ -1203,6 +1225,7 @@ export default function DeviceModel({
 
       let raf = 0;
       let visible = true;
+      let ready = false;
       const loop = () => {
         // Skip rendering while the entry gate covers the page.
         if (document.documentElement.dataset.gate !== "open") frame();
@@ -1210,6 +1233,7 @@ export default function DeviceModel({
       };
       const io = new IntersectionObserver(([e]) => {
         visible = e.isIntersecting;
+        if (!ready) return;
         cancelAnimationFrame(raf);
         if (visible && !still) raf = requestAnimationFrame(loop);
         else if (visible) frame();
@@ -1220,11 +1244,23 @@ export default function DeviceModel({
       const driver = progress ?? explode;
       const unsub =
         still && driver
-          ? driver.on("change", () => visible && frame())
+          ? driver.on("change", () => ready && visible && frame())
           : undefined;
-      frame();
+
+      // Compile every shader off the main thread where the browser allows
+      // it, so the first frame doesn't freeze scrolling. Then fade in.
+      let disposed = false;
+      const begin = () => {
+        if (disposed) return;
+        ready = true;
+        frame();
+        renderer.domElement.style.opacity = "1";
+        if (visible && !still) raf = requestAnimationFrame(loop);
+      };
+      renderer.compileAsync(scene, camera).then(begin, begin);
 
       return () => {
+        disposed = true;
         cancelAnimationFrame(raf);
         container.removeEventListener("pointerdown", onDown);
         container.removeEventListener("pointermove", onMove);
