@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { getSupabaseServerClient } from "@/lib/supabase";
+import { describeSupabaseConfig, getSupabaseServerClient } from "@/lib/supabase";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
@@ -48,6 +48,7 @@ export async function GET() {
         database: "error",
         code: error.code ?? null,
         detail: error.message,
+        ...describeSupabaseConfig(),
       });
     }
     return NextResponse.json({ configured: true, database: "ok" });
