@@ -9,18 +9,21 @@ interface Database {
           email: string;
           created_at: string | null;
           source: string | null;
+          plan: string | null;
         };
         Insert: {
           id?: string;
           email: string;
           created_at?: string | null;
           source?: string | null;
+          plan?: string | null;
         };
         Update: {
           id?: string;
           email?: string;
           created_at?: string | null;
           source?: string | null;
+          plan?: string | null;
         };
         Relationships: [];
       };

@@ -1,14 +1,11 @@
-import Business from "@/components/home/Business";
 import Mission from "@/components/home/Mission";
 import Model from "@/components/home/Model";
 import FAQ from "@/components/home/FAQ";
-import Pricing from "@/components/home/Pricing";
 import Close from "@/components/home/Close";
 import Founder from "@/components/home/Founder";
 import SkinRitual from "@/components/home/SkinRitual";
 import HomeHero from "@/components/home/HomeHero";
 import Anatomy from "@/components/home/Anatomy";
-import FormulaLab from "@/components/home/FormulaLab";
 import SkinChart from "@/components/home/SkinChart";
 import Inside from "@/components/home/Inside";
 import Journey from "@/components/home/Journey";
@@ -27,12 +24,9 @@ export default function Home() {
       <Journey />
       <Anatomy />
       <Inside />
-      <FormulaLab />
       <SkinChart />
       <Progress />
       <Model />
-      <Business />
-      <Pricing />
       <Voices />
       <Founder />
       <FAQ />

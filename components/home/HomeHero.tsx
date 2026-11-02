@@ -299,9 +299,11 @@ function ScrollHero() {
                 <strong className="font-medium text-white">
                   Katalyze is a countertop skincare device.
                 </strong>{" "}
-                Touch the pad on top each morning and it mixes one fresh
-                dose from six cartridges, based on your skin that day, the
-                weather and how you say it feels.
+                Rest a fingertip on the pad each morning. It compares your
+                skin&apos;s hydration with your own usual (a trend, not a
+                clinical number), then mixes one fresh dose from six
+                cartridges, adjusted for the weather and how you say your skin
+                feels.
               </p>
               <WaitlistForm
                 source="hero"
@@ -319,6 +321,15 @@ function ScrollHero() {
                 >
                   Read the story
                 </Link>
+                <span className="md:hidden">
+                  {" · "}
+                  <Link
+                    href="/quick"
+                    className="text-blush underline decoration-blush/40 underline-offset-4"
+                  >
+                    Quick read
+                  </Link>
+                </span>
               </p>
             </div>
           </div>
@@ -362,8 +373,8 @@ function ScrollHero() {
                 lineHeight: "var(--leading-body)",
               }}
             >
-              About three seconds on the sensor. About a minute, start to
-              finish.
+              About three seconds with a fingertip on the pad. About a
+              minute, start to finish.
             </p>
           </div>
         </motion.div>
@@ -589,9 +600,10 @@ function StaticHero() {
             <strong className="font-medium text-white">
               Katalyze is a countertop skincare device.
             </strong>{" "}
-            Touch the pad on top each morning and it mixes one fresh
-            dose from six cartridges, based on your skin that day, the
-            weather and how you say it feels.
+            Rest a fingertip on the pad each morning. It compares your
+            skin&apos;s hydration with your own usual (a trend, not a clinical
+            number), then mixes one fresh dose from six cartridges, adjusted
+            for the weather and how you say your skin feels.
           </p>
           <WaitlistForm
             source="hero"
@@ -609,6 +621,15 @@ function StaticHero() {
             >
               Read the story
             </Link>
+            <span className="md:hidden">
+              {" · "}
+              <Link
+                href="/quick"
+                className="text-blush underline decoration-blush/40 underline-offset-4"
+              >
+                Quick read
+              </Link>
+            </span>
           </p>
         </div>
         <div className="col-span-12 lg:col-span-6">

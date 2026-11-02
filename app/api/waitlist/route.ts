@@ -122,3 +122,34 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+// Optional follow-up after signing up: which planned plan would you pick?
+// Only ever sets the plan column on an existing row.
+const PLANS = new Set(["basic", "full", "premium", "unsure"]);
+
+export async function PATCH(request: NextRequest) {
+  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  if (isRateLimited(ip)) {
+    return NextResponse.json({ ok: false }, { status: 429 });
+  }
+  let body: { email?: unknown; plan?: unknown };
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ ok: false }, { status: 400 });
+  }
+  const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
+  const plan = typeof body.plan === "string" ? body.plan : "";
+  if (!EMAIL_PATTERN.test(email) || !PLANS.has(plan)) {
+    return NextResponse.json({ ok: false }, { status: 400 });
+  }
+  try {
+    const supabase = getSupabaseServerClient();
+    const { error } = await supabase.from("waitlist").update({ plan }).eq("email", email);
+    if (error) throw error;
+    return NextResponse.json({ ok: true });
+  } catch (error) {
+    console.error("waitlist plan update failed", error);
+    return NextResponse.json({ ok: false }, { status: 500 });
+  }
+}

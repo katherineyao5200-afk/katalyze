@@ -5,8 +5,12 @@ create table if not exists waitlist (
   id uuid primary key default gen_random_uuid(),
   email text not null unique,
   created_at timestamptz default now(),
-  source text
+  source text,
+  plan text -- optional answer to "which plan would you pick?"
 );
+
+-- For tables created before the plan question existed:
+alter table waitlist add column if not exists plan text;
 
 alter table waitlist enable row level security;
 

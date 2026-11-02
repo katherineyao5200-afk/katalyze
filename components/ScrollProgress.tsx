@@ -32,7 +32,7 @@ export default function ScrollProgress() {
   return (
     <div
       aria-hidden="true"
-      className="scroll-rail pointer-events-none mix-blend-difference fixed right-3 top-1/2 z-40 h-[38vh] w-px -translate-y-1/2 md:right-6"
+      className="scroll-rail pointer-events-none mix-blend-difference fixed right-3 top-1/2 hidden md:block z-40 h-[38vh] w-px -translate-y-1/2 md:right-6"
     >
       <span className="absolute inset-0 rounded-full bg-white/15" />
       <motion.span

@@ -9,16 +9,10 @@ const QUOTES = [
     name: "Jessica Tang",
     role: "Regional Sales Manager, MAC China",
   },
-  {
-    quote:
-      "This keen awareness of life's pain points and bold application of cutting-edge technology not only usher in the 'precision era' of skincare but also allows us to glimpse the vibrant vitality of youth through scientific and technological innovation.",
-    name: "Fu Tao",
-    role: "Shanghai Kevin Kathy Biomedical Research Center",
-  },
 ];
 
 // Oversized-numeral device: the competition result at architectural
-// scale, cropped by the left edge, then the two industry quotes.
+// scale, cropped by the left edge, then an industry quote.
 export default function Voices() {
   return (
     <section

@@ -29,6 +29,8 @@ export default function WaitlistForm({
   const [company, setCompany] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
+  const [joinedEmail, setJoinedEmail] = useState("");
+  const [plan, setPlan] = useState<string | null>(null);
   const statusRef = useRef<HTMLParagraphElement>(null);
   const inputId = useId();
 
@@ -54,9 +56,11 @@ export default function WaitlistForm({
       } else if (data.duplicate) {
         setStatus("duplicate");
         setMessage("You're already on the list.");
+        setJoinedEmail(email.trim().toLowerCase());
       } else {
         setStatus("success");
-        setMessage("You're on the list. We'll be in touch.");
+        setMessage("You're on the list. Katherine will email you when the first run opens.");
+        setJoinedEmail(email.trim().toLowerCase());
         setEmail("");
       }
     } catch {
@@ -148,6 +152,21 @@ export default function WaitlistForm({
         </button>
       </div>
 
+      {isDone && joinedEmail && (
+        <PlanQuestion
+          light={light}
+          chosen={plan}
+          onChoose={(p) => {
+            setPlan(p);
+            fetch("/api/waitlist", {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email: joinedEmail, plan: p }),
+            }).catch(() => {});
+          }}
+        />
+      )}
+
       <p
         ref={statusRef}
         role="status"
@@ -158,5 +177,58 @@ export default function WaitlistForm({
         {message}
       </p>
     </form>
+  );
+}
+
+const PLAN_OPTIONS = [
+  { id: "basic", label: "Basic · $25" },
+  { id: "full", label: "Full · $45" },
+  { id: "premium", label: "Premium · $89" },
+  { id: "unsure", label: "Not sure yet" },
+];
+
+// One optional question after joining. It helps decide what the first
+// run ships with; skipping it changes nothing.
+function PlanQuestion({
+  light,
+  chosen,
+  onChoose,
+}: {
+  light: boolean;
+  chosen: string | null;
+  onChoose: (plan: string) => void;
+}) {
+  return (
+    <fieldset className="order-last mt-1 flex flex-col gap-2">
+      <legend className={`mb-2 ${light ? "text-midnight" : "text-white/80"}`} style={{ fontSize: "var(--text-sm)" }}>
+        {chosen ? "Thanks, noted." : "Optional: which refill plan would you probably pick?"}{" "}
+        <a href="/pricing" className={`${light ? "text-indigo" : "text-blush"} underline underline-offset-4`}>
+          See plans
+        </a>
+      </legend>
+      <div className="flex flex-wrap gap-2">
+        {PLAN_OPTIONS.map((o) => {
+          const on = chosen === o.id;
+          return (
+            <button
+              key={o.id}
+              type="button"
+              aria-pressed={on}
+              onClick={() => onChoose(o.id)}
+              className={`rounded-full border px-3.5 py-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush ${
+                on
+                  ? "border-blush bg-blush text-midnight"
+                  : light
+                    ? "border-[color:var(--rule-on-light)] text-midnight hover:border-indigo"
+                    : "border-white/20 text-white/85 hover:border-white/50"
+              }`}
+              style={{ fontSize: "var(--text-sm)" }}
+            >
+              {o.label}
+            </button>
+          );
+        })}
+      </div>
+    </fieldset>
   );
 }

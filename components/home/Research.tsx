@@ -7,7 +7,7 @@ import Orbit from "@/components/home/Orbit";
 const LEAD = {
   value: "71.2%",
   description:
-    "say their skin changes with the season or the weather.",
+    "of about 75 people surveyed say their skin changes with the season or the weather.",
 };
 
 const STATS = [
@@ -71,7 +71,7 @@ export default function Research() {
               className="relative z-10 font-mono uppercase text-periwinkle"
               style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}
             >
-              Katalyze survey, 2026
+              Early survey, 2026, about 75 people
             </p>
             <div className="relative z-10 flex flex-col gap-3">
               <DotStat lit={71} className="mb-4 w-40" />
@@ -117,7 +117,9 @@ export default function Research() {
             className="pt-4 text-[color:var(--faint-on-dark)]"
             style={{ fontSize: "var(--text-xs)" }}
           >
-            Katalyze market research survey, about 75 respondents, 2026.
+            All figures are from one early survey of about 75 skincare users,
+            run by Katherine in 2026. It&apos;s a small, informal sample: read
+            these as signals, not proof.
           </p>
         </div>
       </div>

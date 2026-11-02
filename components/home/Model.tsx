@@ -1,13 +1,15 @@
+import Link from "next/link";
+
 import PhotoStatement from "@/components/PhotoStatement";
 import Reveal from "@/components/Reveal";
 import { images } from "@/lib/images";
 
-// The business model in one glance, over the countertop photo (blurred).
+// What it will cost, over the countertop photo (blurred). Consumer view
+// only: unit costs, market and hotels live on the Investors page.
 // Figures from the 2026 pitch deck; all planned, nothing on sale yet.
 const PARTS = [
-  { value: "$279", body: "for the device, once. It costs about $51 to make in the first run." },
-  { value: "$25–89", body: "a month for refills, depending on the plan. This is where most of the long-term revenue comes from." },
-  { value: "Later", body: "hotels: a fresh dose in the bathroom of a luxury room, sold to the hotel." },
+  { value: "$279", body: "for the device, once." },
+  { value: "$25–89", body: "a month for cartridge refills, depending on how much of your routine it covers." },
 ];
 
 export default function Model() {
@@ -18,7 +20,7 @@ export default function Model() {
           className="font-mono uppercase text-periwinkle"
           style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}
         >
-          The business model
+          What it will cost
         </p>
         <h2
           className="font-display font-extralight text-white"
@@ -41,8 +43,16 @@ export default function Model() {
           ))}
         </dl>
       </Reveal>
-      <p className="text-white/50" style={{ fontSize: "var(--text-xs)" }}>
-        Planned pricing. Nothing is on sale yet. The first run is about 2,000 units, and the waitlist hears first.
+      <p className="text-white/60" style={{ fontSize: "var(--text-sm)" }}>
+        Planned prices; nothing is on sale yet.{" "}
+        <Link href="/pricing" className="text-blush underline underline-offset-4">
+          Compare the plans
+        </Link>{" "}
+        or, for the numbers behind the business, see the{" "}
+        <Link href="/investors" className="text-blush underline underline-offset-4">
+          Investors page
+        </Link>
+        .
       </p>
     </PhotoStatement>
   );

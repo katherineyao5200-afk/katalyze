@@ -22,8 +22,12 @@ const FAQS = [
     a: "No. It mixes one dose into a small dish, and you scoop it out and apply it yourself.",
   },
   {
+    q: "How do the cartridges stay fresh?",
+    a: "Each cartridge is sealed until it clicks into the device, and is opaque or amber to keep light out. Every ingredient has its own pump, tube and nozzle, so nothing is shared between channels and nothing sits mixed: the device only combines a dose at the moment you use it. The exact preservative system and shelf life will be set with the contract formulator and tested before launch. The prototype so far has only run simulated liquids.",
+  },
+  {
     q: "Is it regulated?",
-    a: "Formulas will be made with a contract formulator in compliance with FDA cosmetic regulations. Cosmetics are regulated by the FDA, but they are not “approved” by it, so we won't claim that.",
+    a: "Formulas will be made with a contract formulator in compliance with FDA cosmetic regulations. Cosmetics are regulated by the FDA, but they are not “approved” by it, so this site never says it is.",
   },
   {
     q: "Who is behind Katalyze?",
