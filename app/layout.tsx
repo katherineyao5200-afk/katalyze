@@ -9,6 +9,8 @@ import Intro, { INTRO_BOOT } from "@/components/Intro";
 import PageFX from "@/components/PageFX";
 import MotionProvider from "@/components/MotionProvider";
 import CursorGlow from "@/components/CursorGlow";
+import QuietOnQuick from "@/components/QuietOnQuick";
+import QuickReadButton from "@/components/QuickReadButton";
 import ScrollProgress from "@/components/ScrollProgress";
 import GlassLight from "@/components/GlassLight";
 import ShootingStars from "@/components/ShootingStars";
@@ -93,15 +95,20 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <MotionProvider>
           <Intro />
           <PageFX />
-          <SmoothScroll />
+          <QuietOnQuick>
+            <SmoothScroll />
+          </QuietOnQuick>
           <Nav />
           {children}
           <Footer />
           <PersistentCTA />
           <WaitlistModal />
           <GlassLight />
-          <ShootingStars />
-          <CursorGlow />
+          <QuietOnQuick>
+            <ShootingStars />
+            <CursorGlow />
+          </QuietOnQuick>
+          <QuickReadButton />
           <ScrollProgress />
         </MotionProvider>
       </body>
