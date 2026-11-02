@@ -122,10 +122,10 @@ function canvasTexture(
 
 // Fine grain for a satin moulded-plastic finish.
 function grainTexture() {
-  const t = canvasTexture(256, 256, (g) => {
-    const img = g.createImageData(256, 256);
+  const t = canvasTexture(512, 512, (g) => {
+    const img = g.createImageData(512, 512);
     for (let i = 0; i < img.data.length; i += 4) {
-      const v = 120 + Math.random() * 40;
+      const v = 132 + Math.random() * 18;
       img.data[i] = img.data[i + 1] = img.data[i + 2] = v;
       img.data[i + 3] = 255;
     }
@@ -133,7 +133,7 @@ function grainTexture() {
   });
   t.colorSpace = THREE.NoColorSpace;
   t.wrapS = t.wrapT = THREE.RepeatWrapping;
-  t.repeat.set(6, 6);
+  t.repeat.set(10, 10);
   return t;
 }
 
@@ -154,17 +154,17 @@ function buildDevice() {
 
   const shell = track(
     new THREE.MeshPhysicalMaterial({
-      color: 0xeceaf0,
-      roughness: 0.34,
-      clearcoat: 0.7,
-      clearcoatRoughness: 0.22,
-      sheen: 0.4,
+      color: 0xf2f1f4,
+      roughness: 0.4,
+      clearcoat: 0.55,
+      clearcoatRoughness: 0.18,
+      sheen: 0.25,
       sheenColor: new THREE.Color(0xe8ccd2),
       roughnessMap: track(grainTexture()),
     }),
   );
   shell.bumpMap = shell.roughnessMap;
-  shell.bumpScale = 0.4;
+  shell.bumpScale = 0.05;
 
   layer = "shell";
   // Body: rounded outline with the window cut through, softly bevelled.
@@ -182,8 +182,8 @@ function buildDevice() {
       bevelEnabled: true,
       bevelThickness: BEVEL,
       bevelSize: 0.16,
-      bevelSegments: 10,
-      curveSegments: 24,
+      bevelSegments: 16,
+      curveSegments: 48,
     }),
   );
   bodyGeo.translate(0, 0, -DEPTH / 2);
@@ -321,7 +321,7 @@ function buildDevice() {
           sheen: 0.5,
           sheenColor: new THREE.Color(tint),
           emissive: tint,
-          emissiveIntensity: 0.18,
+          emissiveIntensity: 0.06,
         }),
       ),
     );
@@ -419,52 +419,127 @@ function buildDevice() {
   });
 
   layer = "tray";
-  // Cup tray: a shallow oval bowl at the front right.
-  const bowlG = track(
-    new THREE.SphereGeometry(
-      0.44,
-      48,
-      20,
-      0,
-      Math.PI * 2,
-      Math.PI / 2,
-      Math.PI / 2,
-    ),
+  // Dispensing head: a small rounded nose under the window, with a
+  // polished nozzle pointing down into the cup.
+  const CUP = { x: 0.6, z: FRONT + 0.2, floor: -0.84, h: 0.3, r: 0.13 };
+  const nose = new THREE.Mesh(
+    track(new THREE.CapsuleGeometry(0.075, 0.16, 8, 24)),
+    shell,
   );
-  const bowl = new THREE.Mesh(
-    bowlG,
+  nose.rotation.z = Math.PI / 2;
+  nose.scale.set(1, 1, 1.6);
+  nose.position.set(CUP.x, -0.47, FRONT + 0.04);
+  nose.castShadow = true;
+  add(nose);
+  const chrome = track(
+    new THREE.MeshPhysicalMaterial({
+      color: 0xe6e8f0,
+      metalness: 1,
+      roughness: 0.14,
+    }),
+  );
+  const nozzle = new THREE.Mesh(
+    track(new THREE.CylinderGeometry(0.022, 0.03, 0.07, 24)),
+    chrome,
+  );
+  nozzle.position.set(CUP.x, -0.53, CUP.z - 0.02);
+  add(nozzle);
+
+  // Drip grille: a dark recessed plate with slots, set into the ledge.
+  const grilleTex = track(
+    canvasTexture(256, 160, (g) => {
+      g.fillStyle = "#23284a";
+      g.fillRect(0, 0, 256, 160);
+      g.fillStyle = "#14172c";
+      for (let i = 0; i < 9; i++) {
+        g.beginPath();
+        g.roundRect(28 + i * 24, 22, 10, 116, 5);
+        g.fill();
+      }
+    }),
+  );
+  const grille = new THREE.Mesh(
+    track(new THREE.ShapeGeometry(roundedRect(-0.3, -0.19, 0.3, 0.19, 0.08), 8)),
     track(
-      new THREE.MeshPhysicalMaterial({
-        color: 0xfbfbfd,
-        roughness: 0.3,
-        clearcoat: 0.5,
-        side: THREE.DoubleSide,
+      new THREE.MeshStandardMaterial({
+        map: grilleTex,
+        roughness: 0.55,
+        metalness: 0.2,
       }),
     ),
   );
-  bowl.castShadow = true;
-  bowl.scale.set(1.45, 0.62, 0.85);
-  bowl.position.set(0.6, -0.56, FRONT + 0.2);
-  add(bowl);
+  grilleTex.repeat.set(1 / 0.6, 1 / 0.38);
+  grilleTex.offset.set(0.5, 0.5);
+  grille.rotation.x = -Math.PI / 2;
+  grille.position.set(CUP.x, CUP.floor + 0.002, CUP.z);
+  grille.receiveShadow = true;
+  add(grille);
 
-  // The dose: a thin blush disc inside the bowl, visible when lit.
+  // The cup: thick-walled clear glass, turned on a lathe.
+  const cupPts = [
+    [0, 0],
+    [CUP.r * 0.86, 0],
+    [CUP.r * 0.9, 0.01],
+    [CUP.r, CUP.h],
+    [CUP.r - 0.012, CUP.h],
+    [CUP.r * 0.9 - 0.012, 0.05],
+    [0, 0.05],
+  ].map(([x, y]) => new THREE.Vector2(x, y));
+  const cup = new THREE.Mesh(
+    track(new THREE.LatheGeometry(cupPts, 48)),
+    track(
+      new THREE.MeshPhysicalMaterial({
+        color: 0xffffff,
+        roughness: 0.04,
+        transmission: 1,
+        thickness: 0.05,
+        ior: 1.5,
+        clearcoat: 1,
+        specularIntensity: 1,
+      }),
+    ),
+  );
+  cup.position.set(CUP.x, CUP.floor, CUP.z);
+  cup.castShadow = true;
+  add(cup);
+
+  // The dose: a pale blush serum filling the cup's base when lit.
   const doseMat = track(
-    new THREE.MeshStandardMaterial({
-      color: 0xe8ccd2,
+    new THREE.MeshPhysicalMaterial({
+      color: 0xf1d9de,
       emissive: 0xe8ccd2,
       emissiveIntensity: 0,
+      roughness: 0.12,
+      clearcoat: 1,
       transparent: true,
       opacity: 0,
     }),
   );
   const dose = new THREE.Mesh(
-    track(new THREE.CircleGeometry(0.3, 32)),
+    track(new THREE.CylinderGeometry(CUP.r * 0.86, CUP.r * 0.84, 0.07, 40)),
     doseMat,
   );
-  dose.rotation.x = -Math.PI / 2;
-  dose.scale.set(1.35, 0.72, 1);
-  dose.position.set(0.6, -0.62, FRONT + 0.2);
+  dose.position.set(CUP.x, CUP.floor + 0.05 + 0.035, CUP.z);
   add(dose);
+  // A thin stream from the nozzle while it pours.
+  const streamMat = track(
+    new THREE.MeshPhysicalMaterial({
+      color: 0xf1d9de,
+      emissive: 0xe8ccd2,
+      emissiveIntensity: 0.3,
+      roughness: 0.1,
+      transparent: true,
+      opacity: 0,
+    }),
+  );
+  const streamTop = -0.565;
+  const streamBot = CUP.floor + 0.1;
+  const stream = new THREE.Mesh(
+    track(new THREE.CylinderGeometry(0.008, 0.012, streamTop - streamBot, 12)),
+    streamMat,
+  );
+  stream.position.set(CUP.x, (streamTop + streamBot) / 2, CUP.z - 0.02);
+  add(stream);
 
   // ---- Fine detail ----
 
@@ -788,7 +863,7 @@ function buildDevice() {
     add(f);
   });
 
-  return { group, disposables, doseMat };
+  return { group, disposables, doseMat, streamMat };
 }
 
 // A photo-studio reflection environment: a dim navy room with a large
@@ -966,14 +1041,14 @@ export default function DeviceModel({
       softbox.position.set(0, 5, 2.5);
       softbox.lookAt(0, 0, 0);
       scene.add(softbox);
-      const rimL = new THREE.PointLight(0x8a8db3, 18, 12);
+      const rimL = new THREE.PointLight(0x8a8db3, 11, 12);
       rimL.position.set(-4, 1, -2);
       scene.add(rimL);
       const rimR = new THREE.PointLight(0xe8ccd2, 14, 12);
       rimR.position.set(4, 0.5, -1.5);
       scene.add(rimR);
 
-      const { group, disposables, doseMat } = buildDevice();
+      const { group, disposables, doseMat, streamMat } = buildDevice();
       const anatomy = mode === "anatomy";
       const basePos = new Map<THREE.Object3D, THREE.Vector3>();
       group.children.forEach((c) => basePos.set(c, c.position.clone()));
@@ -1215,9 +1290,16 @@ export default function DeviceModel({
           [0.72, 1],
           [0.8, 0],
         ]);
+        const pour = keyframe(p, [
+          [0.52, 0],
+          [0.56, 1],
+          [0.64, 1],
+          [0.68, 0],
+        ]);
         cupLight.intensity = dose * 0.8;
-        doseMat.opacity = dose * 0.9;
-        doseMat.emissiveIntensity = dose * 0.6;
+        doseMat.opacity = dose * 0.95;
+        doseMat.emissiveIntensity = dose * 0.25;
+        streamMat.opacity = pour * 0.9;
 
         renderer.render(scene, camera);
         placeAnchors();

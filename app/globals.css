@@ -743,7 +743,6 @@ body {
 .btn-primary {
   --gx: 50%;
   --gy: 0%;
-  position: relative;
   isolation: isolate;
   -webkit-backdrop-filter: blur(18px) saturate(160%);
   backdrop-filter: blur(18px) saturate(160%);
