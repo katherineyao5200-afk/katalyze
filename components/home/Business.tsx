@@ -1,4 +1,5 @@
 import Reveal from "@/components/Reveal";
+import RoadmapScrubber from "@/components/home/RoadmapScrubber";
 
 // Market and landscape, from the pitch deck (v9, Sep 2026, pp. 10, 18,
 // 32). Competitor rows describe what each product does, in neutral
@@ -194,55 +195,9 @@ export default function Business() {
               letterSpacing: "var(--track-label)",
             }}
           >
-            [Roadmap]
+            Roadmap · drag to scrub
           </h3>
-          <ol
-            className="grid grid-cols-1 gap-px overflow-hidden border border-[color:var(--rule-on-dark)] bg-[color:var(--rule-on-dark)] md:grid-cols-4"
-            style={{ borderRadius: "var(--r-lg)" }}
-          >
-            {ROADMAP.map((r, i) => (
-              <li
-                key={r.phase}
-                className={`spot flex flex-col gap-4 p-6 ${i === 0 ? "bg-indigo/50" : "bg-midnight"}`}
-              >
-                <span
-                  className="flex items-center justify-between font-mono uppercase"
-                  style={{
-                    fontSize: "var(--text-2xs)",
-                    letterSpacing: "var(--track-label)",
-                  }}
-                >
-                  <span className="text-periwinkle">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span
-                    className={
-                      i === 0
-                        ? "rounded-full bg-blush px-2 py-0.5 text-midnight"
-                        : "text-[color:var(--faint-on-dark)]"
-                    }
-                  >
-                    {r.when}
-                  </span>
-                </span>
-                <span
-                  className="font-display font-extralight text-white"
-                  style={{ fontSize: "var(--text-xl)" }}
-                >
-                  {r.phase}
-                </span>
-                <span
-                  className="text-[color:var(--muted-on-dark)]"
-                  style={{
-                    fontSize: "var(--text-sm)",
-                    lineHeight: "var(--leading-body)",
-                  }}
-                >
-                  {r.text}
-                </span>
-              </li>
-            ))}
-          </ol>
+          <RoadmapScrubber stops={ROADMAP} />
         </div>
       </div>
     </section>

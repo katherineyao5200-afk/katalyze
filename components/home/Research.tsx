@@ -1,5 +1,7 @@
 import CountUp from "@/components/CountUp";
 import Reveal from "@/components/Reveal";
+import DotStat from "@/components/home/DotStat";
+import Orbit from "@/components/home/Orbit";
 
 // Katalyze's own survey, about 75 respondents, 2026 (pitch deck v9).
 const LEAD = {
@@ -61,9 +63,9 @@ export default function Research() {
             className="relative flex min-h-[26rem] flex-col justify-between overflow-hidden border border-[color:var(--rule-on-dark)] bg-[color:var(--panel)] p-8 text-white backdrop-blur-sm"
             style={{ borderRadius: "var(--r-lg)" }}
           >
-            <span
-              aria-hidden="true"
-              className="absolute -right-16 -top-16 h-64 w-64 bg-[image:var(--grad-point)] opacity-60"
+            <Orbit
+              readouts={["N ≈ 75", "SURVEY 2026", "71.2%"]}
+              className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 opacity-80"
             />
             <p
               className="relative z-10 font-mono uppercase text-periwinkle"
@@ -72,6 +74,7 @@ export default function Research() {
               [Katalyze survey · 2026]
             </p>
             <div className="relative z-10 flex flex-col gap-3">
+              <DotStat lit={71} className="mb-4 w-40" />
               <p
                 className="font-display font-extralight tabular-nums"
                 style={{ fontSize: "var(--text-display)", lineHeight: "var(--leading-display)" }}

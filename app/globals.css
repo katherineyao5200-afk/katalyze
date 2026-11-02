@@ -962,3 +962,27 @@ a.glass:active {
     inset 0 1px 0 rgb(255 255 255 / 0.9),
     0 12px 32px -16px rgb(31 36 65 / 0.35);
 }
+
+.dot-stat {
+  transition:
+    background 500ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 500ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.orbit-spin {
+  animation: orbit-spin 16s linear infinite;
+  transform-origin: 0 0;
+}
+@keyframes orbit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .orbit-spin {
+    animation: none;
+  }
+  .dot-stat {
+    transition: none;
+  }
+}
