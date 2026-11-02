@@ -1,4 +1,4 @@
-import Mission from "@/components/home/Mission";
+import Facts from "@/components/home/Facts";
 import Model from "@/components/home/Model";
 import FAQ from "@/components/home/FAQ";
 import Close from "@/components/home/Close";
@@ -18,17 +18,17 @@ export default function Home() {
   return (
     <main className="flex flex-1 flex-col bg-midnight">
       <HomeHero />
+      <Facts />
       <SkinRitual />
-      <Mission />
-      <Research />
       <Journey />
-      <Anatomy />
-      <Inside />
-      <SkinChart />
+      <Research />
       <Progress />
-      <Model />
-      <Voices />
       <Founder />
+      <Voices />
+      <Inside />
+      <Anatomy />
+      <SkinChart />
+      <Model />
       <FAQ />
       <Close />
     </main>
