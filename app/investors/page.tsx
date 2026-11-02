@@ -217,7 +217,7 @@ export default function InvestorsPage() {
           {[
             ["Reads", "A capacitive fingertip pad tracks your hydration trend against your own usual."],
             ["Decides", "A rule-based engine in the app combines the reading, local weather and a quick check-in, always inside pre-set safe ranges."],
-            ["Mixes", "Six cartridges (three bases, three actives) dispense one fresh dose into a cup. Refills ship when cartridges run low."],
+            ["Mixes", "Six cartridges (a toner, a serum and a cream base, plus three actives) dispense one fresh dose into a small dish, scooped out with a fingertip. Refills ship when cartridges run low."],
           ].map(([t, d], i) => (
             <li key={t} className="flex flex-col gap-3 border-t border-[color:var(--rule-on-dark)] pt-6">
               <span className="font-mono text-periwinkle" style={mono}>

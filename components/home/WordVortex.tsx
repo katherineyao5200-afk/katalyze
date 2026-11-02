@@ -13,7 +13,7 @@ import { useEffect, useRef } from "react";
 const WORDS = [
   "hydration", "barrier", "niacinamide", "fresh", "humidity", "dry day",
   "fingertip", "dose", "base", "active", "morning", "weather", "trend",
-  "your usual", "light", "rich", "calm", "cup", "refill", "today",
+  "your usual", "light", "rich", "calm", "dish", "refill", "today",
   "tomorrow", "pattern", "winter", "sleep", "one touch", "mix",
 ];
 

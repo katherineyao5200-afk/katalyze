@@ -39,7 +39,7 @@ export const images = {
       src: "/images/prototype/prototype-front.jpg",
       width: 960,
       height: 1708,
-      alt: "The working Katalyze prototype: six amber bottles feeding tubes into a stacked white housing with a pull-out cup drawer",
+      alt: "The working Katalyze prototype: six amber bottles feeding tubes into a stacked white housing with a pull-out drawer",
     },
     // The two inside photos were saved under each other's names.
     electronics: {

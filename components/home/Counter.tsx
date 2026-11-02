@@ -64,7 +64,7 @@ export default function Counter() {
               lineHeight: "var(--leading-body)",
             }}
           >
-            Soft-matte white on a navy base, with the sensor on top and the cup
+            Soft-matte white on a navy base, with the sensor on top and the dose dish
             at the front. The planned design, shown in a home.
           </p>
         </Reveal>

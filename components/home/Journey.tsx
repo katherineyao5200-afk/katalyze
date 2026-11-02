@@ -56,8 +56,8 @@ const CHAPTERS: Chapter[] = [
   },
   {
     chip: "03 · Apply",
-    title: ["Fresh,", "into the cup."],
-    body: "One dose, measured by weight. You apply it like any serum. The device never touches your skin.",
+    title: ["Fresh,", "in a little dish."],
+    body: "One dose, measured by weight. Scoop it out with a fingertip and apply it like any serum. The device never touches your skin.",
     side: "right",
   },
   {

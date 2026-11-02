@@ -34,7 +34,7 @@ export default function Progress() {
     {
       ...front,
       title: "The working prototype",
-      text: "Six bottles, six tubes, one cup drawer. Run so far on simulated liquids.",
+      text: "Six bottles, six tubes, one pull-out drawer. Run so far on simulated liquids.",
     },
     {
       ...pumps,

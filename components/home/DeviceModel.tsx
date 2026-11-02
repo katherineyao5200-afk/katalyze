@@ -424,7 +424,9 @@ function buildDevice() {
   // A hood overhangs the cup with the six-nozzle cluster set into its
   // underside, a dark recessed back panel closes the bay, and a
   // removable navy drip tray with a steel grille catches the drips.
-  const CUP = { x: 0.62, z: FRONT + 0.22, floor: -0.905, h: 0.27, r: 0.135 };
+  // CUP is the dose dish: a small, shallow pod you scoop from with a
+  // fingertip (kat, Nov 2026), not a drinking cup.
+  const CUP = { x: 0.62, z: FRONT + 0.22, floor: -0.905, h: 0.07, r: 0.17 };
   const BAY = { x0: CUP.x - 0.34, x1: CUP.x + 0.34 };
   const HOOD = { top: -0.43, bot: -0.52, depth: 0.44 };
 
@@ -583,35 +585,36 @@ function buildDevice() {
   grille.receiveShadow = true;
   add(grille);
 
-  // The cup: thick-walled clear glass, turned on a lathe.
-  const cupPts = [
-    [0, 0],
-    [CUP.r * 0.86, 0],
-    [CUP.r * 0.9, 0.01],
+  // The dish: a low, glazed white pod with a rolled lip, turned on a lathe.
+  const dishPts = [
+    [0, 0.012],
+    [CUP.r * 0.55, 0.0],
+    [CUP.r * 0.82, 0.008],
+    [CUP.r * 0.97, CUP.h * 0.7],
     [CUP.r, CUP.h],
-    [CUP.r - 0.012, CUP.h],
-    [CUP.r * 0.9 - 0.012, 0.05],
-    [0, 0.05],
+    [CUP.r - 0.018, CUP.h + 0.004],
+    [CUP.r * 0.8, CUP.h * 0.55],
+    [CUP.r * 0.5, 0.026],
+    [0, 0.022],
   ].map(([x, y]) => new THREE.Vector2(x, y));
   const cup = new THREE.Mesh(
-    track(new THREE.LatheGeometry(cupPts, 48)),
+    track(new THREE.LatheGeometry(dishPts, 64)),
     track(
       new THREE.MeshPhysicalMaterial({
-        color: 0xffffff,
-        roughness: 0.04,
-        transmission: 1,
-        thickness: 0.05,
-        ior: 1.5,
+        color: 0xf7f6f9,
+        roughness: 0.22,
         clearcoat: 1,
-        specularIntensity: 1,
+        clearcoatRoughness: 0.08,
+        side: THREE.DoubleSide,
       }),
     ),
   );
   cup.position.set(CUP.x, CUP.floor, CUP.z);
   cup.castShadow = true;
+  cup.receiveShadow = true;
   add(cup);
 
-  // The dose: a pale blush serum filling the cup's base when lit.
+  // The dose: a pale blush serum pooled in the dish when lit.
   const doseMat = track(
     new THREE.MeshPhysicalMaterial({
       color: 0xf1d9de,
@@ -623,11 +626,13 @@ function buildDevice() {
       opacity: 0,
     }),
   );
+  // A soft dome of serum sitting in the dish.
   const dose = new THREE.Mesh(
-    track(new THREE.CylinderGeometry(CUP.r * 0.86, CUP.r * 0.84, 0.07, 40)),
+    track(new THREE.SphereGeometry(CUP.r * 0.62, 40, 16, 0, Math.PI * 2, 0, Math.PI / 2)),
     doseMat,
   );
-  dose.position.set(CUP.x, CUP.floor + 0.05 + 0.035, CUP.z);
+  dose.scale.set(1, 0.32, 1);
+  dose.position.set(CUP.x, CUP.floor + 0.024, CUP.z);
   add(dose);
   // A thin stream from the nozzle while it pours.
   const streamMat = track(
@@ -641,7 +646,7 @@ function buildDevice() {
     }),
   );
   const streamTop = HOOD.bot - 0.035;
-  const streamBot = CUP.floor + 0.1;
+  const streamBot = CUP.floor + 0.04;
   const stream = new THREE.Mesh(
     track(new THREE.CylinderGeometry(0.008, 0.012, streamTop - streamBot, 12)),
     streamMat,

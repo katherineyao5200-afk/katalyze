@@ -33,7 +33,7 @@ const MILESTONES = [
   },
   {
     title: "Built it",
-    body: "A working six-channel prototype: three bases, three actives, each pumped on its own.",
+    body: "A working six-channel prototype: three bases (toner, serum, cream) and three actives, each pumped on its own.",
   },
   {
     title: "Pitched it",
@@ -252,7 +252,7 @@ export default function StoryPage() {
               {
                 ...images.story.wiring3,
                 title: "Tubing in",
-                text: "Fitting the lines that carry each ingredient to the cup.",
+                text: "Fitting the lines that carry each ingredient to the dish.",
               },
             ]}
           />

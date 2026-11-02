@@ -23,13 +23,13 @@ const STEPS = [
     title: "Mix",
     time: "Under a minute",
     body: "Your reading, the local weather and a quick check-in go to a rules engine that picks the blend, always inside pre-set safe ranges. Six pumps, one per cartridge, dose each ingredient by weight.",
-    facts: ["3 base + 3 active cartridges", "Dosed by weight", "Rules set the formula, not AI"],
+    facts: ["Toner, serum, cream + 3 actives", "Dosed by weight", "Rules set the formula, not AI"],
   },
   {
     title: "Apply",
     time: "One dose",
-    body: "One fresh dose lands in the cup. You apply it like any serum. The device never touches your skin.",
-    facts: ["Dispenses into a cup", "Made for one use", "You apply it yourself"],
+    body: "One fresh dose lands in a small dish. Scoop it out with a fingertip and apply it like any serum. The device never touches your skin.",
+    facts: ["Dispenses into a dish", "Made for one use", "You apply it yourself"],
   },
   {
     title: "Learn",
@@ -42,7 +42,7 @@ const STEPS = [
 const NOT = [
   ["It doesn't scan your face.", "The only reading is a fingertip on a small pad."],
   ["It isn't a medical device.", "Readings are relative trends, never clinical numbers."],
-  ["It never touches your skin.", "Each dose goes into a cup, and you apply it."],
+  ["It never touches your skin.", "Each dose goes into a small dish, and you scoop it out yourself."],
   ["AI doesn't pick your formula.", "Rules within safe ranges do. AI only explains the blend in plain words."],
 ];
 
@@ -58,7 +58,7 @@ export default function HowItWorksPage() {
             to one fresh dose.
           </>
         }
-        lede="Think of it as a printer for skincare. Every morning it reads your skin, mixes one dose and pours it into a cup."
+        lede="Think of it as a printer for skincare. Every morning it reads your skin, mixes one dose and sets it out in a small dish."
       />
 
       {/* The four steps: a deck of cards beside the live device. */}

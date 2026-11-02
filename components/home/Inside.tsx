@@ -1,8 +1,7 @@
 import Reveal from "@/components/Reveal";
 import Hint from "@/components/Hint";
 
-// The base formulas have no public names yet (kat confirmed), so they
-// are numbered. Each line says what the ingredient is for, never a
+// The three bases are a toner, a serum and a cream (kat, Nov 2026). Each line says what the ingredient is for, never a
 // percentage: no formulation data exists yet.
 type Item = {
   code: string;
@@ -17,8 +16,19 @@ type Item = {
 const BASES: Item[] = [
   {
     code: "B-01",
-    name: "Base 01",
-    role: "The carrier every dose starts from. Sets the day's texture.",
+    name: "Toner",
+    role: "The lightest base, thin and watery. Makes the dose fresher and lighter.",
+    when: "Leans in on humid days or a reading above your usual",
+    sky: {
+      caption: "Mist",
+      pts: [[8, 34], [22, 8], [34, 6], [46, 12], [54, 24]],
+      links: [[0, 1], [0, 2], [0, 3], [0, 4]],
+    },
+  },
+  {
+    code: "B-02",
+    name: "Serum",
+    role: "The core of every dose. Carries the actives.",
     when: "In every dose",
     sky: {
       caption: "A steady line",
@@ -27,25 +37,14 @@ const BASES: Item[] = [
     },
   },
   {
-    code: "B-02",
-    name: "Base 02",
-    role: "Lets a dry winter morning and a humid summer one feel different.",
+    code: "B-03",
+    name: "Cream",
+    role: "The richest base. Gives the dose more body.",
     when: "Leans in on dry, cold days or a drier reading",
     sky: {
       caption: "Frost",
       pts: [[30, 20], [30, 6], [30, 34], [18, 13], [42, 27], [18, 27], [42, 13]],
       links: [[0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6]],
-    },
-  },
-  {
-    code: "B-03",
-    name: "Base 03",
-    role: "Widens the range further. Its own channel, its own pump.",
-    when: "Leans in on humid days or a reading above your usual",
-    sky: {
-      caption: "A wider fan",
-      pts: [[8, 34], [22, 8], [34, 6], [46, 12], [54, 24]],
-      links: [[0, 1], [0, 2], [0, 3], [0, 4]],
     },
   },
 ];
@@ -248,7 +247,7 @@ export default function Inside() {
 
         <div className="col-span-12 flex flex-col gap-12 lg:col-span-7 lg:col-start-6">
           <Hint className="glass-light !text-midnight">Hover or tap a vial to look inside</Hint>
-          <Row items={BASES} label="Base formulas · 3" kind="base" />
+          <Row items={BASES} label="Bases · toner, serum, cream" kind="base" />
           <Row items={ACTIVES} label="Active ingredients · 3" kind="active" />
         </div>
       </div>

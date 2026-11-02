@@ -52,8 +52,8 @@ const PARTS: {
   {
     layer: "tray",
     n: "04",
-    name: "Cup tray",
-    note: "Each ingredient is dosed by weight into the cup. The drip tray lifts out.",
+    name: "Dose dish",
+    note: "Each ingredient is dosed by weight into the dish. The drip tray lifts out.",
     side: "right",
   },
   {

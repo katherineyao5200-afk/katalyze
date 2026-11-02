@@ -15,7 +15,7 @@ const ITEMS = [
   {
     n: "02 · How it works",
     title: "One touch. One fresh dose.",
-    body: "Three seconds on the sensor. Katalyze weighs that against the weather and how your skin feels, then fills the cup.",
+    body: "Three seconds on the sensor. Katalyze weighs that against the weather and how your skin feels, then sets out one fresh dose.",
   },
   {
     n: "03 · Where it stands",

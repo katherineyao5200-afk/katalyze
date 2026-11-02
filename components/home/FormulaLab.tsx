@@ -8,7 +8,7 @@ import Reveal from "@/components/Reveal";
  * An interactive illustration of how the rule-based engine reasons.
  * Every number here is made up for the demo and labelled that way: no
  * formulation data exists yet, so the tubes show relative weighting
- * inside a "safe range" band, never percentages. The note under the cup
+ * inside a "safe range" band, never percentages. The note under the dish
  * is a fixed template (the real app uses AI only to word the
  * explanation, never to pick the formula).
  */
@@ -32,9 +32,9 @@ const FEEL: { id: Feel; label: string }[] = [
 // Six channels: three base, three active. Each has a safe range
 // (min-max, 0-1 of the tube) that the rules can never leave.
 const CHANNELS = [
-  { code: "B-01", name: "Base 01", kind: "base", min: 0.5, max: 0.8 },
-  { code: "B-02", name: "Base 02", kind: "base", min: 0.1, max: 0.6 },
-  { code: "B-03", name: "Base 03", kind: "base", min: 0.1, max: 0.55 },
+  { code: "B-01", name: "Toner", kind: "base", min: 0.1, max: 0.55 },
+  { code: "B-02", name: "Serum", kind: "base", min: 0.5, max: 0.8 },
+  { code: "B-03", name: "Cream", kind: "base", min: 0.1, max: 0.6 },
   { code: "A-01", name: "Hyaluronic acid", kind: "active", min: 0.1, max: 0.7 },
   { code: "A-02", name: "Niacinamide", kind: "active", min: 0.05, max: 0.6 },
   { code: "A-03", name: "Ceramide", kind: "active", min: 0.1, max: 0.65 },
@@ -49,13 +49,16 @@ function blend(trend: number, weather: Weather, feel: Feel) {
   const low = Math.max(0, -trend); // drier than usual, 0-1
   const high = Math.max(0, trend);
   const raw = [
-    0.65 - 0.08 * dry + 0.06 * humid,
-    0.3 + 0.18 * dry + 0.15 * low - 0.15 * humid + (feel === "tight" ? 0.1 : 0),
+    // toner: lighter days
     0.3 +
       0.15 * humid +
       0.08 * high -
       0.12 * dry +
       (feel === "shiny" ? 0.12 : 0),
+    // serum: the core of every dose
+    0.65 - 0.08 * dry + 0.06 * humid,
+    // cream: drier, colder days
+    0.3 + 0.18 * dry + 0.15 * low - 0.15 * humid + (feel === "tight" ? 0.1 : 0),
     0.3 + 0.3 * low + 0.1 * dry + (feel === "tight" ? 0.15 : 0) - 0.1 * high,
     0.25 +
       (feel === "shiny" ? 0.3 : 0) +
@@ -85,10 +88,10 @@ function note(trend: number, weather: Weather, feel: Feel) {
   if (feel === "shiny") up.push("niacinamide");
   const texture =
     weather === "dry" || trend < -0.4
-      ? "The base leans richer."
+      ? "The base leans on cream."
       : weather === "humid"
-        ? "The base leans lighter."
-        : "The base stays balanced.";
+        ? "The base leans on toner."
+        : "The base stays mostly serum.";
   const weighted = up.length
     ? `so ${up.join(" and ")} ${up.length > 1 ? "are" : "is"} weighted up.`
     : "so the actives stay near their usual levels.";
@@ -174,7 +177,7 @@ export default function FormulaLab() {
 
   const levels = blend(trend, weather, feel);
 
-  // Changing any input empties the cup: the dose no longer matches.
+  // Changing any input empties the dish: the dose no longer matches.
   const inputs = `${trend}|${weather}|${feel}`;
   const [mixedFor, setMixedFor] = useState<string | null>(null);
   if (mixedFor !== null && mixedFor !== inputs && phase !== "idle") {
@@ -256,7 +259,7 @@ export default function FormulaLab() {
     [],
   );
 
-  // Cup colour: weighted mix of the six tints.
+  // Dose colour: weighted mix of the six tints.
   const baseShare = levels.slice(0, 3).reduce((a, b) => a + b, 0);
   const activeShare = levels.slice(3).reduce((a, b) => a + b, 0);
   const activePct = Math.round((activeShare / (baseShare + activeShare)) * 100);
@@ -478,7 +481,7 @@ export default function FormulaLab() {
           </div>
         </Reveal>
 
-        {/* The machine's view: six channels, the cup, the note */}
+        {/* The machine's view: six channels, the dose dish, the note */}
         <Reveal
           variant="scale"
           className="col-span-12 flex flex-col gap-8 lg:col-span-6 lg:col-start-7 lg:self-center"
@@ -559,7 +562,7 @@ export default function FormulaLab() {
               ))}
             </ul>
 
-            {/* Six lines, one per channel, meeting at the cup. */}
+            {/* Six lines, one per channel, meeting at the dish. */}
             <div className="relative -mt-1 h-16" aria-hidden="true">
               <svg
                 viewBox="0 0 600 64"
@@ -588,17 +591,18 @@ export default function FormulaLab() {
               </svg>
             </div>
 
-            {/* The cup, centred under the six channels */}
+            {/* The dose dish, centred under the six channels */}
             <div className="flex flex-col items-center gap-5">
               <div
-                className={`relative h-24 w-20 ${phase === "ready" ? "lab-cup-ready" : ""}`}
+                className={`relative h-14 w-36 ${phase === "ready" ? "lab-cup-ready" : ""}`}
                 aria-hidden="true"
               >
-                <div className="absolute inset-0 overflow-hidden rounded-b-[42%] rounded-t-md border border-white/40 bg-white/[0.03]">
+                {/* the dish: a low pod seen slightly from above */}
+                <div className="absolute inset-x-0 bottom-0 h-11 overflow-hidden rounded-b-[999px] rounded-t-[40%] border border-white/40 bg-white/[0.04]">
                   <div
-                    className="lab-fill absolute inset-x-0 bottom-0"
+                    className="lab-fill absolute inset-x-0 bottom-0 rounded-b-[999px]"
                     style={{
-                      height: phase === "idle" ? "0%" : "62%",
+                      height: phase === "idle" ? "0%" : "58%",
                       background: cupColor,
                       transition: `height ${phase === "mixing" ? MIX_MS : 400}ms var(--ease-glide), background 900ms var(--ease-glide)`,
                     }}
@@ -606,8 +610,9 @@ export default function FormulaLab() {
                     {phase === "mixing" && <span className="lab-swirl absolute inset-0" />}
                   </div>
                 </div>
+                {/* the lip */}
+                <div className="absolute inset-x-0 top-[3px] h-4 rounded-[50%] border border-white/50 bg-[color:var(--panel)]/40" />
               </div>
-
               <button
                 type="button"
                 onClick={(e) => mix(e)}

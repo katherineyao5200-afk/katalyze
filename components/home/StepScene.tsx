@@ -164,7 +164,7 @@ function Read() {
 }
 
 // 02 · Mix: reading, weather and check-in meet in the rules, and the six
-// pumps each send their measured share down to one cup.
+// pumps each send their measured share down to one dish.
 function Mix() {
   const inputs = ["READING", "WEATHER", "CHECK-IN"];
   const tubes = ["B-01", "B-02", "B-03", "A-01", "A-02", "A-03"];
@@ -298,60 +298,46 @@ function Mix() {
   );
 }
 
-// 03 · Apply: the dose settles in the cup, is stirred, and is ready.
+// 03 · Apply: the dose settles in its dish, ready to scoop.
 function Apply() {
   return (
     <g>
       <ellipse
         cx="200"
-        cy="330"
-        rx="120"
-        ry="16"
+        cy="324"
+        rx="140"
+        ry="12"
         fill="black"
         fillOpacity="0.25"
       />
       <defs>
         <clipPath id="ss-cup">
-          <path d="M120 150 L140 310 Q200 336 260 310 L280 150 Z" />
+          <path d="M70 250 Q80 316 200 318 Q320 316 330 250 Z" />
         </clipPath>
       </defs>
       <g clipPath="url(#ss-cup)">
         <rect
           className="ss-fill"
-          x="100"
-          y="200"
-          width="200"
-          height="140"
+          x="60"
+          y="262"
+          width="280"
+          height="70"
           fill="var(--blush)"
           fillOpacity="0.8"
         />
-        <ellipse
-          className="ss-fill"
-          cx="200"
-          cy="200"
-          rx="90"
-          ry="10"
-          fill="white"
-          fillOpacity="0.5"
-        />
         {/* stir */}
-        <g className="ss-stir" style={{ transformOrigin: "200px 255px" }}>
+        <g className="ss-stir" style={{ transformOrigin: "200px 285px" }}>
           <path
-            d="M160 255 Q200 235 240 255"
+            d="M150 282 Q200 270 250 282"
             fill="none"
             stroke="white"
             strokeOpacity="0.5"
           />
-          <path
-            d="M170 275 Q200 290 230 275"
-            fill="none"
-            stroke="white"
-            strokeOpacity="0.35"
-          />
         </g>
       </g>
+      {/* the dish: low and wide, scooped from with a fingertip */}
       <path
-        d="M120 150 L140 310 Q200 336 260 310 L280 150"
+        d="M70 250 Q80 316 200 318 Q320 316 330 250"
         fill="none"
         stroke="white"
         strokeOpacity="0.7"
@@ -359,9 +345,9 @@ function Apply() {
       />
       <ellipse
         cx="200"
-        cy="150"
-        rx="80"
-        ry="9"
+        cy="250"
+        rx="130"
+        ry="20"
         fill="none"
         stroke="white"
         strokeOpacity="0.5"

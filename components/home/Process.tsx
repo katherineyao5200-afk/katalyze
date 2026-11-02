@@ -20,7 +20,7 @@ const STEPS: { n: string; title: string; body: string }[] = [
   {
     n: "03",
     title: "Apply",
-    body: "A fresh dose lands in the cup. You put it on yourself, like any serum.",
+    body: "A fresh dose lands in a small dish. Scoop it up with a fingertip, like any serum.",
   },
   {
     n: "04",

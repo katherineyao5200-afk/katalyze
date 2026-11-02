@@ -37,7 +37,7 @@ const FAQS = [
   {
     question: "Is it safe?",
     answer:
-      "Every formula is set by a rule-based engine inside pre-set safe ranges, not open-ended guessing. AI only writes the plain-language explanation of your blend; it never decides the formula. The device never touches your skin: your dose goes into a cup, and you apply it yourself, like a serum.",
+      "Every formula is set by a rule-based engine inside pre-set safe ranges, not open-ended guessing. AI only writes the plain-language explanation of your blend; it never decides the formula. The device never touches your skin: your dose goes into a small dish, and you scoop it out and apply it yourself, like a serum.",
   },
   {
     question: "Does it measure sebum, or give a clinical-grade reading?",

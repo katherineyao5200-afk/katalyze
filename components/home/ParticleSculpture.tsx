@@ -9,7 +9,7 @@ import { afterIntro } from "@/lib/afterIntro";
 /*
  * Points of light that gather into a different form for each chapter of
  * the journey: the sparkle from the mark, the fingertip pad, the six
- * cartridges, the dose falling into the cup, and the skin chart. The
+ * cartridges, the dose falling into its dish, and the skin chart. The
  * morph runs entirely in the vertex shader from one scroll value, so a
  * frame costs one draw call. The pointer pushes nearby points aside.
  */
@@ -114,7 +114,7 @@ const cartridges: Gen = (r, o, n) => {
   }
 };
 
-// 3. A drop falling from the nozzle into the cup.
+// 3. A drop falling from the nozzle into a shallow dish.
 const dose: Gen = (r, o, n) => {
   for (let i = 0; i < n; i++) {
     const u = r();
@@ -127,16 +127,16 @@ const dose: Gen = (r, o, n) => {
       put(o, i, Math.cos(a) * rad, y, Math.sin(a) * rad);
     } else if (u < 0.42) {
       // the stream below it
-      put(o, i, gauss(r) * 0.03, 0.55 - r() * 1.25, gauss(r) * 0.03);
-    } else if (u < 0.85) {
-      // the cup wall, a tapered glass
+      put(o, i, gauss(r) * 0.03, 0.55 - r() * 2.0, gauss(r) * 0.03);
+    } else if (u < 0.82) {
+      // the dish: low and wide, its wall curving up to a lip
       const t = r();
-      const rad = 0.75 + t * 0.35;
-      put(o, i, Math.cos(a) * rad, -2.0 + t * 1.45, Math.sin(a) * rad);
+      const rad = 0.5 + t * 1.1;
+      put(o, i, Math.cos(a) * rad, -1.85 + t * t * 0.5, Math.sin(a) * rad);
     } else {
-      // the dose pooled in the bottom
-      const d = 0.74 * Math.sqrt(r());
-      put(o, i, Math.cos(a) * d, -1.85 + r() * 0.18, Math.sin(a) * d);
+      // the dose, a shallow pool in the middle of the dish
+      const d = 0.95 * Math.sqrt(r());
+      put(o, i, Math.cos(a) * d, -1.72 + r() * 0.08, Math.sin(a) * d);
     }
   }
 };

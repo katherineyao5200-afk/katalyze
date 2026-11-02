@@ -19,7 +19,7 @@ const FAQS = [
   },
   {
     q: "Does the device touch my skin?",
-    a: "No. It mixes one dose into a cup, and you apply it yourself.",
+    a: "No. It mixes one dose into a small dish, and you scoop it out and apply it yourself.",
   },
   {
     q: "Is it regulated?",

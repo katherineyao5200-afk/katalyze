@@ -49,7 +49,7 @@ const ANNOTATIONS: Annotation[] = [
   {
     id: "cartridges",
     label: "[01 · 6 cartridges]",
-    value: "3 base: the tall bottles",
+    value: "3 bases: toner, serum, cream",
     detail: "3 active: the small droppers",
     side: "right",
     at: 0.3,
@@ -63,8 +63,8 @@ const ANNOTATIONS: Annotation[] = [
   },
   {
     id: "cup",
-    label: "[03 · Cup tray]",
-    value: "One fresh dose, into a cup",
+    label: "[03 · Dose dish]",
+    value: "One fresh dose, in a small dish",
     side: "right",
     at: 0.54,
   },
