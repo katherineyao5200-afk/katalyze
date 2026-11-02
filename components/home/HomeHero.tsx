@@ -160,9 +160,16 @@ function ScrollHero() {
   const onUnsupported = useCallback(() => setWebgl(false), []);
   const [modelReady, setModelReady] = useState(false);
   const onModelReady = useCallback(() => setModelReady(true), []);
-  // Start fetching the 3D code straight away, while the intro plays.
+  // Fetch the 3D code as soon as the browser has a free moment (during
+  // the intro, if it plays), without competing with the first paint.
   useEffect(() => {
-    void import("@/components/home/DeviceModel");
+    const load = () => void import("@/components/home/DeviceModel");
+    if (!window.requestIdleCallback) {
+      const t = window.setTimeout(load, 300);
+      return () => clearTimeout(t);
+    }
+    const id = window.requestIdleCallback(load, { timeout: 800 });
+    return () => window.cancelIdleCallback(id);
   }, []);
 
   const [beat, setBeat] = useState(1);

@@ -370,12 +370,10 @@ export default function DitherField({
       let visible = true;
       let tick = 0;
       const loop = () => {
-        // The aura moves slowly: 30 frames a second is plenty.
+        // Both looks move slowly: 30 frames a second is plenty, and it
+        // leaves the GPU to the 3D device and to scrolling.
         tick++;
-        if (
-          document.documentElement.dataset.gate !== "open" &&
-          (variant !== "aura" || tick % 2 === 0)
-        )
+        if (document.documentElement.dataset.gate !== "open" && tick % 2 === 0)
           draw();
         raf = requestAnimationFrame(loop);
       };

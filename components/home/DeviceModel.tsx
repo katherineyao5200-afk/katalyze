@@ -1278,7 +1278,19 @@ export default function DeviceModel({
         if (!e.isIntersecting) return;
         near.disconnect();
         cancelIntro = afterIntro(() => {
-          cleanup = init();
+          // Build the scene when the browser is idle, so the first
+          // scroll after load isn't blocked (the poster covers the wait).
+          const ric =
+            window.requestIdleCallback ??
+            ((cb: () => void) => window.setTimeout(cb, 200));
+          const id = ric(() => {
+            cleanup = init();
+          }, { timeout: 1200 });
+          const prev = cancelIntro;
+          cancelIntro = () => {
+            prev();
+            (window.cancelIdleCallback ?? window.clearTimeout)(id as number);
+          };
         });
       },
       { rootMargin: "60% 0px" },
@@ -1654,9 +1666,24 @@ export default function DeviceModel({
       let raf = 0;
       let visible = true;
       let ready = false;
+      // At rest the device only drifts, so it renders at half rate; any
+      // scroll or pointer movement brings it back to full rate for a
+      // moment. This keeps the GPU free for scrolling on slower laptops.
+      let activeUntil = 0;
+      const wake = () => {
+        activeUntil = performance.now() + 900;
+      };
+      window.addEventListener("scroll", wake, { passive: true });
+      window.addEventListener("pointermove", wake, { passive: true });
+      let tick = 0;
       const loop = () => {
+        tick++;
         // Skip rendering while the entry gate covers the page.
-        if (document.documentElement.dataset.gate !== "open") frame();
+        if (
+          document.documentElement.dataset.gate !== "open" &&
+          (tick % 2 === 0 || performance.now() < activeUntil)
+        )
+          frame();
         raf = requestAnimationFrame(loop);
       };
       const io = new IntersectionObserver(([e]) => {
@@ -1691,6 +1718,8 @@ export default function DeviceModel({
       return () => {
         disposed = true;
         cancelAnimationFrame(raf);
+        window.removeEventListener("scroll", wake);
+        window.removeEventListener("pointermove", wake);
         container.removeEventListener("pointerdown", onDown);
         container.removeEventListener("pointermove", onMove);
         container.removeEventListener("pointerup", onUp);
