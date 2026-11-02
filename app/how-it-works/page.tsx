@@ -1,11 +1,10 @@
-import Lead from "@/components/Lead";
 import type { Metadata } from "next";
 
 import Close from "@/components/home/Close";
 import FormulaLab from "@/components/home/FormulaLab";
 import PageHero from "@/components/PageHero";
 import Reveal from "@/components/Reveal";
-import SceneInView from "@/components/SceneInView";
+import StepDeck from "@/components/StepDeck";
 
 export const metadata: Metadata = {
   title: "How It Works",
@@ -47,11 +46,6 @@ const NOT = [
   ["AI doesn't pick your formula.", "Rules within safe ranges do. AI only explains the blend in plain words."],
 ];
 
-const mono = {
-  fontSize: "var(--text-2xs)",
-  letterSpacing: "var(--track-label)",
-} as const;
-
 export default function HowItWorksPage() {
   return (
     <main className="flex flex-1 flex-col bg-midnight text-white">
@@ -67,69 +61,8 @@ export default function HowItWorksPage() {
         lede="Think of it as a printer for skincare. Every morning it reads your skin, mixes one dose and pours it into a cup."
       />
 
-      {/* The four steps, each drawn. */}
-      <section style={{ paddingBlock: "var(--s-24)" }}>
-        <ol
-          className="mx-auto flex flex-col"
-          style={{ maxWidth: "var(--max-w)", paddingInline: "var(--margin)" }}
-        >
-          {STEPS.map((s, i) => (
-            <li
-              key={s.title}
-              className="grid grid-cols-1 items-center gap-10 border-t border-[color:var(--rule-on-dark)] py-16 md:grid-cols-12 md:gap-x-[var(--gutter)]"
-            >
-              <SceneInView
-                step={i}
-                className={`mx-auto w-full max-w-[420px] md:col-span-5 ${
-                  i % 2 ? "md:order-2 md:col-start-8" : ""
-                }`}
-              />
-              <Reveal
-                className={`flex flex-col gap-5 md:col-span-6 ${
-                  i % 2 ? "md:order-1 md:col-start-1" : "md:col-start-7"
-                }`}
-              >
-                <p
-                  className="flex items-baseline gap-4 font-mono uppercase text-periwinkle"
-                  style={mono}
-                >
-                  <span className="text-white">0{i + 1}</span>
-                  <span>{s.time}</span>
-                </p>
-                <h2
-                  className="font-display font-extralight"
-                  style={{
-                    fontSize: "var(--text-display)",
-                    lineHeight: "var(--leading-display)",
-                  }}
-                >
-                  {s.title}
-                </h2>
-                <p
-                  className="max-w-lg text-[color:var(--muted-on-dark)]"
-                  style={{
-                    fontSize: "var(--text-base)",
-                    lineHeight: "var(--leading-body)",
-                  }}
-                >
-                  <Lead text={s.body} />
-                </p>
-                <ul className="mt-2 flex flex-wrap gap-x-6 gap-y-2 border-t border-[color:var(--rule-on-dark)] pt-4">
-                  {s.facts.map((f) => (
-                    <li
-                      key={f}
-                      className="text-[color:var(--muted-on-dark)]"
-                      style={{ fontSize: "var(--text-sm)" }}
-                    >
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-              </Reveal>
-            </li>
-          ))}
-        </ol>
-      </section>
+      {/* The four steps: a deck of cards beside the live device. */}
+      <StepDeck steps={STEPS} />
 
       {/* Try the rules yourself. */}
       <FormulaLab />
