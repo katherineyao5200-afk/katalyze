@@ -224,7 +224,7 @@ export default function Inside() {
             className="font-display font-extralight text-midnight"
             style={{ fontSize: "var(--text-3xl)", lineHeight: "var(--leading-tight)" }}
           >
-            Six cartridges,<span className="text-[color:var(--faint-on-light)]"> one dose at a time.</span>
+            Three bases, three actives, and what each one is for.
           </h2>
           <p
             className="max-w-sm text-[color:var(--muted-on-light)]"
@@ -233,13 +233,13 @@ export default function Inside() {
             <strong className="font-medium text-midnight">
               Every dose fresh. Every ounce used.
             </strong>{" "}
-            Each dose is mixed for one use, so there&apos;s no half-finished
-            bottle at the back of the cabinet.
+            Each dose is mixed for one use. Nothing sits open for months,
+            and nothing gets thrown out half full.
           </p>
         </Reveal>
 
         <div className="col-span-12 flex flex-col gap-12 lg:col-span-7 lg:col-start-6">
-          <Hint className="glass-light !text-midnight">Hover or tap a vial to look inside</Hint>
+          <Hint className="text-midnight">Hover or tap a vial to look inside</Hint>
           <Row items={BASES} label="Bases · toner, serum, cream" kind="base" />
           <Row items={ACTIVES} label="Active ingredients · 3" kind="active" />
         </div>

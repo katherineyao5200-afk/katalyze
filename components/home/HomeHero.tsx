@@ -48,7 +48,7 @@ type Annotation = {
 const ANNOTATIONS: Annotation[] = [
   {
     id: "cartridges",
-    label: "[01 · 6 cartridges]",
+    label: "6 cartridges",
     value: "3 bases: toner, serum, cream",
     detail: "3 active: the small droppers",
     side: "right",
@@ -56,14 +56,14 @@ const ANNOTATIONS: Annotation[] = [
   },
   {
     id: "controls",
-    label: "[02 · Controls]",
+    label: "Controls",
     value: "Display and buttons",
     side: "left",
     at: 0.42,
   },
   {
     id: "cup",
-    label: "[03 · Dose dish]",
+    label: "Dose dish",
     value: "One fresh dose, in a small dish",
     side: "right",
     at: 0.54,
@@ -283,11 +283,10 @@ function ScrollHero() {
           >
             <div className="flex max-w-xl flex-col gap-6 pt-16">
               <p
-                className="glass inline-flex w-fit items-center gap-2 rounded-full px-3.5 py-1.5 font-mono uppercase text-white/90"
+                className="font-mono uppercase text-periwinkle"
                 style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}
               >
-                <span aria-hidden="true" className="hint-dot relative size-1.5 rounded-full bg-blush" />
-                Personalized skincare device · In development
+                Personalized skincare · In development
               </p>
               <HeroHeadline compact />
               <p
@@ -300,9 +299,9 @@ function ScrollHero() {
                 <strong className="font-medium text-white">
                   Katalyze is a countertop skincare device.
                 </strong>{" "}
-                It reads your skin from one fingertip, then mixes a fresh,
-                personalized serum from six cartridges for the day you&apos;re
-                actually having.
+                Touch the pad on top each morning and it mixes one fresh
+                dose from six cartridges, based on your skin that day, the
+                weather and how you say it feels.
               </p>
               <WaitlistForm
                 source="hero"
@@ -573,7 +572,7 @@ function StaticHero() {
       >
         <div className="col-span-12 flex flex-col gap-6 lg:col-span-6">
           <p
-            className="glass inline-flex w-fit items-center gap-2 rounded-full px-3.5 py-1.5 font-mono uppercase text-white/90"
+            className="font-mono uppercase text-periwinkle"
             style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}
           >
             <span aria-hidden="true" className="hint-dot relative size-1.5 rounded-full bg-blush" />
@@ -590,9 +589,9 @@ function StaticHero() {
             <strong className="font-medium text-white">
               Katalyze is a countertop skincare device.
             </strong>{" "}
-            It reads your skin from one fingertip, then mixes a fresh,
-            personalized serum from six cartridges for the day you&apos;re
-            actually having.
+            Touch the pad on top each morning and it mixes one fresh
+            dose from six cartridges, based on your skin that day, the
+            weather and how you say it feels.
           </p>
           <WaitlistForm
             source="hero"

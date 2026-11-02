@@ -82,12 +82,12 @@ export default function PricingPage() {
         label="Planned pricing"
         title={
           <>
-            One device.
+            One device,
             <br />
-            Three ways to keep it stocked.
+            three ways to keep it full.
           </>
         }
-        lede="Most people already spend $20 to $50 a month on skincare. Katalyze is built to replace that spend, not add to it."
+        lede="Most people already spend $20 to $50 a month on skincare. Katalyze is meant to replace that, not sit on top of it."
       />
 
       {/* The device, then the plans as one comparison. */}
@@ -284,7 +284,7 @@ export default function PricingPage() {
               lineHeight: "var(--leading-tight)",
             }}
           >
-            Questions<span className="text-periwinkle"> before you join.</span>
+            Before you join the waitlist.
           </h2>
           <div className="flex flex-col md:col-span-7 md:col-start-6">
             {FAQS.map((faq) => (
@@ -348,7 +348,7 @@ export default function PricingPage() {
               lineHeight: "var(--leading-tight)",
             }}
           >
-            <span className="text-periwinkle">The first run is</span> about 2,000 units.
+            The first run is about 2,000 units.
           </h2>
           <p
             className="max-w-md text-[color:var(--muted-on-dark)]"

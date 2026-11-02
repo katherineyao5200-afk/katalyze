@@ -3,27 +3,16 @@ import Reveal from "@/components/Reveal";
 /*
  * Straight after the hero, so nobody wonders what category this is: a
  * line drawing of someone smoothing a fingertip of the dose onto a cheek,
- * beside three ordinary skin days the blend adjusts for. The drawing is
+ * beside ordinary skin days and what the blend does about each. The drawing is
  * about applying skincare, never about scanning: nothing is measured on
  * the face.
  */
 const DAYS = [
-  {
-    title: "A dry winter morning",
-    body: "More cream and hyaluronic acid.",
-    tex: "dry",
-  },
-  {
-    title: "A humid summer day",
-    body: "Lighter: more toner, a little niacinamide.",
-    tex: "dewy",
-  },
-  {
-    title: "Skin that feels irritated",
-    body: "More ceramide, the barrier ingredient.",
-    tex: "calm",
-  },
-] as const;
+  { day: "Tight after a night with the heating on", dose: "more cream, more hyaluronic acid" },
+  { day: "Shiny by lunchtime in a humid August", dose: "more toner, a little niacinamide" },
+  { day: "Red and touchy after a windy walk", dose: "more ceramide" },
+  { day: "A normal Tuesday", dose: "mostly serum, everything near your usual" },
+];
 
 function Face() {
   return (
@@ -74,38 +63,6 @@ function Face() {
   );
 }
 
-function Texture({ kind }: { kind: (typeof DAYS)[number]["tex"] }) {
-  const freq = kind === "dry" ? "0.9 0.35" : kind === "dewy" ? "0.05" : "0.022";
-  return (
-    <svg viewBox="0 0 120 120" className="h-full w-full" aria-hidden="true">
-      <defs>
-        <filter id={`skin-${kind}`} x="0" y="0" width="100%" height="100%">
-          <feTurbulence type="fractalNoise" baseFrequency={freq} numOctaves={kind === "dry" ? 2 : 3} seed={kind.length * 7} />
-          <feColorMatrix
-            values={
-              kind === "dry"
-                ? "0 0 0 0 0.93  0 0 0 0 0.86  0 0 0 0 0.88  0 0 0 -1.6 1.15"
-                : "0 0 0 0 0.96  0 0 0 0 0.89  0 0 0 0 0.91  0 0 0 -1.2 1"
-            }
-          />
-        </filter>
-        <radialGradient id={`sheen-${kind}`} cx="0.35" cy="0.3" r="0.8">
-          <stop offset="0" stopColor="white" stopOpacity={kind === "dewy" ? 0.85 : 0.35} />
-          <stop offset="0.5" stopColor="white" stopOpacity="0" />
-        </radialGradient>
-      </defs>
-      <rect width="120" height="120" fill="#e3c4c9" />
-      <rect width="120" height="120" filter={`url(#skin-${kind})`} />
-      {kind === "calm" && <ellipse cx="72" cy="70" rx="34" ry="26" fill="#d9a9b1" opacity="0.45" />}
-      <rect width="120" height="120" fill={`url(#sheen-${kind})`} />
-      {/* a drop of the dose on the skin */}
-      <ellipse cx="60" cy="62" rx="16" ry="10" fill="white" opacity="0.92" />
-      <ellipse cx="55" cy="58" rx="5" ry="2.6" fill="white" />
-      <ellipse cx="60" cy="66" rx="16" ry="6" fill="#c9b6c4" opacity="0.25" />
-    </svg>
-  );
-}
-
 export default function SkinRitual() {
   return (
     <section className="relative overflow-hidden bg-midnight" style={{ paddingBlock: "var(--s-24) var(--s-16)" }}>
@@ -128,37 +85,34 @@ export default function SkinRitual() {
               className="font-display font-extralight text-white"
               style={{ fontSize: "var(--text-3xl)", lineHeight: "var(--leading-tight)" }}
             >
-              <span className="focal">Skincare</span>, mixed for the skin
-              <em className="italic"> you woke up with.</em>
+              Your skin isn&apos;t the same two mornings in a row.
             </h2>
             <p
               className="max-w-md text-[color:var(--muted-on-dark)]"
               style={{ fontSize: "var(--text-base)", lineHeight: "var(--leading-body)" }}
             >
-              Most routines are one bottle for every day of the year. Skin
-              doesn&apos;t work like that. Katalyze makes one small dose each
-              morning, and you smooth it on like any serum or moisturizer.
+              Most of us still reach for the same jar either way. Katalyze
+              mixes a small, fresh dose each morning instead, and you smooth it
+              on like any moisturizer.
             </p>
           </Reveal>
-          <ul className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            {DAYS.map((d, i) => (
-              <li key={d.title}>
-              <Reveal delayMs={i * 90} variant="scale" className="skin-tile flex flex-col gap-3">
-                <div className="skin-swatch aspect-square overflow-hidden rounded-[22px]">
-                  <Texture kind={d.tex} />
+          <Reveal>
+            <dl className="border-t border-[color:var(--rule-on-dark)]">
+              {DAYS.map((d) => (
+                <div
+                  key={d.day}
+                  className="grid grid-cols-1 gap-1 border-b border-[color:var(--rule-on-dark)] py-4 sm:grid-cols-[1fr_auto] sm:items-baseline sm:gap-8"
+                >
+                  <dt className="text-white" style={{ fontSize: "var(--text-base)" }}>
+                    {d.day}
+                  </dt>
+                  <dd className="text-periwinkle sm:text-right" style={{ fontSize: "var(--text-sm)" }}>
+                    {d.dose}
+                  </dd>
                 </div>
-                <div className="flex flex-col gap-1 px-1">
-                  <h3 className="text-white" style={{ fontSize: "var(--text-sm)" }}>
-                    {d.title}
-                  </h3>
-                  <p className="text-[color:var(--muted-on-dark)]" style={{ fontSize: "var(--text-xs)", lineHeight: 1.45 }}>
-                    {d.body}
-                  </p>
-                </div>
-              </Reveal>
-              </li>
-            ))}
-          </ul>
+              ))}
+            </dl>
+          </Reveal>
         </div>
       </div>
     </section>

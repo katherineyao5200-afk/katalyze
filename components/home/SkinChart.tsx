@@ -102,7 +102,7 @@ export default function SkinChart() {
               lineHeight: "var(--leading-tight)",
             }}
           >
-            Your skin, charted.<span className="text-periwinkle"> One star a morning.</span>
+            Every morning&apos;s reading becomes a star on your chart.
           </h2>
           <p
             className="col-span-12 max-w-md self-end text-[color:var(--muted-on-dark)] lg:col-span-4 lg:col-start-9"
@@ -111,8 +111,8 @@ export default function SkinChart() {
               lineHeight: "var(--leading-body)",
             }}
           >
-            Every reading is measured against your own usual. Within a few
-            weeks a pattern appears, and your formula follows it.
+            Each one is compared with your own usual, not anyone else&apos;s.
+            After a few weeks you can see the pattern, and so can the formula.
             <Hint className="mt-4 flex">Tap any star</Hint>
           </p>
         </Reveal>
@@ -129,7 +129,7 @@ export default function SkinChart() {
                 letterSpacing: "var(--track-label)",
               }}
             >
-              <span>[Demo chart · 21 mornings]</span>
+              <span>Demo chart, 21 mornings</span>
               <span className="hidden sm:inline">Relative to your usual</span>
             </div>
 

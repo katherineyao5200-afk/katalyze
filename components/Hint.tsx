@@ -1,7 +1,6 @@
 /*
- * A small glass tag that says an element can be used, and how
- * ("Drag to turn", "Tap a star"). The blush dot pulses so the eye finds
- * it; the words stay plain.
+ * A quiet line of text saying an element can be used, and how
+ * ("Drag to turn", "Tap a star"). Plain words, no badge.
  */
 export default function Hint({
   children,
@@ -12,10 +11,10 @@ export default function Hint({
 }) {
   return (
     <span
-      className={`glass inline-flex w-fit items-center gap-2 rounded-full px-3 py-1.5 font-mono uppercase text-white/85 ${className}`}
-      style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}
+      className={`inline-flex w-fit items-center gap-1.5 text-current opacity-60 ${className}`}
+      style={{ fontSize: "var(--text-xs)" }}
     >
-      <span aria-hidden="true" className="hint-dot relative size-1.5 rounded-full bg-blush" />
+      <span aria-hidden="true">↳</span>
       {children}
     </span>
   );

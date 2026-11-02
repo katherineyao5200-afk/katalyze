@@ -55,7 +55,7 @@ export default function FAQ() {
               lineHeight: "var(--leading-tight)",
             }}
           >
-            Questions<span className="text-periwinkle"> people ask first.</span>
+            Things people usually ask.
           </h2>
         </Reveal>
         <div className="col-span-12 border-t border-[color:var(--rule-on-dark)] lg:col-span-7 lg:col-start-6">

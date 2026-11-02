@@ -1,13 +1,16 @@
 import Link from "next/link";
 
-import BlueprintMark from "@/components/BlueprintMark";
+import Image from "next/image";
+
+import { images } from "@/lib/images";
 
 const FOOTER_LINKS = [
   { href: "/", label: "Home" },
-  { href: "/how-it-works", label: "How It Works" },
+  { href: "/how-it-works", label: "How it works" },
   { href: "/pricing", label: "Pricing" },
-  { href: "/story", label: "Our Story" },
+  { href: "/story", label: "Our story" },
   { href: "/investors", label: "Investors" },
+  { href: "/quick", label: "Quick read" },
 ];
 
 const focusRing =
@@ -34,7 +37,13 @@ export default function Footer() {
         }}
       >
         <div className="col-span-12 flex flex-col gap-4 md:col-span-5">
-          <BlueprintMark className="-ml-4 mb-2 h-36 w-36" />
+          <Image
+            src={images.logo.nav.src}
+            width={images.logo.nav.width}
+            height={images.logo.nav.height}
+            alt=""
+            className="mb-2 h-10 w-auto opacity-90"
+          />
           <p
             className="max-w-sm text-white"
             style={{
@@ -42,8 +51,8 @@ export default function Footer() {
               lineHeight: "var(--leading-body)",
             }}
           >
-            Katalyze reads your skin each morning and mixes one fresh dose to
-            match it. Join the waitlist to hear first when the first run opens.
+            A countertop device that mixes your skincare fresh each morning.
+            Designed by Katherine Yao. Not on sale yet.
           </p>
         </div>
 

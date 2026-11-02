@@ -1,11 +1,9 @@
-import AtAGlance from "@/components/home/AtAGlance";
 import Business from "@/components/home/Business";
 import Mission from "@/components/home/Mission";
 import Model from "@/components/home/Model";
 import FAQ from "@/components/home/FAQ";
 import Pricing from "@/components/home/Pricing";
 import Close from "@/components/home/Close";
-import Counter from "@/components/home/Counter";
 import Founder from "@/components/home/Founder";
 import SkinRitual from "@/components/home/SkinRitual";
 import HomeHero from "@/components/home/HomeHero";
@@ -24,11 +22,9 @@ export default function Home() {
     <main className="flex flex-1 flex-col bg-midnight">
       <HomeHero />
       <SkinRitual />
-      <AtAGlance />
       <Mission />
       <Research />
       <Journey />
-      <Counter />
       <Anatomy />
       <Inside />
       <FormulaLab />

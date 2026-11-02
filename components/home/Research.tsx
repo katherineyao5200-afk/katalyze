@@ -7,7 +7,7 @@ import Orbit from "@/components/home/Orbit";
 const LEAD = {
   value: "71.2%",
   description:
-    "say their skin changes with the weather, but their products stay the same.",
+    "say their skin changes with the season or the weather.",
 };
 
 const STATS = [
@@ -46,10 +46,10 @@ export default function Research() {
             style={{ fontSize: "var(--text-base)", lineHeight: "var(--leading-body)" }}
           >
             <strong className="font-medium text-white">
-              Skin changes daily. So should your formula.
+              Before building anything, Katherine checked the idea.
             </strong>{" "}
-            Before building anything, Katherine asked about 75 skincare users
-            whether they felt the same. Most did.
+            She surveyed about 75 people who use skincare, asking whether
+            their skin changes and what goes wrong when they shop for it.
           </p>
         </Reveal>
 
@@ -71,7 +71,7 @@ export default function Research() {
               className="relative z-10 font-mono uppercase text-periwinkle"
               style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}
             >
-              [Katalyze survey · 2026]
+              Katalyze survey, 2026
             </p>
             <div className="relative z-10 flex flex-col gap-3">
               <DotStat lit={71} className="mb-4 w-40" />

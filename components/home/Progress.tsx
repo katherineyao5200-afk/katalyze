@@ -70,7 +70,7 @@ export default function Progress() {
               lineHeight: "var(--leading-tight)",
             }}
           >
-            The prototype works.<span className="text-periwinkle"> Next come real ingredients.</span>
+            The prototype runs. It hasn&apos;t touched real skincare yet.
           </h2>
         </Reveal>
         <p
@@ -80,7 +80,7 @@ export default function Progress() {
             lineHeight: "var(--leading-body)",
           }}
         >
-          Each bottle feeds its own pump and tube, so no two ingredients share
+          Each bottle has its own pump and tube, so no two ingredients share
           a path. So far it has run on simulated liquids, to prove the
           mechanics before anything touches skin.
         </p>

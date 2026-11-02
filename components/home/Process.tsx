@@ -72,7 +72,7 @@ export default function Process() {
               lineHeight: "var(--leading-tight)",
             }}
           >
-            About a minute.<span className="text-periwinkle"> Every morning.</span>
+            It takes about a minute each morning.
           </h2>
         </div>
 
@@ -130,7 +130,7 @@ export default function Process() {
                   letterSpacing: "var(--track-label)",
                 }}
               >
-                [Step {step.n}]
+                Step {step.n}
               </span>
               <h3
                 className="font-display font-extralight"

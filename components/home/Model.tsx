@@ -5,21 +5,9 @@ import { images } from "@/lib/images";
 // The business model in one glance, over the countertop photo (blurred).
 // Figures from the 2026 pitch deck; all planned, nothing on sale yet.
 const PARTS = [
-  {
-    value: "$279",
-    title: "The device",
-    body: "Bought once. About $51 to make at the first run.",
-  },
-  {
-    value: "$25–89",
-    title: "Refills, monthly",
-    body: "Cartridge subscriptions in three tiers. This is the recurring revenue.",
-  },
-  {
-    value: "Next",
-    title: "Hotels",
-    body: "Fresh, personalized skincare in luxury hotel rooms, as a B2B channel.",
-  },
+  { value: "$279", body: "for the device, once. It costs about $51 to make in the first run." },
+  { value: "$25–89", body: "a month for refills, depending on the plan. This is where most of the long-term revenue comes from." },
+  { value: "Later", body: "hotels: a fresh dose in the bathroom of a luxury room, sold to the hotel." },
 ];
 
 export default function Model() {
@@ -34,34 +22,27 @@ export default function Model() {
         </p>
         <h2
           className="font-display font-extralight text-white"
-          style={{ fontSize: "clamp(40px, 5.5vw, 88px)", lineHeight: 1 }}
+          style={{ fontSize: "clamp(36px, 5vw, 76px)", lineHeight: 1.02 }}
         >
-          Sell the device once.
-          <span className="text-white/45"> Refill it every month.</span>
+          You buy the device once. The cartridges are what you keep buying.
         </h2>
       </Reveal>
-      <ul className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        {PARTS.map((p, i) => (
-          <li key={p.title}>
-            <Reveal delayMs={i * 90} className="glass flex h-full flex-col gap-2 rounded-[24px] p-6">
-              <span
-                className="focal font-display font-extralight text-white"
-                style={{ fontSize: "var(--text-2xl)", lineHeight: 1 }}
-              >
+      <Reveal>
+        <dl className="flex flex-col border-t border-white/15">
+          {PARTS.map((p) => (
+            <div key={p.value} className="grid grid-cols-[6.5rem_1fr] items-baseline gap-4 border-b border-white/15 py-5 sm:grid-cols-[9rem_1fr]">
+              <dt className="font-display font-extralight text-white" style={{ fontSize: "var(--text-2xl)", lineHeight: 1 }}>
                 {p.value}
-              </span>
-              <span className="text-white" style={{ fontSize: "var(--text-sm)" }}>
-                {p.title}
-              </span>
-              <span className="text-white/60" style={{ fontSize: "var(--text-xs)", lineHeight: 1.45 }}>
+              </dt>
+              <dd className="max-w-lg text-white/75" style={{ fontSize: "var(--text-base)", lineHeight: 1.5 }}>
                 {p.body}
-              </span>
-            </Reveal>
-          </li>
-        ))}
-      </ul>
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </Reveal>
       <p className="text-white/50" style={{ fontSize: "var(--text-xs)" }}>
-        Planned pricing. Katalyze isn&apos;t on sale yet; the first run is about 2,000 units and the waitlist hears first.
+        Planned pricing. Nothing is on sale yet. The first run is about 2,000 units, and the waitlist hears first.
       </p>
     </PhotoStatement>
   );

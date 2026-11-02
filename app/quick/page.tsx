@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 import WaitlistForm from "@/components/WaitlistForm";
+import { CARTRIDGE_TINT } from "@/lib/tints";
+import { images } from "@/lib/images";
 
 export const metadata: Metadata = {
   title: "Quick read",
@@ -10,9 +13,9 @@ export const metadata: Metadata = {
 };
 
 /*
- * The whole site as one plain page for readers on a clock (admissions
- * officers, investors). No reveals, no canvases, no scroll effects: just
- * type, rules and numbers. Figures match the homepage and the investors
+ * The whole site as one page for readers on a clock (admissions officers,
+ * investors). Still pictures and plain type, no reveals, canvases or
+ * scroll effects. Figures match the homepage and the investors
  * page (pitch deck, Sep 2026). Product claims follow the site's rules.
  */
 
@@ -99,32 +102,75 @@ function Rows({ rows, wide = false }: { rows: string[][]; wide?: boolean }) {
 export default function QuickPage() {
   return (
     <main className="flex flex-1 flex-col bg-midnight text-white">
+      <header className="relative isolate overflow-hidden">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 -z-10 bg-cover"
+          style={{ backgroundImage: `url(${images.mood.ritual.src})`, backgroundPosition: "60% 40%" }}
+        />
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 -z-10"
+          style={{
+            background:
+              "linear-gradient(90deg, rgb(21 24 46 / 0.95), rgb(31 36 65 / 0.7) 60%, rgb(31 36 65 / 0.5)), linear-gradient(180deg, transparent 70%, var(--midnight))",
+          }}
+        />
+        <div
+          className="mx-auto grid w-full grid-cols-1 items-center gap-10 md:grid-cols-12"
+          style={{ maxWidth: "1100px", paddingInline: "var(--margin)", paddingBlock: "calc(var(--s-16) + 64px) var(--s-16)" }}
+        >
+          <div className="md:col-span-7">
+            <p className="font-mono uppercase text-periwinkle" style={label}>
+              Quick read · about 2 minutes
+            </p>
+            <h1
+              className="mt-4 font-display font-extralight"
+              style={{ fontSize: "clamp(40px, 6vw, 72px)", lineHeight: 1 }}
+            >
+              Katalyze, on one page.
+            </h1>
+            <p className="mt-6 max-w-xl text-white/80" style={{ fontSize: "var(--text-base)", lineHeight: "var(--leading-body)" }}>
+              Most skincare is chosen once and used for months, while skin
+              changes week to week. Katalyze is a countertop device that checks
+              your skin from one fingertip each morning and mixes a fresh dose
+              from six cartridges to match.
+            </p>
+            <p className="mt-4 text-white/55" style={{ fontSize: "var(--text-xs)" }}>
+              Prefer the full version? <Link href="/" className="text-blush underline underline-offset-4">Go to the homepage</Link>.
+            </p>
+          </div>
+          <div className="md:col-span-5">
+            <Image
+              src={images.product.poster.src}
+              width={images.product.poster.width}
+              height={images.product.poster.height}
+              alt="The planned Katalyze device: a white countertop unit with six cartridges behind a frosted window and a dose dish at the front"
+              priority
+              className="h-auto w-full scale-110 drop-shadow-[0_30px_40px_rgb(0_0_0/0.5)] md:scale-[1.4]"
+            />
+          </div>
+        </div>
+      </header>
+
       <div
         className="mx-auto w-full"
-        style={{ maxWidth: "960px", paddingInline: "var(--margin)", paddingBlock: "calc(var(--s-24) + 40px) var(--s-24)" }}
+        style={{ maxWidth: "1100px", paddingInline: "var(--margin)", paddingBottom: "var(--s-24)" }}
       >
-        <p className="font-mono uppercase text-periwinkle" style={label}>
-          Quick read · about 2 minutes
-        </p>
-        <h1
-          className="mt-4 font-display font-extralight"
-          style={{ fontSize: "clamp(40px, 6vw, 72px)", lineHeight: 1 }}
-        >
-          Katalyze, in one page.
-        </h1>
-        <p className="mt-6 max-w-2xl text-white/75" style={{ fontSize: "var(--text-base)", lineHeight: "var(--leading-body)" }}>
-          Skin changes with the weather, the season, the week, but skincare
-          comes in a bottle that never does. Katalyze reads your skin from one
-          fingertip each morning and mixes a fresh, personalized dose from six
-          cartridges for the day you&apos;re actually having.
-        </p>
-        <p className="mt-4 text-white/50" style={{ fontSize: "var(--text-xs)" }}>
-          Want the full experience? <Link href="/" className="text-blush underline underline-offset-4">Back to the homepage</Link>.
-        </p>
-
-        <div className="mt-12">
+        <div>
           <Block title="At a glance">
-            <Rows rows={FACTS} />
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-[1fr_140px]">
+              <Rows rows={FACTS} />
+              <div className="relative hidden aspect-[3/4] overflow-hidden rounded-xl sm:block">
+                <Image
+                  src={images.founder.portrait.src}
+                  alt={images.founder.portrait.alt}
+                  fill
+                  sizes="140px"
+                  className="object-cover"
+                />
+              </div>
+            </div>
           </Block>
           <Block title="How it works">
             <ol className="flex flex-col">
@@ -141,6 +187,15 @@ export default function QuickPage() {
             </ol>
           </Block>
           <Block title="Inside">
+            <div className="mb-6 flex items-end gap-3" aria-hidden="true">
+              {Object.entries(CARTRIDGE_TINT).map(([code, c], i) => (
+                <span
+                  key={code}
+                  className="block w-8 rounded-t-[10px] rounded-b-[6px] shadow-[inset_4px_0_6px_rgb(255_255_255/0.5),inset_-4px_0_8px_rgb(31_36_65/0.3)]"
+                  style={{ height: i < 3 ? 72 : 48, background: `linear-gradient(180deg, color-mix(in oklab, ${c} 50%, white), ${c})` }}
+                />
+              ))}
+            </div>
             <Rows rows={CARTRIDGES} />
           </Block>
           <Block title="The research">
@@ -157,7 +212,7 @@ export default function QuickPage() {
               ))}
             </ul>
             <p className="mt-5 text-white/45" style={{ fontSize: "var(--text-xs)" }}>
-              Katalyze market research survey, about 75 respondents, 2026.
+              From Katherine&apos;s own survey of about 75 skincare users, 2026.
             </p>
           </Block>
           <Block title="The business">
@@ -167,6 +222,13 @@ export default function QuickPage() {
             </p>
           </Block>
           <Block title="Where it stands">
+            <div className="mb-6 grid grid-cols-3 gap-3">
+              {[images.prototype.front, images.prototype.pumps, images.prototype.electronics].map((im) => (
+                <div key={im.src} className="relative aspect-[4/5] overflow-hidden rounded-xl bg-indigo/30">
+                  <Image src={im.src} alt={im.alt} fill sizes="(min-width: 768px) 240px, 30vw" className="object-cover" />
+                </div>
+              ))}
+            </div>
             <Rows rows={MILESTONES} wide />
           </Block>
           <Block title="What it doesn't do">

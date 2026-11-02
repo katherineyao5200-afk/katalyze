@@ -84,7 +84,7 @@ export default function Pricing() {
                 lineHeight: "var(--leading-tight)",
               }}
             >
-              One device.<span className="text-periwinkle"> Refills that match how you use it.</span>
+              $279 for the device, then refills when you run low.
             </h2>
           </div>
           <p
@@ -94,8 +94,8 @@ export default function Pricing() {
               lineHeight: "var(--leading-body)",
             }}
           >
-            Buy it once. Refills ship when your cartridges run low, not on a
-            schedule. Prices are planned for launch and may still change.
+            Refills ship when a cartridge is nearly empty, not on a fixed
+            schedule. These are planned launch prices and may still change.
           </p>
         </Reveal>
 
@@ -112,7 +112,7 @@ export default function Pricing() {
                 letterSpacing: "var(--track-label)",
               }}
             >
-              [00 · The device]
+              The device
             </span>
             <p className="flex items-baseline gap-2 text-white">
               <span
@@ -156,12 +156,7 @@ export default function Pricing() {
                   letterSpacing: "var(--track-label)",
                 }}
               >
-                [{String(i + 1).padStart(2, "0")} · {plan.name}]
-                {"featured" in plan && (
-                  <span className="rounded-full bg-blush px-2 py-0.5 text-midnight">
-                    Most complete
-                  </span>
-                )}
+                {plan.name}
               </span>
               <p className="flex items-baseline gap-2 text-white">
                 <span

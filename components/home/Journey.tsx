@@ -38,32 +38,32 @@ type Chapter = {
 const CHAPTERS: Chapter[] = [
   {
     chip: "How it works",
-    title: ["Skin changes daily.", "So should your formula."],
-    body: "Katalyze reads your skin each morning and mixes one fresh dose for it. Here's how, in four steps.",
+    title: ["A morning", "with Katalyze."],
+    body: "It takes about a minute, most of which is the machine mixing while you brush your teeth.",
     side: "left",
   },
   {
     chip: "01 · Read",
-    title: ["Three seconds.", "One fingertip."],
-    body: "Rest a finger on the pad. It compares today with your own usual, so it knows a drier day from a more hydrated one.",
+    title: ["Touch the pad", "on top."],
+    body: "Three seconds, one fingertip. It compares the reading with your own usual, so it can tell a drier day from a better one.",
     side: "right",
   },
   {
     chip: "02 · Mix",
-    title: ["Six cartridges.", "One blend."],
-    body: "Three bases and three actives. Your reading, the weather and a quick check-in set the mix, always inside safe ranges.",
+    title: ["It works out", "today's blend."],
+    body: "Your reading, the local weather and a quick check-in decide how much of each cartridge goes in. Every amount stays inside a safe range.",
     side: "left",
   },
   {
     chip: "03 · Apply",
-    title: ["Fresh,", "in a little dish."],
-    body: "One dose, measured by weight. Scoop it out with a fingertip and apply it like any serum. The device never touches your skin.",
+    title: ["Scoop it", "from the dish."],
+    body: "One dose, weighed out into a small dish at the front. Use a fingertip and put it on like any moisturizer. The machine never touches your face.",
     side: "right",
   },
   {
     chip: "04 · Learn",
-    title: ["Tomorrow learns", "from today."],
-    body: "Every reading becomes a star on your own chart, and the formula follows the pattern.",
+    title: ["Tomorrow starts", "from today."],
+    body: "Each reading is saved as a star on your chart. Over a few weeks, the blend follows the pattern.",
     side: "left",
   },
 ];

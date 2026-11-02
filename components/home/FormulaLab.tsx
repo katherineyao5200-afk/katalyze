@@ -307,8 +307,8 @@ export default function FormulaLab() {
               lineHeight: "var(--leading-body)",
             }}
           >
-            Try it. Take a reading, pick the weather and how your skin feels,
-            and watch all six cartridges rebalance.
+            Have a go. Hold the pad, tell it the weather and how your skin
+            feels, then mix. The six levels move the way the real rules would.
           </p>
 
           {/* 01: the sensor */}
@@ -320,7 +320,7 @@ export default function FormulaLab() {
                 letterSpacing: "var(--track-label)",
               }}
             >
-              [01 · Fingertip reading]
+              Fingertip reading
             </p>
             <div className="flex items-center gap-5">
               <button
@@ -449,7 +449,7 @@ export default function FormulaLab() {
               >
                 <span>Drier</span>
                 <span className="font-mono text-periwinkle">
-                  [{trendLabel}]
+                  {trendLabel}
                 </span>
                 <span>More hydrated</span>
               </span>
@@ -468,13 +468,13 @@ export default function FormulaLab() {
 
           <div className="flex flex-col gap-8 border-t border-[color:var(--rule-on-dark)] pt-8">
             <Segmented
-              legend="[02 · Local weather]"
+              legend="Local weather"
               options={WEATHER}
               value={weather}
               onChange={setWeather}
             />
             <Segmented
-              legend="[03 · Morning check-in]"
+              legend="Morning check-in"
               options={FEEL}
               value={feel}
               onChange={setFeel}
@@ -498,7 +498,7 @@ export default function FormulaLab() {
                 letterSpacing: "var(--track-label)",
               }}
             >
-              <span>[Today&apos;s blend · demo]</span>
+              <span>Today&apos;s blend (demo)</span>
               <span className="flex items-center gap-2" aria-live="polite">
                 <span
                   className={`size-1.5 rounded-full ${phase === "mixing" ? "lab-live bg-blush" : phase === "ready" ? "bg-white" : "bg-periwinkle"}`}
@@ -653,7 +653,7 @@ export default function FormulaLab() {
                       letterSpacing: "var(--track-label)",
                     }}
                   >
-                    [Why this blend]
+                    Why this blend
                   </p>
                   <p
                     className="text-white/90"

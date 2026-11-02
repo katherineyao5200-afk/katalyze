@@ -50,7 +50,7 @@ export default function Founder() {
                 letterSpacing: "var(--track-label)",
               }}
             >
-              [Katherine Yao · Founder]
+              Katherine Yao, founder
             </figcaption>
           </figure>
         </Reveal>

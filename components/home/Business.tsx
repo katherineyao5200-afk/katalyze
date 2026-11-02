@@ -95,7 +95,7 @@ export default function Business() {
               lineHeight: "var(--leading-tight)",
             }}
           >
-            <span className="text-periwinkle">A big market that still</span> personalizes only once.
+            Personalized skincare is already big business. Almost all of it stops at the quiz.
           </h2>
         </Reveal>
 
@@ -144,7 +144,7 @@ export default function Business() {
               letterSpacing: "var(--track-label)",
             }}
           >
-            [How others personalize]
+            How others personalize
           </h3>
           <div className="w-full min-w-0 max-w-[calc(100vw-2*var(--margin))] overflow-x-auto">
             <table

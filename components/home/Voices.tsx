@@ -61,7 +61,7 @@ export default function Voices() {
                 letterSpacing: "var(--track-label)",
               }}
             >
-              [Diamond Challenge 2026]
+              Diamond Challenge 2026
             </dt>
             <dd
               className="text-white"

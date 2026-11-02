@@ -58,7 +58,7 @@ export default function HowItWorksPage() {
             to one fresh dose.
           </>
         }
-        lede="Think of it as a printer for skincare. Every morning it reads your skin, mixes one dose and sets it out in a small dish."
+        lede="Think of it as a printer for skincare. Each morning it checks your skin, mixes one dose and leaves it in a small dish for you."
       />
 
       {/* The four steps: a deck of cards beside the live device. */}
@@ -84,7 +84,7 @@ export default function HowItWorksPage() {
                 lineHeight: "var(--leading-tight)",
               }}
             >
-              What it doesn&apos;t do,<span className="text-periwinkle"> on purpose.</span>
+              What it deliberately doesn&apos;t do.
             </h2>
           </Reveal>
           <dl className="flex flex-col md:col-span-7 md:col-start-6">

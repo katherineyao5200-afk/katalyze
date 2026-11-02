@@ -126,7 +126,7 @@ export default function Anatomy() {
                 lineHeight: "var(--leading-tight)",
               }}
             >
-              Take it apart.<span className="text-periwinkle"> Layer by layer.</span>
+              What&apos;s under the shell.
             </h2>
             <p
               className="max-w-sm text-[color:var(--muted-on-dark)]"

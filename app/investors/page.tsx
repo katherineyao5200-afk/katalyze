@@ -142,7 +142,7 @@ export default function InvestorsPage() {
             at a glance.
           </>
         }
-        lede="Katalyze is a countertop skincare device. It reads the skin from one fingertip each morning and mixes a fresh serum dose from six cartridges. Pre-launch, founded by Katherine Yao, raising $450K."
+        lede="Katalyze is a countertop skincare device. It reads the skin from one fingertip each morning and mixes a fresh dose from six cartridges. Pre-launch, founded by Katherine Yao, raising $450K."
       />
 
       {/* The four numbers to remember */}
@@ -180,7 +180,7 @@ export default function InvestorsPage() {
       <Band>
         <SectionHead
           label="The problem"
-          title="Skin changes daily. Skincare is bought once and stays the same."
+          title="Skin changes week to week. The jar on the shelf doesn't."
         />
         <Reveal>
           <ul className="grid grid-cols-1 gap-px overflow-hidden rounded-[var(--r-lg)] border border-[color:var(--rule-on-dark)] bg-[color:var(--rule-on-dark)] sm:grid-cols-2 lg:grid-cols-5">
@@ -211,7 +211,7 @@ export default function InvestorsPage() {
       <Band deep>
         <SectionHead
           label="The product"
-          title="Read, mix, dispense. A fresh dose every morning."
+          title="Each morning: a fingertip reading in, one fresh dose out."
         />
         <ol className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {[
@@ -270,7 +270,7 @@ export default function InvestorsPage() {
 
       {/* Business model */}
       <Band deep>
-        <SectionHead label="Business model" title="Sell the device once. Earn on refills every month." />
+        <SectionHead label="Business model" title="The device is sold once. Refills are the business." />
         <div className="grid grid-cols-1 gap-px overflow-hidden rounded-[var(--r-lg)] border border-[color:var(--rule-on-dark)] bg-[color:var(--rule-on-dark)] sm:grid-cols-2 lg:grid-cols-4">
           {PLANS.map((p) => (
             <div key={p.name} className="flex flex-col gap-3 bg-[color:var(--canvas-deep)] p-6">
@@ -407,7 +407,7 @@ export default function InvestorsPage() {
 
       {/* Competition */}
       <Band>
-        <SectionHead label="Competition" title="Others personalize once, or estimate. Katalyze reads every day." />
+        <SectionHead label="Competition" title="Competitors personalize at signup or guess from a photo. None of them measure daily." />
         <div className="overflow-x-auto rounded-[var(--r-lg)] border border-[color:var(--rule-on-dark)]">
           <table className="w-full min-w-[640px] border-collapse text-left">
             <thead>
@@ -461,7 +461,7 @@ export default function InvestorsPage() {
       <Band>
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
           <div className="flex flex-col gap-6">
-            <SectionHead label="Traction" title="Built and tested, before asking for money." />
+            <SectionHead label="Traction" title="What's already been done." />
             <ul className="flex flex-col">
               {TRACTION.map((t) => (
                 <li key={t} className="border-t border-[color:var(--rule-on-dark)] py-4 text-white/90" style={{ fontSize: "var(--text-sm)" }}>
@@ -471,7 +471,7 @@ export default function InvestorsPage() {
             </ul>
           </div>
           <div className="flex flex-col gap-6">
-            <SectionHead label="Team" title="One founder, specialist partners." />
+            <SectionHead label="Team" title="Katherine, plus specialist partners." />
             <p className="text-white/85" style={{ fontSize: "var(--text-sm)", lineHeight: "var(--leading-body)" }}>
               Katherine Yao leads product, design, the financial model, supplier sourcing and go-to-market. Hardware is built with a Shenzhen manufacturing partner, formulas with a contract formulator, and the app and site with an external development company.
             </p>

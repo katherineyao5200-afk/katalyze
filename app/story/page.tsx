@@ -108,11 +108,11 @@ export default function StoryPage() {
             </Reveal>
             <Reveal>
               <p className={P} style={P_STYLE}>
-                Eventually the problem became obvious: it was never the
-                products. Every formula on that shelf was static, and skin
-                isn&apos;t. It reacts to weather, stress, sleep and the season,
-                while the bottle in the cabinet stays exactly the same until it
-                runs out.
+                After a while I stopped blaming the products. Each one was
+                probably fine for the skin I had the week I bought it. My skin
+                just didn&apos;t stay that way. It changed with the weather,
+                with exams, with how badly I&apos;d slept, and the bottle
+                stayed exactly the same until it ran out.
               </p>
             </Reveal>
             <Reveal>
@@ -273,7 +273,7 @@ export default function StoryPage() {
                 lineHeight: "var(--leading-tight)",
               }}
             >
-              One founder,<span className="text-periwinkle"> a few good partners.</span>
+              One founder, and the partners she hired.
             </h2>
           </Reveal>
           <dl className="flex flex-col md:col-span-7 md:col-start-6">
