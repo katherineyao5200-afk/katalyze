@@ -731,3 +731,178 @@ body {
     animation: none;
   }
 }
+
+/* ------------------------------------------------------------------
+   Glass. One material for every control: a thin, cool pane with a lit
+   top edge and a specular highlight that follows the pointer (set by
+   GlassLight as --gx / --gy). Two weights only:
+   .btn-primary  filled blush, the one action on a screen
+   .glass        clear pane, for everything else (nav, chips, secondary)
+   ------------------------------------------------------------------ */
+.glass,
+.btn-primary {
+  --gx: 50%;
+  --gy: 0%;
+  position: relative;
+  isolation: isolate;
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  backdrop-filter: blur(18px) saturate(160%);
+}
+.glass {
+  background:
+    radial-gradient(120% 140% at var(--gx) var(--gy), rgb(255 255 255 / 0.1), transparent 55%),
+    linear-gradient(180deg, rgb(255 255 255 / 0.07), rgb(255 255 255 / 0.02));
+  border: 1px solid rgb(255 255 255 / 0.12);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.16),
+    inset 0 -1px 0 rgb(255 255 255 / 0.03),
+    0 12px 32px -12px rgb(10 12 28 / 0.6);
+}
+.btn-primary {
+  color: var(--midnight);
+  background:
+    radial-gradient(90% 160% at var(--gx) var(--gy), rgb(255 255 255 / 0.55), transparent 60%),
+    linear-gradient(180deg, #f1dde2 0%, var(--blush) 55%, #dcbcc4 100%);
+  border: 1px solid rgb(255 255 255 / 0.5);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.75),
+    inset 0 -2px 6px rgb(49 63 121 / 0.12),
+    0 10px 30px -10px rgb(232 204 210 / 0.45),
+    0 2px 6px rgb(10 12 28 / 0.3);
+}
+.glass,
+.btn-primary {
+  transition:
+    transform 500ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 500ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 300ms ease,
+    background-color 300ms ease;
+}
+.btn-primary:hover {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.85),
+    inset 0 -2px 6px rgb(49 63 121 / 0.12),
+    0 14px 40px -10px rgb(232 204 210 / 0.6),
+    0 2px 6px rgb(10 12 28 / 0.3);
+}
+.glass:hover {
+  border-color: rgb(255 255 255 / 0.22);
+}
+.btn-primary:active,
+button.glass:active,
+a.glass:active {
+  transform: scale(0.97);
+  transition-duration: 120ms;
+}
+.btn-primary:focus-visible,
+.glass:focus-visible {
+  outline: 2px solid var(--blush);
+  outline-offset: 3px;
+}
+.btn-primary:disabled {
+  opacity: 0.6;
+}
+/* The arrow inside a button nudges, it doesn't bounce. */
+.btn-arrow {
+  display: inline-block;
+  transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+:is(.btn-primary, .glass):hover .btn-arrow {
+  transform: translateX(3px);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass {
+    background-color: rgb(31 36 65 / 0.92);
+  }
+}
+
+/* ------------------------------------------------------------------
+   Motion language. Content "reads in": each block is uncovered top to
+   bottom behind a soft-edged mask while it settles 14px, children one
+   after another, like a reading being taken. Images unveil the same way,
+   slower, with the picture settling from a slight zoom. One curve
+   (expo out) and three durations, nowhere else.
+   ------------------------------------------------------------------ */
+.rv > *,
+.rv-self {
+  --rv-delay: var(--rv-base, 0ms);
+  -webkit-mask-image: linear-gradient(180deg, #000 45%, transparent 55%);
+  mask-image: linear-gradient(180deg, #000 45%, transparent 55%);
+  -webkit-mask-size: 100% 220%;
+  mask-size: 100% 220%;
+  -webkit-mask-position: 0 100%;
+  mask-position: 0 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  transform: translateY(14px);
+  transition:
+    -webkit-mask-position 1100ms cubic-bezier(0.16, 1, 0.3, 1) var(--rv-delay),
+    mask-position 1100ms cubic-bezier(0.16, 1, 0.3, 1) var(--rv-delay),
+    transform 1100ms cubic-bezier(0.16, 1, 0.3, 1) var(--rv-delay);
+}
+.rv[data-revealed="true"] > *,
+.rv-self[data-revealed="true"] {
+  -webkit-mask-position: 0 0;
+  mask-position: 0 0;
+  transform: none;
+}
+/* After the reveal, drop the mask so nothing stays clipped. */
+.rv[data-settled="true"] > *,
+.rv-self[data-settled="true"] {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+.rv > :nth-child(2) { --rv-delay: calc(var(--rv-base, 0ms) + 90ms); }
+.rv > :nth-child(3) { --rv-delay: calc(var(--rv-base, 0ms) + 180ms); }
+.rv > :nth-child(4) { --rv-delay: calc(var(--rv-base, 0ms) + 270ms); }
+.rv > :nth-child(5) { --rv-delay: calc(var(--rv-base, 0ms) + 360ms); }
+.rv > :nth-child(n + 6) { --rv-delay: calc(var(--rv-base, 0ms) + 420ms); }
+.rv[data-variant="slide"] > *,
+.rv-self[data-variant="slide"] {
+  -webkit-mask-image: linear-gradient(90deg, #000 45%, transparent 55%);
+  mask-image: linear-gradient(90deg, #000 45%, transparent 55%);
+  -webkit-mask-size: 220% 100%;
+  mask-size: 220% 100%;
+  -webkit-mask-position: 100% 0;
+  mask-position: 100% 0;
+  transform: translateX(-10px);
+}
+.rv[data-variant="fade"] > *,
+.rv-self[data-variant="fade"] {
+  -webkit-mask-image: none;
+  mask-image: none;
+  opacity: 0;
+  transform: none;
+  transition: opacity 900ms cubic-bezier(0.16, 1, 0.3, 1) var(--rv-delay);
+}
+.rv[data-variant="fade"][data-revealed="true"] > *,
+.rv-self[data-variant="fade"][data-revealed="true"] {
+  opacity: 1;
+}
+/* Unveil: the frame uncovers, the picture inside settles from 1.06x. */
+.rv[data-variant="scale"] > *,
+.rv-self[data-variant="scale"] {
+  transform: none;
+  transition-duration: 1400ms;
+}
+.rv[data-variant="scale"] :is(img, video),
+.rv-self[data-variant="scale"] :is(img, video) {
+  transform: scale(1.06);
+  transition: transform 1800ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.rv[data-variant="scale"][data-revealed="true"] :is(img, video),
+.rv-self[data-variant="scale"][data-revealed="true"] :is(img, video) {
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .rv > *,
+  .rv-self,
+  .rv :is(img, video),
+  .rv-self :is(img, video) {
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+    transition: none !important;
+  }
+}

@@ -51,8 +51,8 @@ export default function Close() {
             lineHeight: "var(--leading-body)",
           }}
         >
-          Katalyze isn&apos;t for sale yet. The first production run is limited
-          to about 2,000 units, and the waitlist hears first.
+          Not for sale yet. The first run is about 2,000 units, and the
+          waitlist hears first.
         </p>
         <WaitlistForm
           source="closing"

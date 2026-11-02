@@ -10,17 +10,17 @@ const ITEMS = [
   {
     n: "01 · What it is",
     title: "A skincare printer for your counter.",
-    body: "Six cartridges sit inside: three base formulas and three active ingredients.",
+    body: "Six cartridges inside. Three bases, three actives, one dose at a time.",
   },
   {
     n: "02 · How it works",
-    title: "It reads your skin, then mixes one dose.",
-    body: "Rest a finger on the capacitive pad. It reads whether your skin is drier or more hydrated than usual, the app adds local weather and a quick check-in, and one dose goes into a cup.",
+    title: "One touch. One fresh dose.",
+    body: "Three seconds on the sensor. Katalyze weighs that against the weather and how your skin feels, then fills the cup.",
   },
   {
     n: "03 · Where it stands",
-    title: "A working prototype.",
-    body: "Six channels, tested with simulated liquids. Next come real ingredients and a manufacturing partner.",
+    title: "Already working.",
+    body: "A six-channel prototype, tested with simulated liquids. Real ingredients are next."
   },
 ];
 

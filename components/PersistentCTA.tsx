@@ -41,15 +41,15 @@ export default function PersistentCTA() {
   if (inlineFormVisible) return null;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 flex justify-center px-4 pb-4 sm:inset-x-auto sm:right-6 sm:bottom-6 sm:justify-end sm:px-0 sm:pb-0">
+    <div className="fixed inset-x-0 bottom-0 z-40 flex lg:hidden justify-center px-4 pb-4 sm:inset-x-auto sm:right-6 sm:bottom-6 sm:justify-end sm:px-0 sm:pb-0">
       <button
         type="button"
         onClick={openWaitlist}
         aria-haspopup="dialog"
-        className="w-full rounded-full bg-blush px-6 py-3 font-medium text-midnight shadow-[0_8px_30px_rgb(21_24_46/0.5)] transition-colors duration-[var(--dur-fast)] ease-[var(--ease-soft)] hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush focus-visible:ring-offset-2 focus-visible:ring-offset-midnight sm:w-auto"
+        className="btn-primary w-full rounded-full px-6 py-3 font-medium sm:w-auto"
         style={{ fontSize: "var(--text-base)" }}
       >
-        Get early access
+        Get early access <span aria-hidden="true" className="btn-arrow">→</span>
       </button>
     </div>
   );

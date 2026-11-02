@@ -94,10 +94,8 @@ export default function Pricing() {
               lineHeight: "var(--leading-body)",
             }}
           >
-            Buy the device once, then choose how it gets restocked. Refills ship
-            when your cartridges actually run low, not on a fixed calendar.
-            Katalyze isn&apos;t for sale yet, so these are planned launch prices
-            and may change before the first run.
+            Buy it once. Refills ship when your cartridges run low, not on a
+            schedule. Prices are planned for launch and may still change.
           </p>
         </Reveal>
 

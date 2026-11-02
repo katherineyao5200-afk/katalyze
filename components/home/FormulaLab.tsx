@@ -132,10 +132,8 @@ function Segmented<T extends string>({
           return (
             <label
               key={o.id}
-              className={`cursor-pointer rounded-full border px-4 py-2 transition-colors duration-[var(--dur-fast)] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-blush ${
-                on
-                  ? "border-blush bg-blush text-midnight"
-                  : "border-[color:var(--rule-on-dark)] text-white/80 hover:border-white/50 hover:text-white"
+              className={`cursor-pointer rounded-full px-4 py-2 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-blush ${
+                on ? "btn-primary" : "glass text-white/80 hover:text-white"
               }`}
               style={{ fontSize: "var(--text-sm)" }}
             >
@@ -260,9 +258,8 @@ export default function FormulaLab() {
               lineHeight: "var(--leading-body)",
             }}
           >
-            Take a reading, set this morning&apos;s weather and how your skin
-            feels, and watch the rules re-weight all six cartridges. This is an
-            illustration of how the engine reasons, not a real formula.
+            Try it. Take a reading, pick the weather and how your skin feels,
+            and watch all six cartridges rebalance.
           </p>
 
           {/* 01: the sensor */}

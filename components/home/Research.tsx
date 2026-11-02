@@ -46,8 +46,8 @@ export default function Research() {
             <strong className="font-medium text-white">
               Skin changes daily. So should your formula.
             </strong>{" "}
-            Before building anything, Katherine surveyed about 75 skincare
-            users to check that the problem was real.
+            Before building anything, Katherine asked about 75 skincare users
+            whether they felt the same. Most did.
           </p>
         </Reveal>
 

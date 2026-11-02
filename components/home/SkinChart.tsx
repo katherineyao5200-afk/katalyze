@@ -101,7 +101,7 @@ export default function SkinChart() {
               lineHeight: "var(--leading-tight)",
             }}
           >
-            <span className="text-periwinkle">Every morning becomes a point on</span> your skin&apos;s own star chart.
+            Your skin, charted.<span className="text-periwinkle"> One star a morning.</span>
           </h2>
           <p
             className="col-span-12 max-w-md self-end text-[color:var(--muted-on-dark)] lg:col-span-4 lg:col-start-9"
@@ -110,9 +110,9 @@ export default function SkinChart() {
               lineHeight: "var(--leading-body)",
             }}
           >
-            Each reading is placed against your own usual, not a chart of
-            averages. Over weeks the points form your pattern, and the formula
-            follows it. Tap a star to see that morning.
+            Every reading is measured against your own usual. Within a few
+            weeks a pattern appears, and your formula follows it. Tap any
+            star.
           </p>
         </Reveal>
 

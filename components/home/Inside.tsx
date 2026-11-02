@@ -88,8 +88,8 @@ export default function Inside() {
             <strong className="font-medium text-midnight">
               Every dose fresh. Every ounce used.
             </strong>{" "}
-            Nothing sits half-used in a drawer, because each dose is mixed for
-            one use.
+            Each dose is mixed for one use, so there&apos;s no half-finished
+            bottle at the back of the cabinet.
           </p>
           <CartridgeIllustration className="mt-6 w-full max-w-sm" />
         </Reveal>

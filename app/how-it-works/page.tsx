@@ -17,25 +17,25 @@ const STEPS = [
   {
     title: "Read",
     time: "About 3 seconds",
-    body: "Rest a fingertip on the capacitive pad on top of the device. It tracks whether your skin is drier or more hydrated than your own usual. It's a relative trend over time, not a clinical value, and it doesn't measure sebum.",
+    body: "Rest a fingertip on the pad on top. Katalyze compares the reading with your own usual, so it can tell a drier day from a more hydrated one.",
     facts: ["Two-electrode pad", "Fingertip contact only", "Compared with your own baseline"],
   },
   {
     title: "Mix",
     time: "Under a minute",
-    body: "The app combines that reading with local weather and a quick morning check-in. A rule-based engine picks the blend, always inside pre-set safe ranges. Six independent pumps, three for bases and three for actives, then dispense each ingredient by weight.",
+    body: "Your reading, the local weather and a quick check-in go to a rules engine that picks the blend, always inside pre-set safe ranges. Six pumps, one per cartridge, dose each ingredient by weight.",
     facts: ["3 base + 3 active cartridges", "Dosed by weight", "Rules set the formula, not AI"],
   },
   {
     title: "Apply",
     time: "One dose",
-    body: "A single fresh dose lands in the cup. You apply it yourself, like a serum. The device never touches your skin, and nothing sits half-used in a drawer.",
+    body: "One fresh dose lands in the cup. You apply it like any serum. The device never touches your skin.",
     facts: ["Dispenses into a cup", "Made for one use", "You apply it yourself"],
   },
   {
     title: "Learn",
     time: "Every morning",
-    body: "You log how your skin feels. That, the day's reading and the weather shape tomorrow's blend, so the formula keeps moving with your skin instead of staying the same until the bottle runs out.",
+    body: "Tell it how your skin feels. That, the reading and the weather shape tomorrow's blend, so your formula changes when your skin does.",
     facts: ["Daily check-in", "Local weather", "Tomorrow's blend follows the trend"],
   },
 ];
@@ -64,7 +64,7 @@ export default function HowItWorksPage() {
             to one fresh dose.
           </>
         }
-        lede="Closer to a skincare printer than a subscription box. Every morning it reads, mixes and dispenses one dose made for that day's skin."
+        lede="Think of it as a printer for skincare. Every morning it reads your skin, mixes one dose and pours it into a cup."
       />
 
       {/* The four steps, each drawn. */}

@@ -87,7 +87,7 @@ export default function PricingPage() {
             Three ways to keep it stocked.
           </>
         }
-        lede="You're probably already spending $20 to $50 a month on skincare. This is a swap, not new spend. And because each dose is mixed fresh for one use, nothing sits half-used in a drawer."
+        lede="Most people already spend $20 to $50 a month on skincare. Katalyze is built to replace that spend, not add to it."
       />
 
       {/* The device, then the plans as one comparison. */}
@@ -117,10 +117,10 @@ export default function PricingPage() {
               from your first skin reading and setup questions.
             </p>
             <WaitlistButton
-              className="mt-2 inline-flex w-fit items-center gap-2 rounded-full bg-blush px-6 py-3 font-medium text-midnight transition-opacity hover:opacity-90"
+              className="btn-primary mt-2 inline-flex w-fit items-center gap-2 rounded-full px-6 py-3 font-medium"
               style={{ fontSize: "var(--text-sm)" }}
             >
-              Get early access <span aria-hidden="true">→</span>
+              Get early access <span aria-hidden="true" className="btn-arrow">→</span>
             </WaitlistButton>
           </Reveal>
 

@@ -78,7 +78,7 @@ export default function WaitlistForm({
         className={
           light
             ? "flex flex-col gap-2 sm:flex-row"
-            : "flex items-center gap-1 rounded-full border border-[color:var(--rule-on-dark)] bg-white/[0.03] p-1.5 transition-colors duration-[var(--dur-fast)] focus-within:border-blush/70 hover:border-white/30 has-[input:focus-visible]:ring-2 has-[input:focus-visible]:ring-blush"
+            : "glass flex items-center gap-1 rounded-full p-1.5 focus-within:!border-blush/60 has-[input:focus-visible]:ring-2 has-[input:focus-visible]:ring-blush/70"
         }
       >
         <label htmlFor={inputId} className="sr-only">
@@ -122,7 +122,7 @@ export default function WaitlistForm({
           className={`whitespace-nowrap rounded-[var(--r-md)] px-6 py-3 font-medium transition-colors duration-[var(--dur-fast)] ease-[var(--ease-soft)] disabled:opacity-60 ${
             light
               ? "bg-midnight text-white hover:bg-indigo focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-              : `group inline-flex items-center gap-2 rounded-full bg-blush px-5 py-2.5 text-midnight hover:bg-white ${buttonFocusRing}`
+              : `btn-primary group inline-flex items-center gap-2 rounded-full px-5 py-2.5 ${buttonFocusRing}`
           }`}
           style={{ fontSize: "var(--text-base)" }}
         >
@@ -140,7 +140,7 @@ export default function WaitlistForm({
           {!light && status !== "loading" && !isDone && (
             <span
               aria-hidden="true"
-              className="transition-transform duration-[var(--dur-fast)] group-hover:translate-x-0.5"
+              className="btn-arrow"
             >
               →
             </span>

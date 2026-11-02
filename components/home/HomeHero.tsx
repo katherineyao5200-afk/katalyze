@@ -262,9 +262,9 @@ function ScrollHero() {
                   lineHeight: "var(--leading-body)",
                 }}
               >
-                Katalyze is a countertop device that reads your skin with a
-                fingertip sensor, then mixes one fresh dose of skincare to match
-                it. Every day, not once at signup.
+                Katalyze is a countertop device that reads your skin from one
+                fingertip, then mixes a fresh dose for the day you&apos;re
+                actually having.
               </p>
               <WaitlistForm
                 source="hero"
@@ -542,9 +542,9 @@ function StaticHero() {
               lineHeight: "var(--leading-body)",
             }}
           >
-            Katalyze is a countertop device that reads your skin with a
-            fingertip sensor, then mixes one fresh dose of skincare to match it.
-            Every day, not once at signup.
+            Katalyze is a countertop device that reads your skin from one
+            fingertip, then mixes a fresh dose for the day you&apos;re actually
+            having.
           </p>
           <WaitlistForm
             source="hero"

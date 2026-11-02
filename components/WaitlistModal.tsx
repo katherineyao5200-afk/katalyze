@@ -50,7 +50,7 @@ export default function WaitlistModal() {
       className="waitlist-modal m-auto w-[min(560px,calc(100vw-2rem))] max-w-none overflow-hidden bg-transparent p-0 text-white"
       style={{ borderRadius: "var(--r-lg)" }}
     >
-      <div className="relative isolate overflow-hidden border border-white/10 bg-[color:var(--canvas-deep)] px-7 pt-14 pb-8 sm:px-10 sm:pt-16 sm:pb-10">
+      <div className="relative isolate overflow-hidden rounded-[28px] border border-white/12 bg-[color:var(--canvas-deep)] shadow-[inset_0_1px_0_rgb(255_255_255/0.12),0_40px_120px_-20px_rgb(0_0_0/0.7)] px-7 pt-14 pb-8 sm:px-10 sm:pt-16 sm:pb-10">
         {/* the glow, rising from the bottom of the card */}
         <div aria-hidden="true" className="absolute inset-0 -z-10">
           {open && (
@@ -67,7 +67,7 @@ export default function WaitlistModal() {
           type="button"
           onClick={close}
           aria-label="Close"
-          className="absolute top-3 right-3 flex h-11 w-11 items-center justify-center rounded-full text-periwinkle transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-blush"
+          className="glass absolute top-4 right-4 flex h-10 w-10 items-center justify-center rounded-full text-white/80 hover:text-white"
         >
           <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
             <path

@@ -10,22 +10,22 @@ const STEPS: { n: string; title: string; body: string }[] = [
   {
     n: "01",
     title: "Read",
-    body: "Rest a fingertip on the capacitive pad for about three seconds. It tracks whether your skin is drier or more hydrated than your usual. A trend, not a clinical number.",
+    body: "Three seconds on the pad. Katalyze compares today with your usual, so it knows whether your skin is drier or more hydrated than normal.",
   },
   {
     n: "02",
     title: "Mix",
-    body: "The app combines that reading with local weather and a quick morning check-in. Rules set at setup keep every blend inside a safe range. Six pumps then measure each ingredient by weight.",
+    body: "Your reading, the local weather and a quick check-in set the blend. Six pumps measure each ingredient by weight, always inside safe ranges.",
   },
   {
     n: "03",
     title: "Apply",
-    body: "One dose lands in the cup. You apply it yourself. The device never touches your skin.",
+    body: "A fresh dose lands in the cup. You put it on yourself, like any serum.",
   },
   {
     n: "04",
     title: "Learn",
-    body: "Each day's reading and check-in shape the next blend, so the formula keeps up with your skin.",
+    body: "Every reading nudges tomorrow's blend. Your formula moves when your skin does.",
   },
 ];
 
@@ -72,7 +72,7 @@ export default function Process() {
               lineHeight: "var(--leading-tight)",
             }}
           >
-            Four steps,<span className="text-periwinkle"> about a minute,</span> every morning.
+            About a minute.<span className="text-periwinkle"> Every morning.</span>
           </h2>
         </div>
 

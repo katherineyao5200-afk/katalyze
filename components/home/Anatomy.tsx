@@ -125,7 +125,7 @@ export default function Anatomy() {
                 lineHeight: "var(--leading-tight)",
               }}
             >
-              What&apos;s inside,<span className="text-periwinkle"> layer by layer.</span>
+              Take it apart.<span className="text-periwinkle"> Layer by layer.</span>
             </h2>
             <p
               className="max-w-sm text-[color:var(--muted-on-dark)]"
@@ -134,8 +134,8 @@ export default function Anatomy() {
                 lineHeight: "var(--leading-body)",
               }}
             >
-              The planned design, pulled apart.{" "}
-              {webgl && "Drag the device to turn it."}
+              The planned design, opened up.{" "}
+              {webgl && "Drag to turn it."}
             </p>
           </div>
 

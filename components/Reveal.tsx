@@ -1,19 +1,20 @@
 "use client";
 
-import { motion, type Variants } from "motion/react";
-import { CSSProperties, ReactNode, useState } from "react";
+import { useInView } from "motion/react";
+import { CSSProperties, ReactNode, useEffect, useRef, useState } from "react";
 
-// Each section picks the entrance that fits its content instead of one
-// fade-up everywhere: "rise" for text blocks, "fade" for quiet asides,
-// "scale" for objects and photos, "slide" for items in a sequence.
+/*
+ * The site's one entrance. Content "reads in": each child is uncovered
+ * top to bottom behind a soft mask while it settles, one after another
+ * (see `.rv` in globals.css). Variants change direction, not character:
+ *   rise   text blocks (default)
+ *   slide  items in a sequence, uncovered left to right
+ *   scale  images and objects: the frame unveils, the picture settles
+ *   fade   quiet asides
+ * Pure CSS transitions on transform and mask, so it costs nothing per
+ * frame on the main thread. Reduced motion shows everything at once.
+ */
 export type RevealVariant = "rise" | "fade" | "scale" | "slide";
-
-const VARIANTS: Record<RevealVariant, Variants> = {
-  rise: { hidden: { opacity: 0, y: 28 }, shown: { opacity: 1, y: 0 } },
-  fade: { hidden: { opacity: 0 }, shown: { opacity: 1 } },
-  scale: { hidden: { opacity: 0, scale: 0.94 }, shown: { opacity: 1, scale: 1 } },
-  slide: { hidden: { opacity: 0, x: -24 }, shown: { opacity: 1, x: 0 } },
-};
 
 interface RevealProps {
   children: ReactNode;
@@ -32,23 +33,31 @@ export default function Reveal({
   variant = "rise",
   role,
 }: RevealProps) {
-  // data-revealed still drives CSS-only details (e.g. HowItWorks' accent line).
-  const [revealed, setRevealed] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.15 });
+  const [settled, setSettled] = useState(false);
+
+  useEffect(() => {
+    if (!inView) return;
+    const t = window.setTimeout(() => setSettled(true), delayMs + 1900);
+    return () => clearTimeout(t);
+  }, [inView, delayMs]);
 
   return (
-    <motion.div
-      data-revealed={revealed ? "true" : "false"}
-      className={className}
-      style={style}
+    <div
+      ref={ref}
+      data-revealed={inView ? "true" : "false"}
+      data-settled={settled ? "true" : undefined}
+      data-variant={variant}
+      className={`rv ${className}`}
+      style={
+        delayMs
+          ? ({ ...style, "--rv-base": `${delayMs}ms` } as CSSProperties)
+          : style
+      }
       role={role}
-      variants={VARIANTS[variant]}
-      initial="hidden"
-      whileInView="shown"
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{ delay: delayMs / 1000 }}
-      onAnimationComplete={() => setRevealed(true)}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }
