@@ -1,5 +1,7 @@
 import AtAGlance from "@/components/home/AtAGlance";
 import Business from "@/components/home/Business";
+import Mission from "@/components/home/Mission";
+import Model from "@/components/home/Model";
 import FAQ from "@/components/home/FAQ";
 import Pricing from "@/components/home/Pricing";
 import Close from "@/components/home/Close";
@@ -23,6 +25,7 @@ export default function Home() {
       <HomeHero />
       <SkinRitual />
       <AtAGlance />
+      <Mission />
       <Research />
       <Journey />
       <Counter />
@@ -31,6 +34,7 @@ export default function Home() {
       <FormulaLab />
       <SkinChart />
       <Progress />
+      <Model />
       <Business />
       <Pricing />
       <Voices />

@@ -1,4 +1,10 @@
 export const images = {
+  // Generated mood photos (Higgsfield), used only blurred and tinted as
+  // backdrops behind large type, never as product evidence.
+  mood: {
+    ritual: { src: "/images/mood/ritual-blur.webp", width: 1600, height: 800 },
+    counter: { src: "/images/mood/counter-blur.webp", width: 1600, height: 800 },
+  },
   logo: {
     nav: {
       src: "/images/logo/mark-cream.png",
