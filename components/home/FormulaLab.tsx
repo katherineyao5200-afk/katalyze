@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { CARTRIDGE_TINT, type CartridgeCode } from "@/lib/tints";
 
 import Reveal from "@/components/Reveal";
 
@@ -543,7 +544,8 @@ export default function FormulaLab() {
                       className="lab-liquid absolute inset-x-0 bottom-0"
                       style={{
                         height: `${levels[i] * 100}%`,
-                        background: `linear-gradient(to top, ${TINT[c.kind]}, color-mix(in oklab, ${TINT[c.kind]} 55%, transparent))`,
+                        background: `linear-gradient(to top, ${CARTRIDGE_TINT[c.code as CartridgeCode]}, color-mix(in oklab, ${CARTRIDGE_TINT[c.code as CartridgeCode]} 55%, transparent))`,
+                        boxShadow: `0 0 18px -2px ${CARTRIDGE_TINT[c.code as CartridgeCode]}`,
                       }}
                     >
                       <span className="lab-meniscus absolute inset-x-0 top-0 h-1 bg-white/70" />
@@ -557,6 +559,9 @@ export default function FormulaLab() {
                     }}
                   >
                     {c.code}
+                  </span>
+                  <span className="-mt-2 text-center text-white/70" style={{ fontSize: "10px", lineHeight: 1.2 }}>
+                    {c.name === "Hyaluronic acid" ? "Hyaluronic" : c.name}
                   </span>
                 </li>
               ))}

@@ -1,5 +1,6 @@
 import Reveal from "@/components/Reveal";
 import Hint from "@/components/Hint";
+import { CARTRIDGE_TINT, type CartridgeCode } from "@/lib/tints";
 
 // The three bases are a toner, a serum and a cream (kat, Nov 2026). Each line says what the ingredient is for, never a
 // percentage: no formulation data exists yet.
@@ -113,17 +114,9 @@ function Constellation({ sky }: { sky: Item["sky"] }) {
 // glows through a frosted front pane that carries the label. Hover (or
 // focus) lifts the pane a little and the liquid shows clearly, like
 // opening the bay. Bases are tall bottles, actives short droppers.
-const TINTS = {
-  base: [
-    "linear-gradient(180deg, #b8bce0, var(--periwinkle) 60%, var(--indigo))",
-    "linear-gradient(180deg, #cfd2ea, #a3a7cf 60%, #6d74b4)",
-    "linear-gradient(180deg, #f6f1ee, #e6dcd8 60%, #c9bcc6)",
-  ],
-  active: [
-    "linear-gradient(180deg, #c9cdf0, #8f97d6 60%, var(--indigo))",
-    "linear-gradient(180deg, #f7e6ea, var(--blush) 60%, #c99aa6)",
-    "linear-gradient(180deg, #fbeef1, #efd3d9 60%, #d5a9b4)",
-  ],
+const tint = (code: string) => {
+  const c = CARTRIDGE_TINT[code as CartridgeCode];
+  return `linear-gradient(180deg, color-mix(in oklab, ${c} 45%, white), ${c} 55%, color-mix(in oklab, ${c} 70%, var(--indigo)))`;
 };
 
 function Row({
@@ -158,7 +151,7 @@ function Row({
               <div
                 aria-hidden="true"
                 className="vial-liquid absolute inset-x-[14%] top-0 bottom-[10%] -z-10 rounded-[22px]"
-                style={{ background: TINTS[kind][i] }}
+                style={{ background: tint(item.code) }}
               >
                 <span className="absolute left-1/2 top-0 h-5 w-[38%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white/90 shadow-sm" />
                 {!tall && (

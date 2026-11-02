@@ -5,6 +5,7 @@ import Pricing from "@/components/home/Pricing";
 import Close from "@/components/home/Close";
 import Counter from "@/components/home/Counter";
 import Founder from "@/components/home/Founder";
+import SkinRitual from "@/components/home/SkinRitual";
 import HomeHero from "@/components/home/HomeHero";
 import Anatomy from "@/components/home/Anatomy";
 import FormulaLab from "@/components/home/FormulaLab";
@@ -20,6 +21,7 @@ export default function Home() {
   return (
     <main className="flex flex-1 flex-col bg-midnight">
       <HomeHero />
+      <SkinRitual />
       <AtAGlance />
       <Research />
       <Journey />

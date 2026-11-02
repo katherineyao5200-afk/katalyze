@@ -8,12 +8,9 @@ import {
   useTransform,
   type MotionValue,
 } from "motion/react";
-import dynamic from "next/dynamic";
-import { useCallback, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
-const DeviceModel = dynamic(() => import("@/components/home/DeviceModel"), {
-  ssr: false,
-});
+import { STEP_VISUALS } from "@/components/StepVisuals";
 
 export type Step = {
   title: string;
@@ -22,14 +19,10 @@ export type Step = {
   facts: string[];
 };
 
-// Where the device turns to for each step (the hero's own pose track):
-// the pad on top, the cartridges, the pour, the full cup.
-const POSE = [0.06, 0.4, 0.6, 0.76];
-
 /*
- * How it works as a held scene: the live device on one side turns to the
- * part each step is about (and pours on "Apply"), while the steps sit in
- * a deck of glass cards on the other. Scrolling deals the top card off
+ * How it works as a held scene: a close-up for each step on one side
+ * (the pad, the app's blend, the dish, the check-in) swings in and out in
+ * 3D, while the steps sit in a deck of glass cards on the other. Scrolling deals the top card off
  * and the next one rises into place. Reduced motion gets the cards as a
  * plain list.
  */
@@ -54,15 +47,6 @@ function Deck({ steps }: { steps: Step[] }) {
     if (i >= n - 1) return n - 1;
     return i + Math.min(1, Math.max(0, (f - 0.55) / 0.45));
   });
-  const pose = useTransform(deck, (d) => {
-    const i = Math.min(n - 1, Math.floor(d));
-    const f = d - i;
-    const a = POSE[i] ?? POSE[POSE.length - 1];
-    const b = POSE[i + 1] ?? a;
-    return a + (b - a) * f;
-  });
-  const [webgl, setWebgl] = useState(true);
-  const onUnsupported = useCallback(() => setWebgl(false), []);
   const dots = useTransform(deck, (d) => Math.round(d));
 
   return (
@@ -89,15 +73,11 @@ function Deck({ steps }: { steps: Step[] }) {
             columnGap: "var(--gutter)",
           }}
         >
-          {/* The device */}
-          <div className="relative row-start-1 h-full pt-16 md:pt-0 md:col-span-7 md:col-start-6 md:h-[78%]">
-            {webgl && (
-              <DeviceModel
-                progress={pose}
-                onUnsupported={onUnsupported}
-                className="absolute inset-0"
-              />
-            )}
+          {/* The close-ups */}
+          <div className="relative row-start-1 h-full pt-16 pb-2 [perspective:1600px] md:col-span-6 md:col-start-7 md:h-[80%] md:py-0">
+            {steps.map((s, i) => (
+              <Visual key={s.title} index={i} deck={deck} />
+            ))}
           </div>
 
           {/* The deck */}
@@ -110,6 +90,27 @@ function Deck({ steps }: { steps: Step[] }) {
         </div>
       </div>
     </section>
+  );
+}
+
+function Visual({ index, deck }: { index: number; deck: MotionValue<number> }) {
+  const rel = useTransform(deck, (d) => d - index);
+  const rotateY = useTransform(rel, (r) => Math.max(-1, Math.min(1, r)) * -38);
+  const rotateX = useTransform(rel, (r) => 6 - Math.abs(Math.max(-1, Math.min(1, r))) * 4);
+  const x = useTransform(rel, (r) => `${Math.max(-1, Math.min(1, r)) * -30}%`);
+  const z = useTransform(rel, (r) => Math.abs(Math.max(-1, Math.min(1, r))) * -260);
+  const opacity = useTransform(rel, (r) => Math.max(0, 1 - Math.abs(r) * 1.6));
+  const V = STEP_VISUALS[index] ?? STEP_VISUALS[0];
+  return (
+    <motion.div
+      aria-hidden="true"
+      className="absolute inset-0 flex items-center justify-center [transform-style:preserve-3d]"
+      style={{ rotateY, rotateX, x, z, opacity }}
+    >
+      <div className="step-float h-full w-full">
+        <V />
+      </div>
+    </motion.div>
   );
 }
 
@@ -156,7 +157,7 @@ function Card({
         pointerEvents: pointer,
         transformOrigin: "50% 100%",
         background:
-          "linear-gradient(160deg, rgb(52 66 124 / 0.97), rgb(31 36 65 / 0.98))",
+          "linear-gradient(160deg, rgb(52 66 124), rgb(31 36 65))",
       }}
     >
       <p

@@ -9,6 +9,7 @@ import Intro, { INTRO_BOOT } from "@/components/Intro";
 import PageFX from "@/components/PageFX";
 import MotionProvider from "@/components/MotionProvider";
 import CursorGlow from "@/components/CursorGlow";
+import ScrollProgress from "@/components/ScrollProgress";
 import GlassLight from "@/components/GlassLight";
 import ShootingStars from "@/components/ShootingStars";
 import Nav from "@/components/Nav";
@@ -101,6 +102,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <GlassLight />
           <ShootingStars />
           <CursorGlow />
+          <ScrollProgress />
         </MotionProvider>
       </body>
     </html>

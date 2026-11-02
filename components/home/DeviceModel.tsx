@@ -1,6 +1,7 @@
 "use client";
 
 import type { MotionValue } from "motion/react";
+import { tintHex } from "@/lib/tints";
 import { useEffect, useRef, type RefObject } from "react";
 import * as THREE from "three";
 
@@ -362,12 +363,12 @@ function buildDevice() {
     g.position.set(x, 0, 0.32);
     add(g);
   };
-  bottle(-0.98, 0.56, 0.19, 0xb9c1e2, false);
-  bottle(-0.52, 0.56, 0.19, 0xc9cde6, false);
-  bottle(-0.06, 0.56, 0.19, 0xf3eadf, false);
-  bottle(0.36, 0.34, 0.115, 0xaab3dc, true);
-  bottle(0.66, 0.34, 0.115, 0xeec8cf, true);
-  bottle(0.96, 0.34, 0.115, 0xeec8cf, true);
+  bottle(-0.98, 0.56, 0.19, tintHex("B-01"), false);
+  bottle(-0.52, 0.56, 0.19, tintHex("B-02"), false);
+  bottle(-0.06, 0.56, 0.19, tintHex("B-03"), false);
+  bottle(0.36, 0.34, 0.115, tintHex("A-01"), true);
+  bottle(0.66, 0.34, 0.115, tintHex("A-02"), true);
+  bottle(0.96, 0.34, 0.115, tintHex("A-03"), true);
 
   layer = "glass";
   // Frosted glass over the bay.

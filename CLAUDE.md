@@ -81,8 +81,8 @@ All headings use `clamp()` for fluid scaling.
 - The sensor is a **capacitive pad read by fingertip contact**. It measures **relative hydration trends**, not absolute clinical values.
 - **Never claim** clinical-grade precision, absolute hydration numbers, or sebum measurement.
 - **Never depict or imply facial scanning.** The device does not scan faces. Points-of-light imagery is atmosphere and abstraction only.
-- The device **dispenses into a cup**. The user applies the product themselves. The device never touches skin.
-- **Six cartridges: three base + three active.** Not six actives.
+- The device **dispenses one dose into a small dish** that the user scoops from with a fingertip (not a cup). The user applies the product themselves. The device never touches skin.
+- **Six cartridges: three base + three active.** Not six actives. The bases are a **toner, a serum and a cream**; the actives are hyaluronic acid, niacinamide and ceramide. Cartridge colours live in `lib/tints.ts`.
 - Formula generation is **rule-based within pre-set safe ranges**, running app-side. AI generates the natural-language *explanation* only, not the formula.
 
 ### Claims and compliance

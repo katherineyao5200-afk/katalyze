@@ -10,7 +10,7 @@ const ITEMS = [
   {
     n: "01 · What it is",
     title: "A skincare printer for your counter.",
-    body: "Six cartridges inside. Three bases, three actives, one dose at a time.",
+    body: "Six cartridges inside: a toner, a serum and a cream as bases, plus three actives. One dose at a time.",
   },
   {
     n: "02 · How it works",
