@@ -1,5 +1,4 @@
-import Image from "next/image";
-
+import Gallery from "@/components/Gallery";
 import Chip from "@/components/home/Chip";
 import Reveal from "@/components/Reveal";
 import { images } from "@/lib/images";
@@ -27,60 +26,42 @@ const MILESTONES = [
   },
 ];
 
-function PhotoCard({
-  photo,
-  label,
-  className = "",
-}: {
-  photo: { src: string; width: number; height: number; alt: string };
-  label: string;
-  className?: string;
-}) {
-  return (
-    <figure
-      className={`relative overflow-hidden bg-midnight ${className}`}
-      style={{ borderRadius: "var(--r-lg)" }}
-    >
-      <Image
-        src={photo.src}
-        alt={photo.alt}
-        width={photo.width}
-        height={photo.height}
-        sizes="(min-width: 1024px) 30vw, 90vw"
-        className="h-full w-full object-cover"
-      />
-      <figcaption
-        className="absolute left-4 top-4 rounded-full bg-midnight/70 px-3 py-1 font-mono uppercase text-white backdrop-blur-sm"
-        style={{
-          fontSize: "var(--text-2xs)",
-          letterSpacing: "var(--track-label)",
-        }}
-      >
-        [{label}]
-      </figcaption>
-    </figure>
-  );
-}
-
-// Reference: alethia's full-bleed image cards with bracketed labels set
-// inside the photo. Dark band; photos 1-7, milestones 9-12.
+// The prototype as a gallery you drag through, then the milestones as a
+// plain two-column list.
 export default function Progress() {
   const { front, pumps, electronics } = images.prototype;
+  const photos = [
+    {
+      ...front,
+      title: "The working prototype",
+      text: "Six bottles, six tubes, one cup drawer. Run so far on simulated liquids.",
+    },
+    {
+      ...pumps,
+      title: "Six pumps",
+      text: "One peristaltic pump per channel, so no two ingredients share a path.",
+    },
+    {
+      ...electronics,
+      title: "The controller",
+      text: "Runs the pumps and weighs each dose as it dispenses.",
+    },
+  ];
 
   return (
     <section
-      className="bg-midnight text-white"
+      className="overflow-hidden bg-midnight text-white"
       style={{ paddingBlock: "var(--s-32) var(--s-40)" }}
     >
       <div
-        className="mx-auto grid grid-cols-12 gap-y-16"
+        className="mx-auto grid grid-cols-12 items-end gap-y-8"
         style={{
           maxWidth: "var(--max-w)",
           paddingInline: "var(--margin)",
           columnGap: "var(--gutter)",
         }}
       >
-        <Reveal className="col-span-12 flex flex-col gap-6 lg:col-span-8">
+        <Reveal className="col-span-12 flex flex-col gap-6 lg:col-span-7">
           <Chip tone="dark">Where it stands</Chip>
           <h2
             className="font-display font-extralight"
@@ -92,74 +73,56 @@ export default function Progress() {
             The prototype works.<span className="text-periwinkle"> Next come real ingredients.</span>
           </h2>
         </Reveal>
-
-        <Reveal
-          variant="scale"
-          className="col-span-12 grid grid-cols-2 gap-3 lg:col-span-7"
+        <p
+          className="col-span-12 max-w-md text-white/75 lg:col-span-4 lg:col-start-9"
+          style={{
+            fontSize: "var(--text-base)",
+            lineHeight: "var(--leading-body)",
+          }}
         >
-          <PhotoCard
-            photo={front}
-            label="Prototype"
-            className="row-span-2 aspect-[3/4] sm:aspect-auto"
-          />
-          <PhotoCard
-            photo={pumps}
-            label="Six pumps"
-            className="aspect-square"
-          />
-          <PhotoCard
-            photo={electronics}
-            label="Controller"
-            className="aspect-square"
-          />
-        </Reveal>
+          Each bottle feeds its own pump and tube, so no two ingredients share
+          a path. So far it has run on simulated liquids, to prove the
+          mechanics before anything touches skin.
+        </p>
+      </div>
 
-        <div className="col-span-12 flex flex-col gap-6 lg:col-span-4 lg:col-start-9">
-          <p
-            className="text-white/75"
-            style={{
-              fontSize: "var(--text-base)",
-              lineHeight: "var(--leading-body)",
-            }}
-          >
-            Each bottle feeds its own pump and tube, so no two ingredients share
-            a path. The controller weighs every dose as it dispenses. So far it
-            has run on simulated liquids, to prove the mechanics before anything
-            touches skin.
-          </p>
-          <div role="list" className="flex flex-col">
-            {MILESTONES.map((m, i) => (
-              <Reveal
-                key={m.text}
-                variant="slide"
-                delayMs={i * 70}
-                role="listitem"
-                className="flex items-baseline gap-4 border-t border-[color:var(--rule-on-dark)] py-4"
+      <div className="mt-14">
+        <Gallery items={photos} label="Prototype photos" />
+      </div>
+
+      <div
+        className="mx-auto mt-20"
+        style={{ maxWidth: "var(--max-w)", paddingInline: "var(--margin)" }}
+      >
+        <ul className="grid grid-cols-1 gap-x-[var(--gutter)] md:grid-cols-2">
+          {MILESTONES.map((m) => (
+            <li
+              key={m.text}
+              className="flex items-baseline gap-4 border-t border-[color:var(--rule-on-dark)] py-5"
+            >
+              <span
+                className={`w-12 shrink-0 font-mono uppercase ${
+                  m.status === "Next" ? "text-blush" : "text-periwinkle"
+                }`}
+                style={{
+                  fontSize: "var(--text-2xs)",
+                  letterSpacing: "var(--track-label)",
+                }}
               >
-                <span
-                  className={`w-12 shrink-0 font-mono uppercase ${
-                    m.status === "Next" ? "text-blush" : "text-periwinkle"
-                  }`}
-                  style={{
-                    fontSize: "var(--text-2xs)",
-                    letterSpacing: "var(--track-label)",
-                  }}
-                >
-                  {m.status}
-                </span>
-                <span
-                  className="text-white/85"
-                  style={{
-                    fontSize: "var(--text-sm)",
-                    lineHeight: "var(--leading-snug)",
-                  }}
-                >
-                  {m.text}
-                </span>
-              </Reveal>
-            ))}
-          </div>
-        </div>
+                {m.status}
+              </span>
+              <span
+                className="text-white/90"
+                style={{
+                  fontSize: "var(--text-base)",
+                  lineHeight: "var(--leading-snug)",
+                }}
+              >
+                {m.text}
+              </span>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );

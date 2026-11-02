@@ -11,6 +11,7 @@ import {
 } from "react";
 
 import type { Layer } from "@/components/home/DeviceModel";
+import Hint from "@/components/Hint";
 
 // three.js is large: load it in its own chunk after the page is up, so it
 // never delays the first paint or the page becoming interactive.
@@ -134,9 +135,9 @@ export default function Anatomy() {
                 lineHeight: "var(--leading-body)",
               }}
             >
-              The planned design, opened up.{" "}
-              {webgl && "Drag to turn it."}
+              The planned design, opened up.
             </p>
+            {webgl && <Hint>Drag to turn · scroll to open</Hint>}
           </div>
 
           {webgl && (

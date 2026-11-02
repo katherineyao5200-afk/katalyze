@@ -1,5 +1,6 @@
 import Reveal from "@/components/Reveal";
 import RoadmapScrubber from "@/components/home/RoadmapScrubber";
+import Hint from "@/components/Hint";
 
 // Market and landscape, from the pitch deck (v9, Sep 2026, pp. 10, 18,
 // 32). Competitor rows describe what each product does, in neutral
@@ -195,8 +196,9 @@ export default function Business() {
               letterSpacing: "var(--track-label)",
             }}
           >
-            Roadmap · drag to scrub
+            Roadmap
           </h3>
+          <Hint className="-mt-2">Drag the marker</Hint>
           <RoadmapScrubber stops={ROADMAP} />
         </div>
       </div>

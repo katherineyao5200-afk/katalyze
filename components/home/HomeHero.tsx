@@ -13,6 +13,7 @@ import {
 } from "motion/react";
 import {
   useCallback,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -157,6 +158,12 @@ function ScrollHero() {
   );
   const [webgl, setWebgl] = useState(true);
   const onUnsupported = useCallback(() => setWebgl(false), []);
+  const [modelReady, setModelReady] = useState(false);
+  const onModelReady = useCallback(() => setModelReady(true), []);
+  // Start fetching the 3D code straight away, while the intro plays.
+  useEffect(() => {
+    void import("@/components/home/DeviceModel");
+  }, []);
 
   const [beat, setBeat] = useState(1);
   useMotionValueEvent(p, "change", (v) => {
@@ -208,13 +215,27 @@ function ScrollHero() {
               style={{ opacity: glowOpacity }}
             />
             {webgl ? (
-              <DeviceModel
-                progress={p}
-                anchors={anchors}
-                boxes={boxes}
-                onUnsupported={onUnsupported}
-                className="absolute inset-0 [mask-image:linear-gradient(to_bottom,black_80%,transparent)]"
-              />
+              <>
+                {/* A still of the first frame, on screen at once while the
+                    live model loads; it fades as the model takes over. */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={images.product.poster.src}
+                  alt=""
+                  aria-hidden="true"
+                  fetchPriority="high"
+                  className="pointer-events-none absolute inset-0 h-full w-full object-contain transition-opacity duration-700 [mask-image:linear-gradient(to_bottom,black_80%,transparent)]"
+                  style={{ opacity: modelReady ? 0 : 1 }}
+                />
+                <DeviceModel
+                  progress={p}
+                  anchors={anchors}
+                  boxes={boxes}
+                  onUnsupported={onUnsupported}
+                  onReady={onModelReady}
+                  className="absolute inset-0 [mask-image:linear-gradient(to_bottom,black_80%,transparent)]"
+                />
+              </>
             ) : (
               <div className="absolute inset-0 flex justify-center">
                 <div
@@ -254,6 +275,13 @@ function ScrollHero() {
             style={{ maxWidth: "var(--max-w)", paddingInline: "var(--margin)" }}
           >
             <div className="flex max-w-xl flex-col gap-6 pt-16">
+              <p
+                className="glass inline-flex w-fit items-center gap-2 rounded-full px-3.5 py-1.5 font-mono uppercase text-white/90"
+                style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}
+              >
+                <span aria-hidden="true" className="hint-dot relative size-1.5 rounded-full bg-blush" />
+                Personalized skincare device · In development
+              </p>
               <HeroHeadline compact />
               <p
                 className="max-w-md text-white/85"
@@ -262,8 +290,11 @@ function ScrollHero() {
                   lineHeight: "var(--leading-body)",
                 }}
               >
-                Katalyze is a countertop device that reads your skin from one
-                fingertip, then mixes a fresh dose for the day you&apos;re
+                <strong className="font-medium text-white">
+                  Katalyze is a countertop skincare device.
+                </strong>{" "}
+                It reads your skin from one fingertip, then mixes a fresh,
+                personalized serum from six cartridges for the day you&apos;re
                 actually having.
               </p>
               <WaitlistForm
@@ -534,6 +565,13 @@ function StaticHero() {
         }}
       >
         <div className="col-span-12 flex flex-col gap-6 lg:col-span-6">
+          <p
+            className="glass inline-flex w-fit items-center gap-2 rounded-full px-3.5 py-1.5 font-mono uppercase text-white/90"
+            style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}
+          >
+            <span aria-hidden="true" className="hint-dot relative size-1.5 rounded-full bg-blush" />
+            Personalized skincare device · In development
+          </p>
           <HeroHeadline compact />
           <p
             className="max-w-md text-white/85"
@@ -542,9 +580,12 @@ function StaticHero() {
               lineHeight: "var(--leading-body)",
             }}
           >
-            Katalyze is a countertop device that reads your skin from one
-            fingertip, then mixes a fresh dose for the day you&apos;re actually
-            having.
+            <strong className="font-medium text-white">
+              Katalyze is a countertop skincare device.
+            </strong>{" "}
+            It reads your skin from one fingertip, then mixes a fresh,
+            personalized serum from six cartridges for the day you&apos;re
+            actually having.
           </p>
           <WaitlistForm
             source="hero"

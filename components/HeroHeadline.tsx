@@ -27,7 +27,7 @@ export default function HeroHeadline({
 
   return (
     <motion.h1
-      className={`font-display font-extralight ${size}`}
+      className={`focal font-display font-extralight ${size}`}
       style={{
         lineHeight: "var(--leading-display)",
         letterSpacing: "var(--track-display)",

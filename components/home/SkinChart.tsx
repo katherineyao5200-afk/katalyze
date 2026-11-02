@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import Reveal from "@/components/Reveal";
 import { SPARKLE_PATH } from "@/components/Sparkle";
+import Hint from "@/components/Hint";
 
 /*
  * "Your skin, charted": three weeks of demo readings drawn as a star
@@ -111,8 +112,8 @@ export default function SkinChart() {
             }}
           >
             Every reading is measured against your own usual. Within a few
-            weeks a pattern appears, and your formula follows it. Tap any
-            star.
+            weeks a pattern appears, and your formula follows it.
+            <Hint className="mt-4 flex">Tap any star</Hint>
           </p>
         </Reveal>
 
@@ -236,6 +237,7 @@ export default function SkinChart() {
                         role="button"
                         aria-label={`Day ${i + 1}: ${describe(p.v).read}`}
                         aria-pressed={on}
+                        data-cursor="Read"
                         className="chart-star cursor-pointer outline-none"
                         style={{ animationDelay: `${0.6 + i * 0.05}s` }}
                         onMouseEnter={() => setActive(i)}

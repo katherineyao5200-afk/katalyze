@@ -218,7 +218,7 @@ function ChapterText({
         <Chip>{chapter.chip}</Chip>
         <Heading
           id={first ? "journey-title" : undefined}
-          className="font-display font-extralight"
+          className="focal font-display font-extralight"
           style={{
             fontSize: small ? "clamp(40px, 11vw, 56px)" : "clamp(56px, 6.4vw, 104px)",
             lineHeight: 0.98,

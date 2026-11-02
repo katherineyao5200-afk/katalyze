@@ -27,7 +27,7 @@ export default function Close() {
         style={{ maxWidth: "var(--max-w)", paddingInline: "var(--margin)" }}
       >
         <h2
-          className="max-w-4xl font-display font-extralight text-white"
+          className="focal max-w-4xl font-display font-extralight text-white"
           style={{
             fontSize: "var(--text-display)",
             lineHeight: "var(--leading-display)",

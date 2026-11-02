@@ -4,7 +4,7 @@ import { FormEvent, useId, useRef, useState } from "react";
 
 type Status = "idle" | "loading" | "success" | "duplicate" | "error";
 
-type Source = "hero" | "closing" | "persistent" | "pricing" | "footer";
+type Source = "hero" | "closing" | "persistent" | "pricing" | "footer" | "investors";
 
 interface WaitlistFormProps {
   source: Source;

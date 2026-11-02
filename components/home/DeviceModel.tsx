@@ -420,59 +420,166 @@ function buildDevice() {
   });
 
   layer = "tray";
-  // Dispensing head: a small rounded nose under the window, with a
-  // polished nozzle pointing down into the cup.
-  const CUP = { x: 0.6, z: FRONT + 0.2, floor: -0.84, h: 0.3, r: 0.13 };
-  const nose = new THREE.Mesh(
-    track(new THREE.CapsuleGeometry(0.075, 0.16, 8, 24)),
-    shell,
+  // Dispensing station, after the spec: a sheltered bay under the window.
+  // A hood overhangs the cup with the six-nozzle cluster set into its
+  // underside, a dark recessed back panel closes the bay, and a
+  // removable navy drip tray with a steel grille catches the drips.
+  const CUP = { x: 0.62, z: FRONT + 0.22, floor: -0.905, h: 0.27, r: 0.135 };
+  const BAY = { x0: CUP.x - 0.34, x1: CUP.x + 0.34 };
+  const HOOD = { top: -0.43, bot: -0.52, depth: 0.44 };
+
+  // Recessed back panel: soft-matte navy, so the bay reads as a hollow.
+  const bayPanel = new THREE.Mesh(
+    track(
+      new THREE.ShapeGeometry(
+        roundedRect(BAY.x0 + 0.02, -0.98, BAY.x1 - 0.02, HOOD.bot + 0.02, 0.06),
+        8,
+      ),
+    ),
+    track(
+      new THREE.MeshStandardMaterial({ color: 0x161a33, roughness: 0.75 }),
+    ),
   );
-  nose.rotation.z = Math.PI / 2;
-  nose.scale.set(1, 1, 1.6);
-  nose.position.set(CUP.x, -0.47, FRONT + 0.04);
-  nose.castShadow = true;
-  add(nose);
-  const chrome = track(
+  bayPanel.position.z = FRONT + 0.003;
+  bayPanel.receiveShadow = true;
+  add(bayPanel);
+
+  // Hood: a bevelled slab in the shell finish, flush with the front face.
+  const hoodGeo = track(
+    new THREE.ExtrudeGeometry(
+      roundedRect(BAY.x0, -HOOD.depth, BAY.x1, 0.06, 0.12),
+      {
+        depth: HOOD.top - HOOD.bot - 0.05,
+        bevelEnabled: true,
+        bevelThickness: 0.025,
+        bevelSize: 0.025,
+        bevelSegments: 6,
+        curveSegments: 24,
+      },
+    ),
+  );
+  const hood = new THREE.Mesh(hoodGeo, shell);
+  hood.rotation.x = -Math.PI / 2;
+  hood.position.set(0, HOOD.bot + 0.025, FRONT);
+  hood.castShadow = true;
+  hood.receiveShadow = true;
+  add(hood);
+
+  // Under the hood: a dark nozzle plate, six steel nozzles in a ring (one
+  // per cartridge channel), and a faint status-light ring around them.
+  const NZ = { x: CUP.x, z: CUP.z, y: HOOD.bot - 0.002 };
+  const nozzlePlate = new THREE.Mesh(
+    track(new THREE.CircleGeometry(0.105, 40)),
+    track(
+      new THREE.MeshStandardMaterial({
+        color: 0x1a1e38,
+        roughness: 0.45,
+        metalness: 0.3,
+      }),
+    ),
+  );
+  nozzlePlate.rotation.x = Math.PI / 2;
+  nozzlePlate.position.set(NZ.x, NZ.y, NZ.z);
+  add(nozzlePlate);
+  const steelNozzle = track(
     new THREE.MeshPhysicalMaterial({
       color: 0xe6e8f0,
       metalness: 1,
-      roughness: 0.14,
+      roughness: 0.18,
     }),
   );
-  const nozzle = new THREE.Mesh(
-    track(new THREE.CylinderGeometry(0.022, 0.03, 0.07, 24)),
-    chrome,
+  const tipGeo = track(new THREE.CylinderGeometry(0.009, 0.013, 0.035, 16));
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2 + Math.PI / 6;
+    const t = new THREE.Mesh(tipGeo, steelNozzle);
+    t.position.set(
+      NZ.x + Math.cos(a) * 0.042,
+      NZ.y - 0.017,
+      NZ.z + Math.sin(a) * 0.042,
+    );
+    add(t);
+  }
+  const ledRing = new THREE.Mesh(
+    track(new THREE.RingGeometry(0.088, 0.096, 48)),
+    track(
+      new THREE.MeshBasicMaterial({
+        color: 0xb9bce0,
+        transparent: true,
+        opacity: 0.75,
+        side: THREE.DoubleSide,
+      }),
+    ),
   );
-  nozzle.position.set(CUP.x, -0.53, CUP.z - 0.02);
-  add(nozzle);
+  ledRing.rotation.x = Math.PI / 2;
+  ledRing.position.set(NZ.x, NZ.y - 0.001, NZ.z);
+  add(ledRing);
 
-  // Drip grille: a dark recessed plate with slots, set into the ledge.
+  // Drip tray: navy, sitting in front of the base, with a raised rim.
+  const trayGeo = track(
+    new THREE.ExtrudeGeometry(
+      roundedRect(BAY.x0 + 0.01, -HOOD.depth - 0.02, BAY.x1 - 0.01, 0.04, 0.1),
+      {
+        depth: 0.06,
+        bevelEnabled: true,
+        bevelThickness: 0.02,
+        bevelSize: 0.02,
+        bevelSegments: 5,
+        curveSegments: 20,
+      },
+    ),
+  );
+  const tray = new THREE.Mesh(
+    trayGeo,
+    track(
+      new THREE.MeshPhysicalMaterial({
+        color: 0x1f2441,
+        roughness: 0.55,
+        clearcoat: 0.3,
+        clearcoatRoughness: 0.4,
+      }),
+    ),
+  );
+  tray.rotation.x = -Math.PI / 2;
+  tray.position.set(0, CUP.floor - 0.1, FRONT);
+  tray.castShadow = true;
+  tray.receiveShadow = true;
+  add(tray);
+
+  // Steel grille set into the tray: brushed plate with rounded slots.
   const grilleTex = track(
-    canvasTexture(256, 160, (g) => {
-      g.fillStyle = "#23284a";
-      g.fillRect(0, 0, 256, 160);
-      g.fillStyle = "#14172c";
-      for (let i = 0; i < 9; i++) {
+    canvasTexture(512, 320, (g) => {
+      g.fillStyle = "#c9ccd8";
+      g.fillRect(0, 0, 512, 320);
+      for (let y = 0; y < 320; y += 2) {
+        g.fillStyle = `rgba(255,255,255,${0.04 + Math.random() * 0.06})`;
+        g.fillRect(0, y, 512, 1);
+      }
+      g.fillStyle = "#0e1124";
+      for (let i = 0; i < 13; i++) {
         g.beginPath();
-        g.roundRect(28 + i * 24, 22, 10, 116, 5);
+        g.roundRect(44 + i * 34, 40, 12, 240, 6);
         g.fill();
       }
     }),
   );
+  const gw = BAY.x1 - BAY.x0 - 0.12;
+  const gd = HOOD.depth - 0.1;
   const grille = new THREE.Mesh(
-    track(new THREE.ShapeGeometry(roundedRect(-0.3, -0.19, 0.3, 0.19, 0.08), 8)),
+    track(
+      new THREE.ShapeGeometry(roundedRect(-gw / 2, -gd / 2, gw / 2, gd / 2, 0.06), 8),
+    ),
     track(
       new THREE.MeshStandardMaterial({
         map: grilleTex,
-        roughness: 0.55,
-        metalness: 0.2,
+        roughness: 0.32,
+        metalness: 0.85,
       }),
     ),
   );
-  grilleTex.repeat.set(1 / 0.6, 1 / 0.38);
+  grilleTex.repeat.set(1 / gw, 1 / gd);
   grilleTex.offset.set(0.5, 0.5);
   grille.rotation.x = -Math.PI / 2;
-  grille.position.set(CUP.x, CUP.floor + 0.002, CUP.z);
+  grille.position.set(CUP.x, CUP.floor + 0.002, FRONT + HOOD.depth / 2 - 0.01);
   grille.receiveShadow = true;
   add(grille);
 
@@ -533,13 +640,13 @@ function buildDevice() {
       opacity: 0,
     }),
   );
-  const streamTop = -0.565;
+  const streamTop = HOOD.bot - 0.035;
   const streamBot = CUP.floor + 0.1;
   const stream = new THREE.Mesh(
     track(new THREE.CylinderGeometry(0.008, 0.012, streamTop - streamBot, 12)),
     streamMat,
   );
-  stream.position.set(CUP.x, (streamTop + streamBot) / 2, CUP.z - 0.02);
+  stream.position.set(CUP.x, (streamTop + streamBot) / 2, CUP.z);
   add(stream);
 
   // ---- Fine detail ----
@@ -706,28 +813,6 @@ function buildDevice() {
     l.position.set(x, WIN.y0 + 0.16 + h * 0.42, 0.32);
     add(l);
   });
-
-  layer = "tray";
-  // Cup ledge: the lower lip the cup sits on.
-  const ledgeShape = roundedRect(-0.12, -0.45, 1.32, 0.1, 0.14);
-  const ledge = new THREE.Mesh(
-    track(
-      new THREE.ExtrudeGeometry(ledgeShape, {
-        depth: 0.12,
-        bevelEnabled: true,
-        bevelThickness: 0.04,
-        bevelSize: 0.04,
-        bevelSegments: 4,
-        curveSegments: 16,
-      }),
-    ),
-    shell,
-  );
-  ledge.rotation.x = -Math.PI / 2;
-  ledge.position.set(0, -1.0, FRONT);
-  ledge.castShadow = true;
-  ledge.receiveShadow = true;
-  add(ledge);
 
   layer = "shell";
   // Fingertip sensor: two brushed-steel half-disc electrodes set flush
@@ -1155,7 +1240,10 @@ export default function DeviceModel({
   mode = "hero",
   explode,
   labels,
+  onReady,
 }: {
+  /** Called once the first frame is on screen. */
+  onReady?: () => void;
   /** "anatomy": pulled apart by `explode` (0-1), turned by dragging. */
   mode?: "hero" | "anatomy" | "counter";
   explode?: MotionValue<number>;
@@ -1167,6 +1255,10 @@ export default function DeviceModel({
   onUnsupported?: () => void;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const onReadyRef = useRef(onReady);
+  useEffect(() => {
+    onReadyRef.current = onReady;
+  }, [onReady]);
 
   useEffect(() => {
     // Heavy WebGL setup waits until the intro has lifted, so the intro
@@ -1423,6 +1515,7 @@ export default function DeviceModel({
       };
       if (anatomy) {
         container.style.cursor = "grab";
+        container.dataset.cursor = "Drag to turn";
         container.style.touchAction = "pan-y";
         container.addEventListener("pointerdown", onDown);
         container.addEventListener("pointermove", onMove);
@@ -1584,6 +1677,7 @@ export default function DeviceModel({
         ready = true;
         frame();
         renderer.domElement.style.opacity = "1";
+        onReadyRef.current?.();
         if (visible && !still) raf = requestAnimationFrame(loop);
       };
       renderer.compileAsync(scene, camera).then(begin, begin);

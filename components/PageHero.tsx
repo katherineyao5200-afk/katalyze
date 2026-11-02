@@ -48,7 +48,7 @@ export default function PageHero({
           {label}
         </p>
         <h1
-          className="max-w-5xl font-display font-extralight text-white"
+          className="focal max-w-5xl font-display font-extralight text-white"
           style={{
             fontSize: "var(--text-display)",
             lineHeight: "var(--leading-display)",

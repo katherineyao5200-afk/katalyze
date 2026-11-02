@@ -5,8 +5,8 @@ import { useEffect, useRef } from "react";
 
 /*
  * Shooting stars, used as punctuation rather than wallpaper:
- *  - a meteor crosses the top of each section as you scroll into it,
- *  - a rare one crosses the sky while you read,
+ *  - now and then a meteor crosses the whole screen as you reach a new
+ *    section, and a rare one while you read,
  *  - pressing a primary button throws off a few sparks.
  * One fixed 2D canvas that only runs while something is in flight, so it
  * costs nothing at rest. Off entirely under reduced motion.
@@ -79,17 +79,18 @@ export default function ShootingStars() {
     let lastY = window.scrollY;
 
     const launch = (x: number, y: number, opts: Partial<Meteor> = {}) => {
-      const angle = (18 + Math.random() * 14) * (Math.PI / 180);
-      const dist = Math.min(W * 0.55, 720) * (0.7 + Math.random() * 0.4);
+      // Full-screen streaks: each one crosses the whole viewport.
+      const angle = (22 + Math.random() * 16) * (Math.PI / 180);
+      const dist = Math.hypot(W, H) * 1.25;
       meteors.push({
         x0: x,
         y0: y,
         dx: Math.cos(angle) * dist,
         dy: Math.sin(angle) * dist,
-        len: 140 + Math.random() * 160,
+        len: 280 + Math.random() * 180,
         t0: performance.now(),
-        dur: 1100 + Math.random() * 500,
-        w: 2,
+        dur: 1700 + Math.random() * 500,
+        w: 2.2,
         warm: Math.random() < 0.35,
         ...opts,
       });
@@ -146,12 +147,12 @@ export default function ShootingStars() {
         g.lineTo(hx, hy);
         g.stroke();
         // Head: a soft glow and the sparkle glyph.
-        const glow = g.createRadialGradient(hx, hy, 0, hx, hy, 20);
+        const glow = g.createRadialGradient(hx, hy, 0, hx, hy, 34);
         glow.addColorStop(0, `rgba(255,255,255,${0.55 * alpha})`);
         glow.addColorStop(1, `rgba(${col},0)`);
         g.fillStyle = glow;
         g.beginPath();
-        g.arc(hx, hy, 20, 0, Math.PI * 2);
+        g.arc(hx, hy, 34, 0, Math.PI * 2);
         g.fill();
         g.fillStyle = `rgba(255,255,255,${alpha})`;
         star(g, hx, hy, 6);
@@ -207,13 +208,9 @@ export default function ShootingStars() {
           if (!e.isIntersecting || seen.has(e.target) || !down) continue;
           seen.add(e.target);
           const now = performance.now();
-          if (now - lastLaunch < 1400) continue;
+          if (now - lastLaunch < 9000 || Math.random() < 0.5) continue;
           lastLaunch = now;
-          const r = e.target.getBoundingClientRect();
-          launch(
-            W * (0.04 + Math.random() * 0.3),
-            Math.min(H * 0.42, Math.max(70, r.top + 30)),
-          );
+          launch(W * (-0.15 + Math.random() * 0.45), -30);
         }
       },
       { rootMargin: "0px 0px -35% 0px" },
@@ -229,12 +226,11 @@ export default function ShootingStars() {
     const ambient = () => {
       idle = window.setTimeout(() => {
         if (!document.hidden && document.documentElement.dataset.gate !== "open")
-          launch(W * Math.random() * 0.6, H * Math.random() * 0.35, {
-            w: 1.2,
-            len: 110,
+          launch(W * (-0.2 + Math.random() * 0.6), -30, {
+            w: 1.6,
           });
         ambient();
-      }, 9000 + Math.random() * 9000);
+      }, 14000 + Math.random() * 12000);
     };
     ambient();
 
@@ -244,13 +240,19 @@ export default function ShootingStars() {
       if (el) burst(e.clientX, e.clientY);
     };
     window.addEventListener("click", onClick);
+    // Other parts of the page can ask for sparks (the blend demo does).
+    const onBurst = (e: Event) => {
+      const d = (e as CustomEvent<{ x: number; y: number }>).detail;
+      if (d) burst(d.x, d.y);
+    };
+    window.addEventListener("katalyze:burst", onBurst);
 
     // When the intro's curtain lifts, one long meteor opens the page.
     const root = document.documentElement;
     const mo = new MutationObserver(() => {
       if (root.classList.contains("intro-done")) {
         mo.disconnect();
-        launch(W * 0.04, H * 0.12, { len: 320, w: 2, dur: 1700, warm: true });
+        launch(-W * 0.05, -30, { len: 460, w: 2.6, dur: 2000, warm: true });
       }
     });
     if (!root.classList.contains("intro-done"))
@@ -263,6 +265,7 @@ export default function ShootingStars() {
       mo.disconnect();
       window.removeEventListener("resize", resize);
       window.removeEventListener("click", onClick);
+      window.removeEventListener("katalyze:burst", onBurst);
     };
   }, [pathname]);
 

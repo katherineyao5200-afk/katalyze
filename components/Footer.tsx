@@ -7,6 +7,7 @@ const FOOTER_LINKS = [
   { href: "/how-it-works", label: "How It Works" },
   { href: "/pricing", label: "Pricing" },
   { href: "/story", label: "Our Story" },
+  { href: "/investors", label: "Investors" },
 ];
 
 const focusRing =

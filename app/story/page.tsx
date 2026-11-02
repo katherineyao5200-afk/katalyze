@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 
+import Gallery from "@/components/Gallery";
 import Close from "@/components/home/Close";
 import PageHero from "@/components/PageHero";
 import Reveal from "@/components/Reveal";
@@ -195,6 +196,66 @@ export default function StoryPage() {
               </Reveal>
             ))}
           </ol>
+        </div>
+      </section>
+
+      {/* Behind the scenes: Katherine's own photos, floating on a track. */}
+      <section className="overflow-hidden" style={{ paddingBlock: "var(--s-24)" }}>
+        <div
+          className="mx-auto grid grid-cols-1 items-end gap-6 md:grid-cols-12 md:gap-x-[var(--gutter)]"
+          style={{ maxWidth: "var(--max-w)", paddingInline: "var(--margin)" }}
+        >
+          <Reveal className="md:col-span-6">
+            <h2
+              className="font-display font-extralight"
+              style={{
+                fontSize: "var(--text-3xl)",
+                lineHeight: "var(--leading-tight)",
+              }}
+            >
+              Behind the scenes.
+            </h2>
+          </Reveal>
+          <p
+            className="max-w-md text-[color:var(--muted-on-dark)] md:col-span-5 md:col-start-8"
+            style={{ fontSize: "var(--text-base)", lineHeight: "var(--leading-body)" }}
+          >
+            Wiring the first prototype by hand, and a visit to see how
+            clinics analyse skin today.
+          </p>
+        </div>
+        <div className="mt-6">
+          <Gallery
+            variant="float"
+            label="Behind-the-scenes photos"
+            items={[
+              {
+                ...images.story.wiring1,
+                title: "Wiring the controller",
+                text: "Every pump runs off one board, wired by hand.",
+              },
+              {
+                ...images.story.wiring2,
+                title: "Six channels, laid out",
+                text: "Each pump gets its own lines before it goes in the housing.",
+              },
+              {
+                ...images.story.visia,
+                title: "Research: a clinic's skin imaging",
+                text: "How professional skin analysis works today. Katalyze doesn't scan faces; it reads one fingertip.",
+              },
+              {
+                ...images.story.visiaScreen,
+                title: "What a clinic scan looks like",
+                text: "Detailed, but a once-in-a-while snapshot. Katalyze is built for every morning.",
+              },
+              {
+                ...images.story.wiring3,
+                title: "Tubing in",
+                text: "Fitting the lines that carry each ingredient to the cup.",
+              },
+            ]}
+          />
         </div>
       </section>
 

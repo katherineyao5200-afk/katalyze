@@ -103,6 +103,12 @@ const TINT = {
 };
 
 const READ_MS = 3000;
+const MIX_MS = 2200;
+
+// A burst of sparks at a point (ShootingStars listens for this).
+function burst(x: number, y: number) {
+  window.dispatchEvent(new CustomEvent("katalyze:burst", { detail: { x, y } }));
+}
 
 function Segmented<T extends string>({
   legend,
@@ -162,10 +168,41 @@ export default function FormulaLab() {
   const holdStart = useRef<number | null>(null);
   const raf = useRef(0);
   const wave = useRef<SVGPolylineElement>(null);
+  const [phase, setPhase] = useState<"idle" | "mixing" | "ready">("idle");
+  const [doses, setDoses] = useState(0);
+  const mixTimer = useRef(0);
 
   const levels = blend(trend, weather, feel);
-  // Restarts the falling drops whenever the inputs change.
-  const mixKey = `${trend}|${weather}|${feel}`;
+
+  // Changing any input empties the cup: the dose no longer matches.
+  const inputs = `${trend}|${weather}|${feel}`;
+  const [mixedFor, setMixedFor] = useState<string | null>(null);
+  if (mixedFor !== null && mixedFor !== inputs && phase !== "idle") {
+    setPhase("idle");
+    setMixedFor(null);
+  }
+
+  const mix = useCallback(
+    (e?: React.MouseEvent) => {
+      if (phase === "mixing") return;
+      const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const at = e
+        ? { x: e.clientX, y: e.clientY }
+        : null;
+      setMixedFor(inputs);
+      setPhase("mixing");
+      window.clearTimeout(mixTimer.current);
+      mixTimer.current = window.setTimeout(
+        () => {
+          setPhase("ready");
+          setDoses((d) => d + 1);
+          if (at) burst(at.x, at.y - 120);
+        },
+        reduce ? 0 : MIX_MS,
+      );
+    },
+    [inputs, phase],
+  );
 
   const stopHold = useCallback(() => {
     cancelAnimationFrame(raf.current);
@@ -198,6 +235,8 @@ export default function FormulaLab() {
         holdStart.current = null;
         setHoldPct(1);
         setReading("done");
+        const pad = document.getElementById("lab-pad")?.getBoundingClientRect();
+        if (pad) burst(pad.left + pad.width / 2, pad.top + pad.height / 2);
         // A demo reading: somewhere between quite dry and a little
         // more hydrated than usual.
         setTrend(Math.round((Math.random() * 1.3 - 0.85) * 20) / 20);
@@ -209,7 +248,13 @@ export default function FormulaLab() {
     raf.current = requestAnimationFrame(tick);
   }, []);
 
-  useEffect(() => () => cancelAnimationFrame(raf.current), []);
+  useEffect(
+    () => () => {
+      cancelAnimationFrame(raf.current);
+      window.clearTimeout(mixTimer.current);
+    },
+    [],
+  );
 
   // Cup colour: weighted mix of the six tints.
   const baseShare = levels.slice(0, 3).reduce((a, b) => a + b, 0);
@@ -292,8 +337,12 @@ export default function FormulaLab() {
                   if (e.key === " " || e.key === "Enter") stopHold();
                 }}
                 onContextMenu={(e) => e.preventDefault()}
+                id="lab-pad"
                 aria-label="Hold to take a demo reading"
-                className="relative grid size-24 shrink-0 touch-none select-none place-items-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush"
+                data-cursor="Hold"
+                className={`relative grid size-24 shrink-0 cursor-pointer touch-none select-none place-items-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush ${
+                  reading === "idle" ? "lab-pad-idle" : ""
+                }`}
               >
                 <svg
                   viewBox="0 0 96 96"
@@ -435,7 +484,7 @@ export default function FormulaLab() {
           className="col-span-12 flex flex-col gap-8 lg:col-span-6 lg:col-start-7 lg:self-center"
         >
           <div
-            className="spot border border-[color:var(--rule-on-dark)] bg-[color:var(--panel)] p-6 sm:p-10"
+            className="spot relative border border-[color:var(--rule-on-dark)] bg-[color:var(--panel)] p-6 sm:p-10"
             style={{ borderRadius: "var(--r-lg)" }}
           >
             <div
@@ -446,12 +495,16 @@ export default function FormulaLab() {
               }}
             >
               <span>[Today&apos;s blend · demo]</span>
-              <span className="flex items-center gap-2">
+              <span className="flex items-center gap-2" aria-live="polite">
                 <span
-                  className="lab-live size-1.5 rounded-full bg-blush"
+                  className={`size-1.5 rounded-full ${phase === "mixing" ? "lab-live bg-blush" : phase === "ready" ? "bg-white" : "bg-periwinkle"}`}
                   aria-hidden="true"
                 />
-                Rules engine
+                {phase === "mixing"
+                  ? "Dispensing"
+                  : phase === "ready"
+                    ? `Dose ${String(doses).padStart(2, "0")} ready`
+                    : "Waiting to mix"}
               </span>
             </div>
 
@@ -462,7 +515,11 @@ export default function FormulaLab() {
               {CHANNELS.map((c, i) => (
                 <li key={c.code} className="flex flex-col items-center gap-3">
                   <div
-                    className="relative h-44 w-full max-w-12 overflow-hidden rounded-full border border-white/20 bg-white/[0.03] sm:h-56"
+                    className={`relative h-40 w-full max-w-12 overflow-hidden rounded-full border bg-white/[0.03] transition-[border-color,box-shadow] duration-500 sm:h-48 ${
+                      phase === "mixing"
+                        ? "border-white/50 shadow-[0_0_18px_rgb(232_204_210/0.35)]"
+                        : "border-white/20"
+                    }`}
                     role="meter"
                     aria-label={c.name}
                     aria-valuemin={0}
@@ -502,54 +559,103 @@ export default function FormulaLab() {
               ))}
             </ul>
 
-            <div className="mt-8 flex flex-col items-start gap-6 border-t sm:flex-row sm:items-end border-[color:var(--rule-on-dark)] pt-8">
-              {/* the cup */}
-              <div className="relative mt-4 h-20 w-20 shrink-0" aria-hidden="true">
-                <div
-                  key={mixKey}
-                  className="lab-drops absolute inset-x-0 -top-6 flex justify-center gap-1.5"
-                >
-                  {[0, 1, 2].map((d) => (
-                    <span
-                      key={d}
-                      className="size-1.5 rounded-full"
+            {/* Six lines, one per channel, meeting at the cup. */}
+            <div className="relative -mt-1 h-16" aria-hidden="true">
+              <svg
+                viewBox="0 0 600 64"
+                preserveAspectRatio="none"
+                className="absolute inset-0 h-full w-full overflow-visible"
+              >
+                {CHANNELS.map((c, i) => {
+                  const x = ((i + 0.5) / 6) * 600;
+                  return (
+                    <path
+                      key={c.code}
+                      d={`M${x} 0 C${x} 36 300 24 300 64`}
+                      fill="none"
+                      stroke={c.kind === "active" ? "var(--blush)" : "var(--periwinkle)"}
+                      strokeWidth={phase === "mixing" ? 2 : 1}
+                      strokeOpacity={phase === "mixing" ? 0.95 : 0.25}
+                      vectorEffect="non-scaling-stroke"
+                      className={phase === "mixing" ? "lab-flow" : ""}
                       style={{
-                        background: cupColor,
-                        animationDelay: `${d * 120}ms`,
+                        animationDelay: `${i * 90}ms`,
+                        transition: "stroke-opacity 400ms",
                       }}
                     />
-                  ))}
-                </div>
-                <div className="absolute inset-x-1 bottom-0 h-16 overflow-hidden rounded-b-[40%] rounded-t-md border border-white/30">
+                  );
+                })}
+              </svg>
+            </div>
+
+            {/* The cup, centred under the six channels */}
+            <div className="flex flex-col items-center gap-5">
+              <div
+                className={`relative h-24 w-20 ${phase === "ready" ? "lab-cup-ready" : ""}`}
+                aria-hidden="true"
+              >
+                <div className="absolute inset-0 overflow-hidden rounded-b-[42%] rounded-t-md border border-white/40 bg-white/[0.03]">
                   <div
-                    className="lab-fill absolute inset-x-0 bottom-0 h-[55%]"
+                    className="lab-fill absolute inset-x-0 bottom-0"
                     style={{
+                      height: phase === "idle" ? "0%" : "62%",
                       background: cupColor,
-                      transition: "background 900ms var(--ease-glide)",
+                      transition: `height ${phase === "mixing" ? MIX_MS : 400}ms var(--ease-glide), background 900ms var(--ease-glide)`,
                     }}
-                  />
+                  >
+                    {phase === "mixing" && <span className="lab-swirl absolute inset-0" />}
+                  </div>
                 </div>
               </div>
-              <div className="flex min-w-0 flex-col gap-2">
-                <p
-                  className="font-mono uppercase text-periwinkle"
-                  style={{
-                    fontSize: "var(--text-2xs)",
-                    letterSpacing: "var(--track-label)",
-                  }}
-                >
-                  [Why this blend]
-                </p>
-                <p
-                  className="text-white/90"
-                  style={{
-                    fontSize: "var(--text-sm)",
-                    lineHeight: "var(--leading-body)",
-                  }}
-                  aria-live="polite"
-                >
-                  {note(trend, weather, feel)}
-                </p>
+
+              <button
+                type="button"
+                onClick={(e) => mix(e)}
+                disabled={phase === "mixing"}
+                className={`btn-primary inline-flex items-center gap-2 rounded-full px-6 py-3 disabled:opacity-60 ${
+                  phase === "idle" ? "lab-cta" : ""
+                }`}
+                style={{ fontSize: "var(--text-sm)" }}
+              >
+                {phase === "mixing"
+                  ? "Mixing…"
+                  : phase === "ready"
+                    ? "Mix again"
+                    : "Mix today's dose"}
+                <span aria-hidden="true" className="btn-arrow">
+                  {phase === "mixing" ? "" : "→"}
+                </span>
+              </button>
+            </div>
+
+            <div
+              className={`mt-8 grid transition-[grid-template-rows,opacity] duration-700 ${
+                phase === "ready" ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+              }`}
+              aria-hidden={phase !== "ready"}
+            >
+              <div className="overflow-hidden">
+                <div className="flex flex-col gap-2 border-t border-[color:var(--rule-on-dark)] pt-6">
+                  <p
+                    className="font-mono uppercase text-periwinkle"
+                    style={{
+                      fontSize: "var(--text-2xs)",
+                      letterSpacing: "var(--track-label)",
+                    }}
+                  >
+                    [Why this blend]
+                  </p>
+                  <p
+                    className="text-white/90"
+                    style={{
+                      fontSize: "var(--text-sm)",
+                      lineHeight: "var(--leading-body)",
+                    }}
+                    aria-live="polite"
+                  >
+                    {phase === "ready" ? note(trend, weather, feel) : ""}
+                  </p>
+                </div>
               </div>
             </div>
           </div>

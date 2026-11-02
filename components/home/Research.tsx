@@ -76,7 +76,7 @@ export default function Research() {
             <div className="relative z-10 flex flex-col gap-3">
               <DotStat lit={71} className="mb-4 w-40" />
               <p
-                className="font-display font-extralight tabular-nums"
+                className="focal font-display font-extralight tabular-nums"
                 style={{ fontSize: "var(--text-display)", lineHeight: "var(--leading-display)" }}
               >
                 <CountUp value={LEAD.value} />

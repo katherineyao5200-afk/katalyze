@@ -191,6 +191,7 @@ export default function RoadmapScrubber({ stops }: { stops: Stop[] }) {
               setV(pos[Math.max(0, nearest - 1)]);
             }
           }}
+          data-cursor="Drag"
           className="roadmap-range absolute inset-x-0 top-0 h-12 w-full cursor-ew-resize opacity-0"
         />
       </div>

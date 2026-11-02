@@ -14,6 +14,7 @@ const NAV_LINKS = [
   { href: "/how-it-works", label: "How it works" },
   { href: "/pricing", label: "Pricing" },
   { href: "/story", label: "Story" },
+  { href: "/investors", label: "Investors" },
 ];
 
 const focusRing =
@@ -91,7 +92,11 @@ export default function Nav() {
             {NAV_LINKS.map((link) => {
               const isActive = link.href === active;
               return (
-                <li key={link.href} className="relative">
+                <li
+                  key={link.href}
+                  // On phones the logo is the way home, which frees room.
+                  className={`relative ${link.href === "/" ? "hidden sm:block" : ""}`}
+                >
                   {lit === link.href && (
                     <motion.span
                       layoutId="nav-pane"
@@ -108,7 +113,7 @@ export default function Nav() {
                     href={link.href}
                     aria-current={isActive ? "page" : undefined}
                     onMouseEnter={() => setHover(link.href)}
-                    className={`relative inline-flex min-h-9 items-center whitespace-nowrap rounded-full px-2.5 transition-colors duration-300 sm:px-4 ${
+                    className={`relative inline-flex min-h-9 items-center whitespace-nowrap rounded-full px-2 text-[13px] transition-colors duration-300 sm:px-4 sm:text-[length:var(--text-sm)] ${
                       light
                         ? isActive
                           ? "text-midnight"
@@ -117,7 +122,6 @@ export default function Nav() {
                           ? "text-white"
                           : "text-white/65 hover:text-white"
                     } ${focusRing}`}
-                    style={{ fontSize: "var(--text-sm)" }}
                   >
                     {link.label}
                   </Link>
