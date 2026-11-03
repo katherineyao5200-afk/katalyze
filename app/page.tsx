@@ -16,6 +16,7 @@ import Journey from "@/components/home/Journey";
 import Progress from "@/components/home/Progress";
 import Research from "@/components/home/Research";
 import Voices from "@/components/home/Voices";
+import XRay from "@/components/home/XRay";
 
 // Section map and the reference behind each one: docs/REFERENCES.md.
 export default function Home() {
@@ -26,6 +27,7 @@ export default function Home() {
       <Mission />
       <Research />
       <Journey />
+      <XRay />
       <Counter />
       <Anatomy />
       <Inside />
