@@ -38,15 +38,15 @@ export default function Research() {
             className="font-display font-extralight text-white"
             style={{ fontSize: "var(--text-3xl)", lineHeight: "var(--leading-tight)" }}
           >
-            We measure.
+            Our idea,
             <br />
-            <span className="text-periwinkle">They guess.</span>
+            <span className="text-periwinkle">tested in the market.</span>
           </h2>
           <p
             className="max-w-sm text-[color:var(--muted-on-dark)]"
             style={{ fontSize: "var(--text-base)", lineHeight: "var(--leading-body)" }}
           >
-            <Lead text="Most personalized skincare is picked once, from a quiz. Katalyze checks your skin every morning instead. Before building it, Katherine surveyed about 75 skincare users; here's what they said." />
+            <Lead text="Before building anything, Katherine asked about 75 skincare users what goes wrong. Most said their skin changes with the weather, and most had bought products that didn't work for them." />
           </p>
         </Reveal>
 

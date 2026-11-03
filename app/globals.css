@@ -1293,25 +1293,22 @@ a.glass:active {
 /* Ingredient constellations: faint at rest, drawn in on hover/focus. */
 .vial-sky line {
   stroke-dasharray: 1;
-  stroke-dashoffset: 0.65;
-  transition: stroke-dashoffset 900ms cubic-bezier(0.16, 1, 0.3, 1);
+  stroke-dashoffset: 1;
+  animation: sky-etch 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
-.vial-sky circle {
-  opacity: 0.55;
-  transition: opacity 500ms;
-}
-.vial:is(:hover, :focus-visible) .vial-sky line {
-  stroke-dashoffset: 0;
-}
-.vial:is(:hover, :focus-visible) .vial-sky circle {
-  opacity: 1;
-  filter: drop-shadow(0 0 2px rgb(49 63 121 / 0.6));
-}
+.rv[data-revealed="false"] .vial-sky line { animation-play-state: paused; }
+@keyframes sky-etch { to { stroke-dashoffset: 0; } }
+.vial-sky .star { animation: sky-twinkle 2.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.vial-sky .halo { transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1); transform-box: fill-box; transform-origin: center; }
+@keyframes sky-twinkle { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+.vial-sky { filter: drop-shadow(0 0 10px rgb(138 141 179 / 0.75)) drop-shadow(0 0 2px rgb(255 255 255 / 0.9)); }
+.vial-sky .glowline { opacity: 0.7; animation: sky-pulse 3.2s ease-in-out infinite; }
+@keyframes sky-pulse { 0%, 100% { opacity: 0.55; } 50% { opacity: 0.95; } }
+.vial:is(:hover, :focus-visible) .vial-sky .halo { transform: scale(1.5); }
 @media (prefers-reduced-motion: reduce) {
-  .vial-sky line {
-    stroke-dashoffset: 0;
-    transition: none;
-  }
+  .vial-sky line { animation: none; stroke-dashoffset: 0; }
+  .vial-sky .star { animation: none; }
+  .vial-sky .glowline { animation: none; }
 }
 
 /* ------------------------------------------------------------------

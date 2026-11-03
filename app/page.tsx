@@ -25,7 +25,6 @@ export default function Home() {
       <HomeHero />
       <SkinRitual />
       <Mission />
-      <Research />
       <Journey />
       <XRayStory />
       <Counter />
@@ -34,6 +33,7 @@ export default function Home() {
       <FormulaLab />
       <SkinChart />
       <Progress />
+      <Research />
       <Model />
       <Business />
       <Pricing />
