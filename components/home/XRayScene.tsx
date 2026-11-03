@@ -3,6 +3,10 @@
 import { useEffect, useRef } from "react";
 import type { MotionValue } from "motion/react";
 import * as THREE from "three";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
+import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 
 import { afterIntro } from "@/lib/afterIntro";
 import { tintHex } from "@/lib/tints";
@@ -94,6 +98,84 @@ const flowFrag = /* glsl */ `
     gl_FragColor = vec4(c, 0.55 + 0.45 * uOn);
   }`;
 
+// A soft round sprite, for every point of light in the film.
+function glowSprite() {
+  const c = document.createElement("canvas");
+  c.width = c.height = 64;
+  const g = c.getContext("2d")!;
+  const r = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+  r.addColorStop(0, "rgba(255,255,255,1)");
+  r.addColorStop(0.25, "rgba(255,255,255,0.55)");
+  r.addColorStop(1, "rgba(255,255,255,0)");
+  g.fillStyle = r;
+  g.fillRect(0, 0, 64, 64);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+
+// A fingertip: lathe-turned with a rounded pad and a gentle taper, a
+// little flatter front to back, with a glossy nail on the back.
+function buildFinger(track: <T extends { dispose(): void }>(x: T) => T) {
+  const g = new THREE.Group();
+  const prof = [
+    [0, 0],
+    [0.035, 0.004],
+    [0.064, 0.018],
+    [0.086, 0.044],
+    [0.1, 0.085],
+    [0.106, 0.14],
+    [0.107, 0.24],
+    [0.104, 0.34],
+    [0.108, 0.42], // the first knuckle, a slight swell
+    [0.113, 0.5],
+    [0.116, 0.7],
+    [0.12, 1.1],
+  ].map(([r, y]) => new THREE.Vector2(r, y));
+  const skin = track(
+    new THREE.MeshPhysicalMaterial({
+      color: 0xd8aa9b,
+      roughness: 0.52,
+      sheen: 0.7,
+      sheenColor: new THREE.Color(0xffd9cf),
+      sheenRoughness: 0.55,
+      clearcoat: 0.12,
+      clearcoatRoughness: 0.6,
+      emissive: 0x5a1e18,
+      emissiveIntensity: 0.1, // light passing through skin
+    }),
+  );
+  const body = new THREE.Mesh(track(new THREE.LatheGeometry(prof, 64)), skin);
+  body.scale.z = 0.86;
+  g.add(body);
+  // Nail: a thin curved shell cut from a sphere, on the back (+x).
+  const nail = new THREE.Mesh(
+    // phi centred on +x; a band either side of the equator, stretched tall.
+    track(new THREE.SphereGeometry(0.105, 32, 16, Math.PI - 0.8, 1.6, 1.25, 0.64)),
+    track(
+      new THREE.MeshPhysicalMaterial({
+        color: 0xf2cfc6,
+        roughness: 0.18,
+        clearcoat: 1,
+        clearcoatRoughness: 0.05,
+      }),
+    ),
+  );
+  nail.scale.set(1.035, 2.3, 0.9);
+  nail.position.set(0, 0.16, 0);
+  g.add(nail);
+  // A faint crease at the knuckle.
+  const crease = new THREE.Mesh(
+    track(new THREE.TorusGeometry(0.108, 0.0025, 6, 48, Math.PI * 0.7)),
+    track(new THREE.MeshStandardMaterial({ color: 0xb88676, roughness: 0.8 })),
+  );
+  crease.rotation.set(Math.PI / 2, 0, -Math.PI * 0.35);
+  crease.position.y = 0.42;
+  crease.scale.set(1.02, 0.88, 1);
+  g.add(crease);
+  return g;
+}
+
 export default function XRayScene({
   progress,
   className = "",
@@ -161,6 +243,8 @@ export default function XRayScene({
       const envTex = pmrem.fromScene(studio.scene, 0.02).texture;
       studio.dispose();
       scene.environment = envTex;
+      scene.background = new THREE.Color(0x15182e);
+      scene.fog = new THREE.Fog(0x15182e, 9, 16);
       scene.add(new THREE.HemisphereLight(0xdfe3ff, 0x1f2441, 0.3));
       const key = new THREE.DirectionalLight(0xfff8f4, 2.2);
       key.position.set(-2.5, 8, 3.5);
@@ -280,16 +364,17 @@ export default function XRayScene({
       ) as THREE.Mesh | undefined;
 
       // ---- Fingertip and the pad's glow.
-      const fingerMat = track(
-        new THREE.MeshPhysicalMaterial({ color: 0xf0cfd4, roughness: 0.55, sheen: 1, sheenColor: new THREE.Color(0xffe4e8) }),
-      );
-      const finger = new THREE.Mesh(track(new THREE.CapsuleGeometry(0.1, 0.5, 8, 24)), fingerMat);
-      finger.rotation.z = 0.25;
-      scene.add(finger);
+      const sprite = track(glowSprite());
+      const finger = buildFinger(track);
+      // Comes in from the upper left, nail toward the camera.
+      finger.rotation.set(0.25, 0, 0.55);
+      const fingerAxis = new THREE.Vector3(0, 1, 0).applyEuler(finger.rotation);
+      const fingerKey = new THREE.PointLight(0xffe2da, 0, 1.6);
+      scene.add(finger, fingerKey);
       const padGlowMat = track(
-        new THREE.MeshBasicMaterial({ color: new THREE.Color(0xe8ccd2).multiplyScalar(1.6), transparent: true, opacity: 0, toneMapped: false, depthWrite: false, blending: THREE.AdditiveBlending }),
+        new THREE.MeshBasicMaterial({ map: sprite, color: new THREE.Color(0xe8ccd2).multiplyScalar(2.2), transparent: true, opacity: 0, toneMapped: false, depthWrite: false, blending: THREE.AdditiveBlending }),
       );
-      const padGlow = new THREE.Mesh(track(new THREE.CircleGeometry(0.34, 48)), padGlowMat);
+      const padGlow = new THREE.Mesh(track(new THREE.PlaneGeometry(0.9, 0.9)), padGlowMat);
       padGlow.rotation.x = -Math.PI / 2;
       padGlow.position.set(PAD.x, TOP_Y + 0.01, PAD.z);
       group.add(padGlow);
@@ -300,6 +385,81 @@ export default function XRayScene({
       dishLight.position.set(CUP.x, -0.6, CUP.z + 0.3);
       group.add(dishLight);
 
+      // ---- Effects.
+      const additive = (color: number, k = 1) =>
+        track(new THREE.MeshBasicMaterial({ color: new THREE.Color(color).multiplyScalar(k), transparent: true, opacity: 0, toneMapped: false, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide }));
+      // Touch ripples spreading from the pad.
+      const ringG = track(new THREE.RingGeometry(0.2, 0.215, 64));
+      const ripples = [0, 1, 2].map(() => {
+        const m = new THREE.Mesh(ringG, additive(0xe8ccd2, 2));
+        m.rotation.x = -Math.PI / 2;
+        m.position.set(PAD.x, TOP_Y + 0.012, PAD.z);
+        group.add(m);
+        return m;
+      });
+      // The x-ray scan: a bright slice sweeping down the body.
+      const scanMat = additive(0x9da2e0, 1.6);
+      const scan = new THREE.Mesh(track(new THREE.PlaneGeometry(3.9, 1.8)), scanMat);
+      scan.rotation.x = -Math.PI / 2;
+      scan.position.z = 0.1;
+      group.add(scan);
+      const scanEdge = new THREE.Mesh(track(new THREE.PlaneGeometry(3.9, 0.012)), additive(0xd8dbff, 3));
+      scanEdge.position.z = 1.0;
+      group.add(scanEdge);
+
+      const pointsMat = (size: number, color: number) =>
+        track(new THREE.PointsMaterial({ map: sprite, size, color, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false, sizeAttenuation: true }));
+      const rand = (() => {
+        let a = 7;
+        return () => ((a = (a * 16807) % 2147483647) / 2147483647);
+      })();
+      // Drifting motes inside the shell: the brand's points of light.
+      const MOTES = 140;
+      const moteBase = new Float32Array(MOTES * 3);
+      for (let i = 0; i < MOTES; i++) {
+        moteBase[i * 3] = (rand() - 0.5) * 3.2;
+        moteBase[i * 3 + 1] = (rand() - 0.5) * 2.0;
+        moteBase[i * 3 + 2] = (rand() - 0.5) * 1.4;
+      }
+      const moteGeo = track(new THREE.BufferGeometry());
+      moteGeo.setAttribute("position", new THREE.BufferAttribute(moteBase.slice(), 3));
+      const moteMat = pointsMat(0.035, 0xb9bdf0);
+      group.add(new THREE.Points(moteGeo, moteMat));
+      // Data: sparks running from the pad out to the phone and back.
+      const linkCurve = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(PAD.x, TOP_Y + 0.05, PAD.z),
+        new THREE.Vector3(PAD.x + 0.7, TOP_Y + 0.7, 0.4),
+        new THREE.Vector3(2.4, 1.4, 1.2),
+        new THREE.Vector3(3.6, 1.0, 1.8),
+      ]);
+      const SPARKS = 14;
+      const sparkGeo = track(new THREE.BufferGeometry());
+      sparkGeo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(SPARKS * 3), 3));
+      const sparkMat = pointsMat(0.07, 0xf3d6dc);
+      group.add(new THREE.Points(sparkGeo, sparkMat));
+      const linkLine = new THREE.Mesh(track(new THREE.TubeGeometry(linkCurve, 80, 0.004, 6, false)), additive(0xe8ccd2, 1.5));
+      group.add(linkLine);
+      // Finale: sparkles rising off the finished dose.
+      const BURST = 50;
+      const burstSeed = Array.from({ length: BURST }, () => [rand() * Math.PI * 2, 0.04 + rand() * 0.16, 0.25 + rand() * 0.55, rand()]);
+      const burstGeo = track(new THREE.BufferGeometry());
+      burstGeo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(BURST * 3), 3));
+      const burstMat = pointsMat(0.05, 0xf6dfe4);
+      group.add(new THREE.Points(burstGeo, burstMat));
+      const tmp = new THREE.Vector3();
+
+      // Bloom on larger screens; phones render straight, to stay smooth.
+      const lite = window.innerWidth < 768;
+      let composer: EffectComposer | undefined;
+      let bloom: UnrealBloomPass | undefined;
+      if (!lite) {
+        composer = new EffectComposer(renderer);
+        composer.addPass(new RenderPass(scene, camera));
+        bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), 0.5, 0.4, 1.02);
+        composer.addPass(bloom);
+        composer.addPass(new OutputPass());
+      }
+
       function resize() {
         const w = container!.clientWidth;
         const h = container!.clientHeight;
@@ -308,6 +468,9 @@ export default function XRayScene({
         // Pull back on tall, narrow screens so the device still fits.
         camera.fov = w / h < 0.8 ? 46 : 30;
         camera.updateProjectionMatrix();
+        composer?.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+        composer?.setSize(w, h);
+        bloom?.resolution.set(w / 2, h / 2);
       }
       resize();
       const ro = new ResizeObserver(resize);
@@ -335,6 +498,9 @@ export default function XRayScene({
         const time = clock.elapsedTime;
 
         shotAt(p, camPos, camTgt);
+        // A slow handheld drift, so the frame never sits dead still.
+        camPos.x += Math.sin(time * 0.35) * 0.035;
+        camPos.y += Math.sin(time * 0.27 + 1.3) * 0.025;
         camera.position.copy(camPos);
         camera.lookAt(camTgt);
 
@@ -350,7 +516,11 @@ export default function XRayScene({
         // Fingertip comes down onto the pad, then lifts.
         const down = span(p, 0.12, 0.19) * (1 - span(p, 0.24, 0.29));
         finger.visible = down > 0.01;
-        finger.position.set(PAD.x + 0.08 - 0.08 * down, TOP_Y + 0.37 + 0.6 * (1 - down), PAD.z + 0.02);
+        // Slides in along its own axis; presses a hair into the pad.
+        const lift = 0.9 * (1 - down) - 0.012 * span(p, 0.185, 0.2);
+        finger.position.set(PAD.x, TOP_Y + 0.005, PAD.z).addScaledVector(fingerAxis, lift);
+        fingerKey.position.copy(finger.position).add(tmp.set(0.4, 0.5, 0.6));
+        fingerKey.intensity = down * 1.2;
         const glow = span(p, 0.18, 0.22) * (1 - span(p, 0.3, 0.38));
         padGlowMat.opacity = glow * 0.7;
         padLight.intensity = glow * 3;
@@ -373,17 +543,77 @@ export default function XRayScene({
             l.drop.position.y = NOZZLE_Y - (NOZZLE_Y - CUP.floor - 0.03) * fall * fall;
           }
           const liq = liquids[i];
-          if (liq) liq.material.emissiveIntensity = 0.06 + ready * 0.25 * (1 - span(p, 0.8, 0.9)) + on * 0.9;
+          if (liq) liq.material.emissiveIntensity = 0.04 + ready * 0.08 * (1 - span(p, 0.8, 0.9)) + on * 0.6;
           poured += smooth(q);
         });
         const fill = poured / lines.length;
         doseMat.opacity = Math.min(1, fill * 1.4);
-        doseMat.emissiveIntensity = 0.2 + span(p, 0.8, 0.86) * 0.5;
+        doseMat.emissiveIntensity = 0.12 + span(p, 0.8, 0.86) * 0.25;
         if (dose) dose.scale.set(0.35 + 0.65 * fill, 0.12 + 0.2 * fill, 0.35 + 0.65 * fill);
         streamMat.opacity = 0;
-        dishLight.intensity = span(p, 0.78, 0.86) * 2.5 * (1 - span(p, 0.95, 1));
+        dishLight.intensity = span(p, 0.78, 0.86) * 1.2 * (1 - span(p, 0.95, 1));
 
-        renderer.render(scene, camera);
+        // Ripples while the pad reads.
+        ripples.forEach((m, k) => {
+          const ph = (time * 0.9 + k / 3) % 1;
+          m.scale.setScalar(1 + ph * 2.6);
+          (m.material as THREE.MeshBasicMaterial).opacity = glow * (1 - ph) * 0.9;
+        });
+        // The scan sweeps down as the x-ray switches on (and up at the end).
+        const sIn = clamp((p - 0.03) / 0.08);
+        const sOut = clamp((p - 0.9) / 0.08);
+        const sweep = sIn < 1 ? sIn : sOut > 0 ? 1 - sOut : -1;
+        scan.visible = scanEdge.visible = sweep > 0 && sweep < 1;
+        if (scan.visible) {
+          const y = 1.25 - sweep * 2.35;
+          scan.position.y = y;
+          scanEdge.position.y = y;
+          scanMat.opacity = Math.sin(sweep * Math.PI) * 0.16;
+          (scanEdge.material as THREE.MeshBasicMaterial).opacity = Math.sin(sweep * Math.PI);
+        }
+        // Motes drift slowly; only visible in x-ray.
+        const mp = moteGeo.attributes.position as THREE.BufferAttribute;
+        for (let i = 0; i < MOTES; i++) {
+          mp.setXYZ(
+            i,
+            moteBase[i * 3] + Math.sin(time * 0.2 + i) * 0.05,
+            moteBase[i * 3 + 1] + Math.sin(time * 0.15 + i * 1.7) * 0.06,
+            moteBase[i * 3 + 2] + Math.cos(time * 0.18 + i * 0.6) * 0.05,
+          );
+        }
+        mp.needsUpdate = true;
+        moteMat.opacity = x * 0.55;
+        // Data out to the phone (0.25-0.31) and back (0.31-0.37).
+        const out = clamp((p - 0.25) / 0.06);
+        const back = clamp((p - 0.31) / 0.06);
+        const linkOn = p > 0.25 && p < 0.37;
+        (linkLine.material as THREE.MeshBasicMaterial).opacity = linkOn ? 0.35 * Math.sin(clamp((p - 0.25) / 0.12) * Math.PI) : 0;
+        const sp = sparkGeo.attributes.position as THREE.BufferAttribute;
+        for (let i = 0; i < SPARKS; i++) {
+          const lag = i * 0.045;
+          const u = back > 0 ? 1 - clamp(back * 1.6 - lag) : clamp(out * 1.6 - lag);
+          linkCurve.getPointAt(clamp(u), tmp);
+          sp.setXYZ(i, tmp.x, tmp.y, tmp.z);
+        }
+        sp.needsUpdate = true;
+        sparkMat.opacity = linkOn ? 1 : 0;
+        // Sparkles rise off the dose once it's ready.
+        const fin = clamp((p - 0.82) / 0.12);
+        const bp = burstGeo.attributes.position as THREE.BufferAttribute;
+        burstSeed.forEach(([a, r, h, d], i) => {
+          const u = clamp((fin - d * 0.4) / 0.6);
+          bp.setXYZ(
+            i,
+            CUP.x + Math.cos(a + time * 0.4) * r * (1 + u),
+            CUP.floor + 0.05 + u * h,
+            CUP.z + Math.sin(a + time * 0.4) * r * (1 + u),
+          );
+        });
+        bp.needsUpdate = true;
+        burstMat.opacity = fin > 0 && fin < 1 ? Math.sin(fin * Math.PI) : 0;
+
+        if (composer) composer.render();
+        else renderer.render(scene, camera);
         if (first) {
           first = false;
           el.style.opacity = "1";
@@ -406,6 +636,7 @@ export default function XRayScene({
         ro.disconnect();
         disposables.forEach((d) => d.dispose());
         own.forEach((d) => d.dispose());
+        composer?.dispose();
         envTex.dispose();
         pmrem.dispose();
         renderer.dispose();
