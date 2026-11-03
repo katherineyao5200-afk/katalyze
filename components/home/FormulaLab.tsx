@@ -308,7 +308,7 @@ export default function FormulaLab() {
               lineHeight: "var(--leading-body)",
             }}
           >
-            <Lead text="Try the rules yourself. Hold the pad, pick the weather and how your skin feels, then mix." />
+            <Lead text="Try it yourself. Hold the pad, pick the weather and how your skin feels, and see what Katalyze would mix." />
           </p>
 
           {/* 01: the sensor */}

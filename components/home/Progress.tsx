@@ -81,7 +81,7 @@ export default function Progress() {
             lineHeight: "var(--leading-body)",
           }}
         >
-          <Lead text="Tested with simulated liquids so far. Each ingredient has its own pump and tube, so nothing shares a path. Real ingredients come next." />
+          <Lead text="The prototype works with test liquids. Each ingredient has its own pump and tube, so nothing mixes before it should. Testing with real ingredients comes next." />
         </p>
       </div>
 

@@ -231,7 +231,7 @@ export default function Inside() {
             className="max-w-sm text-[color:var(--muted-on-light)]"
             style={{ fontSize: "var(--text-base)", lineHeight: "var(--leading-body)" }}
           >
-            <Lead text="Mixed fresh, used up. Each dose is made for one use, so nothing sits open for months or gets thrown out half full." className="text-midnight" />
+            <Lead text="No more half-used bottles. Each dose is mixed fresh and used right away, so nothing sits open for months or gets thrown out." className="text-midnight" />
           </p>
         </Reveal>
 

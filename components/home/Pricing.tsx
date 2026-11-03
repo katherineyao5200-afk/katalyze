@@ -95,7 +95,7 @@ export default function Pricing() {
               lineHeight: "var(--leading-body)",
             }}
           >
-            <Lead text="Refills ship when you run low. Not on a fixed schedule. These are planned prices and may change." />
+            <Lead text="Refills arrive when you're running low, not on a fixed schedule. Prices are planned and may change." />
           </p>
         </Reveal>
 

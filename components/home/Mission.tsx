@@ -19,12 +19,12 @@ export default function Mission() {
           className="font-display font-extralight text-white"
           style={{ fontSize: "clamp(40px, 6vw, 96px)", lineHeight: 0.98 }}
         >
-          Most skincare is chosen for the skin you had the day you bought it.
+          Tired of buying skincare that stops working for you?
         </h2>
       </Reveal>
       <Reveal className="flex max-w-xl flex-col gap-4 border-l border-blush/50 pl-6">
         <p className="text-white" style={{ fontSize: "var(--text-lg)", lineHeight: 1.4 }}>
-          <Lead text="It started with a cabinet of half-used bottles. Each was right for a few weeks, then wrong. Katalyze checks every morning and mixes fresh." />
+          <Lead text="Most people end up with a shelf of half-used products. That's how Katalyze started: Katherine's own bottles each worked for a few weeks, then didn't, because her skin kept changing." />
         </p>
       </Reveal>
     </PhotoStatement>

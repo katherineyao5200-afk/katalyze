@@ -40,31 +40,31 @@ const CHAPTERS: Chapter[] = [
   {
     chip: "How it works",
     title: ["A morning", "with Katalyze."],
-    body: "About a minute. Most of it is the machine mixing while you brush your teeth.",
+    body: "About a minute each morning. Most of it is the machine mixing while you brush your teeth.",
     side: "left",
   },
   {
     chip: "01 · Read",
     title: ["Touch the", "sensor pad."],
-    body: "Three seconds, one fingertip. It compares today with your own usual: drier, or better?",
+    body: "Touch the pad for three seconds. Katalyze checks whether your skin is drier or more hydrated than your normal.",
     side: "right",
   },
   {
     chip: "02 · Mix",
     title: ["It works out", "today's blend."],
-    body: "The app sets the blend. Your reading, the weather and a quick check-in decide each amount, always inside safe ranges.",
+    body: "The app picks the mix. It uses your reading, the weather and a quick question about how your skin feels. Every amount stays within safe limits.",
     side: "left",
   },
   {
     chip: "03 · Apply",
     title: ["Scoop it", "from the dish."],
-    body: "One dose, into a small dish. Scoop it with a fingertip and apply like a moisturizer. The machine never touches your face.",
+    body: "One dose lands in a small dish. Scoop it with a fingertip and put it on like a moisturizer. The machine never touches your face.",
     side: "right",
   },
   {
     chip: "04 · Learn",
     title: ["Tomorrow starts", "from today."],
-    body: "Each reading becomes a star on your chart. Over a few weeks, the blend follows the pattern.",
+    body: "It keeps track. Each reading is saved, so over a few weeks the mix follows your skin's pattern.",
     side: "left",
   },
 ];

@@ -46,7 +46,7 @@ export default function Research() {
             className="max-w-sm text-[color:var(--muted-on-dark)]"
             style={{ fontSize: "var(--text-base)", lineHeight: "var(--leading-body)" }}
           >
-            <Lead text="Quizzes guess once; Katalyze checks every morning. Before building it, Katherine surveyed about 75 skincare users on how their skin changes and what goes wrong when they shop." />
+            <Lead text="Most personalized skincare is picked once, from a quiz. Katalyze checks your skin every morning instead. Before building it, Katherine surveyed about 75 skincare users; here's what they said." />
           </p>
         </Reveal>
 

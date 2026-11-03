@@ -103,7 +103,7 @@ export default function SkinChart() {
               lineHeight: "var(--leading-tight)",
             }}
           >
-            In the app, every morning&apos;s reading becomes a star on your chart.
+            The app shows how your skin changes, day by day.
           </h2>
           <p
             className="col-span-12 max-w-md self-end text-[color:var(--muted-on-dark)] lg:col-span-4 lg:col-start-9"
@@ -112,7 +112,7 @@ export default function SkinChart() {
               lineHeight: "var(--leading-body)",
             }}
           >
-            <Lead text="Compared only with your own usual. After a few weeks you can see the pattern, and so can the formula." />
+            <Lead text="Each star is one morning. Readings are compared with your own normal, so after a few weeks you can spot patterns, like drier skin in cold weather." />
             <Hint className="mt-4 flex">Tap any star</Hint>
           </p>
         </Reveal>

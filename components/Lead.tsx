@@ -8,7 +8,8 @@ export default function Lead({
   text: string;
   className?: string;
 }) {
-  const i = text.indexOf(". ");
+  const m = /[.?!] /.exec(text);
+  const i = m ? m.index : -1;
   if (i < 0) return <strong className={`font-medium ${className}`}>{text}</strong>;
   return (
     <>

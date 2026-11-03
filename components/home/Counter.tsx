@@ -65,7 +65,7 @@ export default function Counter() {
               lineHeight: "var(--leading-body)",
             }}
           >
-            <Lead text="The planned design, at home. Matte white on navy, sensor on top, dose dish at the front." />
+            <Lead text="It lives on your bathroom counter. White with a navy base, a sensor pad on top and a small dish at the front for your dose." />
           </p>
         </Reveal>
       </div>

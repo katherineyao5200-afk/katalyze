@@ -74,7 +74,7 @@ export default function Founder() {
               lineHeight: "var(--leading-body)",
             }}
           >
-            <Lead text="She ran the survey, designed the device and built the prototype. Katalyze is a solo-founder company: Katherine leads product, design, finances and sourcing, with outside partners for hardware, formulation and software." />
+            <Lead text="Katherine ran the survey, designed the device and built the prototype. Katalyze is a one-person company, working with outside partners for hardware, formulation and software." />
           </p>
           <Link
             href="/story"

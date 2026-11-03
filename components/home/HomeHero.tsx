@@ -297,13 +297,12 @@ function ScrollHero() {
                 }}
               >
                 <strong className="font-medium text-white">
-                  A countertop device that mixes your skincare fresh every
-                  morning.
+                  One device instead of a shelf of skincare.
                 </strong>
                 <span className="block pt-1 text-[0.88em] opacity-75">
-                  A fingertip on the sensor pad tells it if your skin is drier
-                  than usual. One dose lands in a small dish; you apply it like a
-                  moisturizer.
+                  Katalyze sits on your counter. Each morning you touch its sensor
+                  pad, it checks if your skin is drier than usual, and it mixes one
+                  fresh dose to match.
                 </span>
               </p>
               <WaitlistForm
@@ -596,13 +595,12 @@ function StaticHero() {
             }}
           >
             <strong className="font-medium text-white">
-              A countertop device that mixes your skincare fresh every
-              morning.
+              One device instead of a shelf of skincare.
             </strong>
             <span className="block pt-1 text-[0.88em] opacity-75">
-              A fingertip on the sensor pad tells it if your skin is drier
-              than usual. One dose lands in a small dish; you apply it like a
-              moisturizer.
+              Katalyze sits on your counter. Each morning you touch its sensor
+              pad, it checks if your skin is drier than usual, and it mixes one
+              fresh dose to match.
             </span>
           </p>
           <WaitlistForm
