@@ -1237,6 +1237,29 @@ function shadowTexture() {
   return new THREE.CanvasTexture(c);
 }
 
+// One WebGL scene build per idle period, page-wide.
+let buildQueue: Promise<void> = Promise.resolve();
+function enqueueBuild(build: () => void) {
+  buildQueue = buildQueue.then(
+    () =>
+      new Promise<void>((resolve) => {
+        const ric =
+          window.requestIdleCallback ??
+          ((cb: () => void) => window.setTimeout(cb, 200));
+        ric(
+          () => {
+            try {
+              build();
+            } finally {
+              resolve();
+            }
+          },
+          { timeout: 1200 },
+        );
+      }),
+  );
+}
+
 export default function DeviceModel({
   progress,
   anchors,
@@ -1280,16 +1303,17 @@ export default function DeviceModel({
         cancelIntro = afterIntro(() => {
           // Build the scene when the browser is idle, so the first
           // scroll after load isn't blocked (the poster covers the wait).
-          const ric =
-            window.requestIdleCallback ??
-            ((cb: () => void) => window.setTimeout(cb, 200));
-          const id = ric(() => {
-            cleanup = init();
-          }, { timeout: 1200 });
+          // Several models can come near at once (the countertop scene
+          // sits right above the teardown), so builds are queued one per
+          // idle slot instead of landing in the same frame.
+          let cancelled = false;
+          enqueueBuild(() => {
+            if (!cancelled) cleanup = init();
+          });
           const prev = cancelIntro;
           cancelIntro = () => {
             prev();
-            (window.cancelIdleCallback ?? window.clearTimeout)(id as number);
+            cancelled = true;
           };
         });
       },

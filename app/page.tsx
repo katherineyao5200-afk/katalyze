@@ -3,6 +3,7 @@ import Mission from "@/components/home/Mission";
 import Model from "@/components/home/Model";
 import FAQ from "@/components/home/FAQ";
 import Pricing from "@/components/home/Pricing";
+import Counter from "@/components/home/Counter";
 import Close from "@/components/home/Close";
 import Founder from "@/components/home/Founder";
 import SkinRitual from "@/components/home/SkinRitual";
@@ -25,6 +26,7 @@ export default function Home() {
       <Mission />
       <Research />
       <Journey />
+      <Counter />
       <Anatomy />
       <Inside />
       <FormulaLab />

@@ -19,6 +19,8 @@ import PersistentCTA from "@/components/PersistentCTA";
 import WaitlistModal from "@/components/WaitlistModal";
 import SmoothScroll from "@/components/SmoothScroll";
 
+// Only weight 200 is used on the site; the 800 files were preloaded on
+// every page for nothing. Add them back here if a design needs 800.
 const migra = localFont({
   variable: "--font-migra",
   display: "swap",
@@ -29,18 +31,8 @@ const migra = localFont({
       style: "normal",
     },
     {
-      path: "../public/fonts/Migra-Extrabold.woff2",
-      weight: "800",
-      style: "normal",
-    },
-    {
       path: "../public/fonts/MigraItalic-ExtralightItalic.woff2",
       weight: "200",
-      style: "italic",
-    },
-    {
-      path: "../public/fonts/MigraItalic-ExtraboldItalic.woff2",
-      weight: "800",
       style: "italic",
     },
   ],
