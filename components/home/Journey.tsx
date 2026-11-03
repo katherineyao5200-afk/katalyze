@@ -46,7 +46,7 @@ const CHAPTERS: Chapter[] = [
   {
     chip: "01 · Read",
     title: ["Touch the", "sensor pad."],
-    body: "Touch the pad for three seconds. Katalyze checks whether your skin is drier or more hydrated than your normal.",
+    body: "Touch the pad for three seconds. It checks if your skin is drier or less dry than normal for you.",
     side: "right",
   },
   {

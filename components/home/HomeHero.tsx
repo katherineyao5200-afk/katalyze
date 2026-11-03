@@ -50,7 +50,7 @@ const ANNOTATIONS: Annotation[] = [
     id: "cartridges",
     label: "6 cartridges",
     value: "3 bases: toner, serum, cream",
-    detail: "3 actives: smaller, concentrated ingredients",
+    detail: "3 actives: extra ingredients for dry, shiny or irritated days",
     side: "right",
     at: 0.3,
   },
@@ -63,8 +63,8 @@ const ANNOTATIONS: Annotation[] = [
   },
   {
     id: "cup",
-    label: "Dose dish",
-    value: "One fresh dose, in a small dish",
+    label: "Dish",
+    value: "Your skincare comes out here, ready to use",
     side: "right",
     at: 0.54,
   },
@@ -300,9 +300,9 @@ function ScrollHero() {
                   One device instead of a shelf of skincare.
                 </strong>
                 <span className="block pt-1 text-[0.88em] opacity-75">
-                  Katalyze sits on your counter. Each morning you touch its sensor
-                  pad, it checks if your skin is drier than usual, and it mixes one
-                  fresh dose to match.
+                  Katalyze is a small machine for your bathroom counter. Each
+                  morning you touch it with one finger, it checks how dry your skin
+                  is today, and it mixes the right skincare for you.
                 </span>
               </p>
               <WaitlistForm
@@ -598,9 +598,9 @@ function StaticHero() {
               One device instead of a shelf of skincare.
             </strong>
             <span className="block pt-1 text-[0.88em] opacity-75">
-              Katalyze sits on your counter. Each morning you touch its sensor
-              pad, it checks if your skin is drier than usual, and it mixes one
-              fresh dose to match.
+              Katalyze is a small machine for your bathroom counter. Each
+              morning you touch it with one finger, it checks how dry your skin
+              is today, and it mixes the right skincare for you.
             </span>
           </p>
           <WaitlistForm

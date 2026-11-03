@@ -32,14 +32,14 @@ const PARTS: {
     layer: "glass",
     n: "01",
     name: "Frosted window",
-    note: "Acrylic. Shows each cartridge's colour, hides the mechanics.",
+    note: "A frosted panel. You see each cartridge's colour, not the machinery.",
     side: "left",
   },
   {
     layer: "cartridges",
     n: "02",
     name: "Six cartridges",
-    note: "Three base, three active. Keyed slots, so a base can't go in an active slot.",
+    note: "Six refillable containers of skincare ingredients. Each one only fits its own slot.",
     side: "left",
   },
   {
@@ -53,14 +53,14 @@ const PARTS: {
     layer: "tray",
     n: "04",
     name: "Dose dish",
-    note: "Each ingredient is dosed by weight into the dish. The drip tray lifts out.",
+    note: "Your skincare comes out here, measured by weight. The tray lifts out to clean.",
     side: "right",
   },
   {
     layer: "shell",
     n: "05",
     name: "Housing",
-    note: "Soft-matte shell on a navy base, with the fingertip sensor set into the top. Six pumps sit inside.",
+    note: "The outer shell. The finger sensor is on top, and six small pumps sit inside.",
     side: "right",
   },
 ];

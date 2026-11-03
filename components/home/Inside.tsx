@@ -56,7 +56,7 @@ const ACTIVES: Item[] = [
     code: "A-01",
     name: "Hyaluronic acid",
     role: "Holds water at the skin's surface.",
-    when: "Weighted up when your reading is drier than usual or skin feels tight",
+    when: "Added more when your skin reads drier than usual or feels tight",
     sky: {
       caption: "A drop",
       pts: [[30, 4], [22, 18], [20, 27], [25, 35], [35, 35], [40, 27], [38, 18]],
@@ -67,7 +67,7 @@ const ACTIVES: Item[] = [
     code: "A-02",
     name: "Niacinamide",
     role: "Vitamin B3, widely used for oil balance and an even tone.",
-    when: "Weighted up when skin feels shiny or the air is humid",
+    when: "Added more when skin feels shiny or the air is humid",
     sky: {
       caption: "A balance",
       pts: [[30, 8], [30, 24], [10, 24], [50, 24], [6, 32], [14, 32], [46, 32], [54, 32]],
@@ -78,7 +78,7 @@ const ACTIVES: Item[] = [
     code: "A-03",
     name: "Ceramide",
     role: "Part of the skin's own barrier.",
-    when: "Weighted up on irritated or wind-dried days",
+    when: "Added more on irritated or wind-dried days",
     sky: {
       caption: "A wall",
       pts: [[8, 12], [22, 12], [36, 12], [50, 12], [15, 22], [29, 22], [43, 22], [8, 32], [22, 32], [36, 32], [50, 32]],
@@ -225,7 +225,7 @@ export default function Inside() {
             className="font-display font-extralight text-midnight"
             style={{ fontSize: "var(--text-3xl)", lineHeight: "var(--leading-tight)" }}
           >
-            Three bases, three actives, and what each one is for.
+            What goes into your skincare.
           </h2>
           <p
             className="max-w-sm text-[color:var(--muted-on-light)]"

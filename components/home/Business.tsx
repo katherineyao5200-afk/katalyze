@@ -56,7 +56,7 @@ const ROADMAP = [
   {
     phase: "Validate",
     when: "Now",
-    text: "Prototype tested with simulated liquids. Market research done. Talking to manufacturers and formulators.",
+    text: "Prototype tested with test liquids. Market research done. Talking to manufacturers and formulators.",
   },
   {
     phase: "Prepare",

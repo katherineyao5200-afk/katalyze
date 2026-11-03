@@ -92,7 +92,7 @@ export default function SkinRitual() {
               className="max-w-md text-[color:var(--muted-on-dark)]"
               style={{ fontSize: "var(--text-base)", lineHeight: "var(--leading-body)" }}
             >
-              <Lead text="Your skin changes, but your products don't. Katalyze mixes a fresh dose each morning to match how your skin is that day, and you put it on like a moisturizer." />
+              <Lead text="Your skin changes, but your products don't. Each morning Katalyze checks your skin and mixes a fresh amount to match. You put it on like a normal moisturizer." />
             </p>
           </Reveal>
           <Reveal>

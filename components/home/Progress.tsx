@@ -10,7 +10,7 @@ const MILESTONES = [
   { status: "Done", text: "Market research survey with about 75 respondents" },
   {
     status: "Done",
-    text: "Six-channel prototype built and tested with simulated liquids",
+    text: "Working prototype built and tested with water-like test liquids",
   },
   {
     status: "Done",
@@ -20,7 +20,7 @@ const MILESTONES = [
     status: "Done",
     text: "Finalist (top 2%), Blue Ocean Student Entrepreneur Competition 2026",
   },
-  { status: "Next", text: "Move from simulated liquids to real ingredients" },
+  { status: "Next", text: "Move from test liquids to real skincare ingredients" },
   {
     status: "Next",
     text: "Lock in a manufacturing partner for a first run of about 2,000 units",
@@ -35,17 +35,17 @@ export default function Progress() {
     {
       ...front,
       title: "The working prototype",
-      text: "Six bottles, six tubes, one pull-out drawer. Run so far on simulated liquids.",
+      text: "Six bottles, six tubes, one pull-out drawer. Tested so far with test liquids, not real skincare.",
     },
     {
       ...pumps,
       title: "Six pumps",
-      text: "One peristaltic pump per channel, so no two ingredients share a path.",
+      text: "One small pump for each ingredient, so they never mix inside the machine.",
     },
     {
       ...electronics,
       title: "The controller",
-      text: "Runs the pumps and weighs each dose as it dispenses.",
+      text: "The small computer that runs the pumps and weighs each ingredient as it comes out.",
     },
   ];
 
