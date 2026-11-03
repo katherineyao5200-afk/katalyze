@@ -44,7 +44,7 @@ export default function Close() {
             lineHeight: "var(--leading-body)",
           }}
         >
-          Not for sale yet. The first run is about 2,000 units, and the
+          Not in public markets yet. The first run is about 2,000 units, and the
           waitlist hears first.
         </p>
         <WaitlistForm

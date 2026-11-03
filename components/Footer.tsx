@@ -42,7 +42,7 @@ export default function Footer() {
             width={images.logo.nav.width}
             height={images.logo.nav.height}
             alt=""
-            className="mb-2 h-10 w-auto opacity-90"
+            className="mb-2 h-10 w-auto self-start opacity-90"
           />
           <p
             className="max-w-sm text-white"
@@ -52,7 +52,7 @@ export default function Footer() {
             }}
           >
             A countertop device that mixes your skincare fresh each morning.
-            Designed by Katherine Yao. Not on sale yet.
+            Designed by Katherine Yao. Not in public markets yet.
           </p>
         </div>
 
@@ -92,7 +92,7 @@ export default function Footer() {
             }}
           >
             <li>Working prototype</li>
-            <li>Not yet for sale</li>
+            <li>Not in public markets yet</li>
             <li>First run: about 2,000 units</li>
           </ul>
         </div>
@@ -105,7 +105,7 @@ export default function Footer() {
           }}
         >
           <p className="max-w-2xl">
-            Katalyze is in development and not yet for sale; prices shown are
+            Katalyze is in development and not in public markets yet; prices shown are
             planned launch prices. Founded by Katherine Yao, working with
             external hardware, formulation and software partners. Waitlist
             emails are used only for launch news, and you can unsubscribe at any

@@ -300,7 +300,7 @@ export default function InvestorsPage() {
           </p>
         </div>
         <p className="text-[color:var(--faint-on-dark)]" style={{ fontSize: "var(--text-xs)" }}>
-          Planned launch prices. Not yet for sale.
+          Planned launch prices. Not in public markets yet.
         </p>
       </Band>
 

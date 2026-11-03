@@ -254,7 +254,7 @@ export default function Pricing() {
             className="mt-4 text-[color:var(--faint-on-dark)]"
             style={{ fontSize: "var(--text-xs)" }}
           >
-            Planned launch pricing in US dollars. Not yet available to buy. The
+            Planned launch pricing in US dollars. Not in public markets yet. The
             waitlist hears confirmed prices first.
           </p>
         </Reveal>

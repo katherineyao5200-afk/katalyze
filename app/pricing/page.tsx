@@ -263,7 +263,7 @@ export default function PricingPage() {
             fontSize: "var(--text-xs)",
           }}
         >
-          Planned pricing. Katalyze isn&apos;t for sale yet, and prices may
+          Planned pricing. Katalyze isn&apos;t in public markets yet, and prices may
           still change before launch. The waitlist hears first either way.
         </p>
       </section>

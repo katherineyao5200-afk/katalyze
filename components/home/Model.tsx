@@ -42,7 +42,7 @@ export default function Model() {
         </dl>
       </Reveal>
       <p className="text-white/50" style={{ fontSize: "var(--text-xs)" }}>
-        Planned pricing. Nothing is on sale yet. The first run is about 2,000 units, and the waitlist hears first.
+        Planned pricing. Not in public markets yet. The first run is about 2,000 units, and the waitlist hears first.
       </p>
     </PhotoStatement>
   );
