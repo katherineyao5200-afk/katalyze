@@ -44,14 +44,14 @@ const CHAPTERS: Chapter[] = [
   },
   {
     chip: "01 · Read",
-    title: ["Touch the pad", "on top."],
+    title: ["Touch the", "sensor pad."],
     body: "Three seconds, one fingertip. It compares the reading with your own usual, so it can tell a drier day from a better one.",
     side: "right",
   },
   {
     chip: "02 · Mix",
     title: ["It works out", "today's blend."],
-    body: "Your reading, the local weather and a quick check-in decide how much of each cartridge goes in. Every amount stays inside a safe range.",
+    body: "The Katalyze app takes your reading, the local weather and a quick check-in on your phone, and decides how much of each cartridge goes in. Every amount stays inside a safe range.",
     side: "left",
   },
   {

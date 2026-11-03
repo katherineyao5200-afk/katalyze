@@ -50,7 +50,7 @@ const ANNOTATIONS: Annotation[] = [
     id: "cartridges",
     label: "6 cartridges",
     value: "3 bases: toner, serum, cream",
-    detail: "3 active: the small droppers",
+    detail: "3 actives: smaller, concentrated ingredients",
     side: "right",
     at: 0.3,
   },
@@ -299,9 +299,10 @@ function ScrollHero() {
                 <strong className="font-medium text-white">
                   Katalyze is a countertop skincare device.
                 </strong>{" "}
-                Touch the pad on top each morning and it mixes one fresh
-                dose from six cartridges, based on your skin that day, the
-                weather and how you say it feels.
+                Each morning you rest a fingertip on the sensor pad on top. It
+                checks whether your skin is drier or more hydrated than usual,
+                then mixes one fresh dose of skincare from six cartridges into
+                a small dish, for you to apply like a moisturizer.
               </p>
               <WaitlistForm
                 source="hero"
@@ -319,6 +320,12 @@ function ScrollHero() {
                 >
                   Read the story
                 </Link>
+                <span className="md:hidden">
+                  {" · "}
+                  <Link href="/quick" className="text-blush underline decoration-blush/40 underline-offset-4">
+                    Quick read
+                  </Link>
+                </span>
               </p>
             </div>
           </div>
@@ -589,9 +596,10 @@ function StaticHero() {
             <strong className="font-medium text-white">
               Katalyze is a countertop skincare device.
             </strong>{" "}
-            Touch the pad on top each morning and it mixes one fresh
-            dose from six cartridges, based on your skin that day, the
-            weather and how you say it feels.
+            Each morning you rest a fingertip on the sensor pad on top. It
+            checks whether your skin is drier or more hydrated than usual,
+            then mixes one fresh dose of skincare from six cartridges into
+            a small dish, for you to apply like a moisturizer.
           </p>
           <WaitlistForm
             source="hero"
@@ -609,6 +617,12 @@ function StaticHero() {
             >
               Read the story
             </Link>
+            <span className="md:hidden">
+              {" · "}
+              <Link href="/quick" className="text-blush underline decoration-blush/40 underline-offset-4">
+                Quick read
+              </Link>
+            </span>
           </p>
         </div>
         <div className="col-span-12 lg:col-span-6">

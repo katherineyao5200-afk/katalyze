@@ -46,10 +46,13 @@ export default function Research() {
             style={{ fontSize: "var(--text-base)", lineHeight: "var(--leading-body)" }}
           >
             <strong className="font-medium text-white">
-              Before building anything, Katherine checked the idea.
+              Quizzes guess; Katalyze checks.
             </strong>{" "}
-            She surveyed about 75 people who use skincare, asking whether
-            their skin changes and what goes wrong when they shop for it.
+            Most personalized skincare picks your formula once, from a quiz.
+            Katalyze measures your skin every morning instead. Before building
+            it, Katherine surveyed about 75 people who use skincare, asking
+            whether their skin changes and what goes wrong when they shop for
+            it.
           </p>
         </Reveal>
 

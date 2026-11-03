@@ -12,7 +12,7 @@ export default function QuickReadButton() {
     <Link
       href="/quick"
       data-cursor="Skip the show"
-      className="glass fixed bottom-24 left-4 z-40 flex items-center gap-2 rounded-full px-4 py-2.5 text-white md:bottom-6 md:left-6"
+      className="glass fixed bottom-24 left-4 z-40 hidden items-center md:flex gap-2 rounded-full px-4 py-2.5 text-white md:bottom-6 md:left-6"
       style={{ fontSize: "var(--text-xs)" }}
     >
       <svg viewBox="0 0 16 16" aria-hidden="true" className="size-3.5">

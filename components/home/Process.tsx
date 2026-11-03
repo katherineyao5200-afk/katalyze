@@ -10,12 +10,12 @@ const STEPS: { n: string; title: string; body: string }[] = [
   {
     n: "01",
     title: "Read",
-    body: "Three seconds on the pad. Katalyze compares today with your usual, so it knows whether your skin is drier or more hydrated than normal.",
+    body: "Three seconds with a fingertip on the sensor pad. Katalyze compares today with your usual, so it knows whether your skin is drier or more hydrated than normal.",
   },
   {
     n: "02",
     title: "Mix",
-    body: "Your reading, the local weather and a quick check-in set the blend. Six pumps measure each ingredient by weight, always inside safe ranges.",
+    body: "The Katalyze app combines your reading, the local weather and a quick check-in to set the blend. Six pumps measure each ingredient by weight, always inside safe ranges.",
   },
   {
     n: "03",

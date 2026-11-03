@@ -102,7 +102,7 @@ export default function SkinChart() {
               lineHeight: "var(--leading-tight)",
             }}
           >
-            Every morning&apos;s reading becomes a star on your chart.
+            In the app, every morning&apos;s reading becomes a star on your chart.
           </h2>
           <p
             className="col-span-12 max-w-md self-end text-[color:var(--muted-on-dark)] lg:col-span-4 lg:col-start-9"
