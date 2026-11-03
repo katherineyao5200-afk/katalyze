@@ -2,6 +2,7 @@ import Gallery from "@/components/Gallery";
 import Chip from "@/components/home/Chip";
 import Reveal from "@/components/Reveal";
 import { images } from "@/lib/images";
+import Lead from "@/components/Lead";
 
 // Real milestones only, from the pitch deck (v9, Sep 2026). Add rows as
 // they actually happen; never pre-date one.
@@ -80,9 +81,7 @@ export default function Progress() {
             lineHeight: "var(--leading-body)",
           }}
         >
-          Each bottle has its own pump and tube, so no two ingredients share
-          a path. So far it has run on simulated liquids, to prove the
-          mechanics before anything touches skin.
+          <Lead text="Tested with simulated liquids so far. Each ingredient has its own pump and tube, so nothing shares a path. Real ingredients come next." />
         </p>
       </div>
 

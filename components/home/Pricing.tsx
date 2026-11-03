@@ -1,5 +1,6 @@
 import Chip from "@/components/home/Chip";
 import Reveal from "@/components/Reveal";
+import Lead from "@/components/Lead";
 
 // Planned launch pricing, from the pitch deck (v9, Sep 2026, pp. 20-21).
 // Nothing is for sale yet: every number here is labelled as planned.
@@ -94,8 +95,7 @@ export default function Pricing() {
               lineHeight: "var(--leading-body)",
             }}
           >
-            Refills ship when a cartridge is nearly empty, not on a fixed
-            schedule. These are planned launch prices and may still change.
+            <Lead text="Refills ship when you run low. Not on a fixed schedule. These are planned prices and may change." />
           </p>
         </Reveal>
 

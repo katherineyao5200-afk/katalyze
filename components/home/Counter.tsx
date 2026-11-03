@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useCallback, useState } from "react";
 
 import Reveal from "@/components/Reveal";
+import Lead from "@/components/Lead";
 
 const DeviceModel = dynamic(() => import("@/components/home/DeviceModel"), {
   ssr: false,
@@ -64,8 +65,7 @@ export default function Counter() {
               lineHeight: "var(--leading-body)",
             }}
           >
-            Soft-matte white on a navy base, with the sensor on top and the dose dish
-            at the front. The planned design, shown in a home.
+            <Lead text="The planned design, at home. Matte white on navy, sensor on top, dose dish at the front." />
           </p>
         </Reveal>
       </div>

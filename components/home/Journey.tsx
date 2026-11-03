@@ -14,6 +14,7 @@ import { useEffect, useRef, useState } from "react";
 import Chip from "@/components/home/Chip";
 import Process from "@/components/home/Process";
 import { SHAPES } from "@/components/home/ParticleSculpture";
+import Lead from "@/components/Lead";
 
 const ParticleSculpture = dynamic(
   () => import("@/components/home/ParticleSculpture"),
@@ -39,31 +40,31 @@ const CHAPTERS: Chapter[] = [
   {
     chip: "How it works",
     title: ["A morning", "with Katalyze."],
-    body: "It takes about a minute, most of which is the machine mixing while you brush your teeth.",
+    body: "About a minute. Most of it is the machine mixing while you brush your teeth.",
     side: "left",
   },
   {
     chip: "01 · Read",
     title: ["Touch the", "sensor pad."],
-    body: "Three seconds, one fingertip. It compares the reading with your own usual, so it can tell a drier day from a better one.",
+    body: "Three seconds, one fingertip. It compares today with your own usual: drier, or better?",
     side: "right",
   },
   {
     chip: "02 · Mix",
     title: ["It works out", "today's blend."],
-    body: "The Katalyze app takes your reading, the local weather and a quick check-in on your phone, and decides how much of each cartridge goes in. Every amount stays inside a safe range.",
+    body: "The app sets the blend. Your reading, the weather and a quick check-in decide each amount, always inside safe ranges.",
     side: "left",
   },
   {
     chip: "03 · Apply",
     title: ["Scoop it", "from the dish."],
-    body: "One dose, weighed out into a small dish at the front. Use a fingertip and put it on like any moisturizer. The machine never touches your face.",
+    body: "One dose, into a small dish. Scoop it with a fingertip and apply like a moisturizer. The machine never touches your face.",
     side: "right",
   },
   {
     chip: "04 · Learn",
     title: ["Tomorrow starts", "from today."],
-    body: "Each reading is saved as a star on your chart. Over a few weeks, the blend follows the pattern.",
+    body: "Each reading becomes a star on your chart. Over a few weeks, the blend follows the pattern.",
     side: "left",
   },
 ];
@@ -233,7 +234,7 @@ function ChapterText({
           className="max-w-md text-white/75"
           style={{ fontSize: "var(--text-base)", lineHeight: "var(--leading-body)" }}
         >
-          {chapter.body}
+          <Lead text={chapter.body} />
         </p>
         {index === N - 1 && (
           <Link

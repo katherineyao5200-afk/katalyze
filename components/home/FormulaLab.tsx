@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { CARTRIDGE_TINT, type CartridgeCode } from "@/lib/tints";
 
 import Reveal from "@/components/Reveal";
+import Lead from "@/components/Lead";
 
 /*
  * An interactive illustration of how the rule-based engine reasons.
@@ -307,8 +308,7 @@ export default function FormulaLab() {
               lineHeight: "var(--leading-body)",
             }}
           >
-            Have a go. Hold the pad, tell it the weather and how your skin
-            feels, then mix. The six levels move the way the real rules would.
+            <Lead text="Try the rules yourself. Hold the pad, pick the weather and how your skin feels, then mix." />
           </p>
 
           {/* 01: the sensor */}

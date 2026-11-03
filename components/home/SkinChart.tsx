@@ -5,6 +5,7 @@ import { useState } from "react";
 import Reveal from "@/components/Reveal";
 import { SPARKLE_PATH } from "@/components/Sparkle";
 import Hint from "@/components/Hint";
+import Lead from "@/components/Lead";
 
 /*
  * "Your skin, charted": three weeks of demo readings drawn as a star
@@ -111,8 +112,7 @@ export default function SkinChart() {
               lineHeight: "var(--leading-body)",
             }}
           >
-            Each one is compared with your own usual, not anyone else&apos;s.
-            After a few weeks you can see the pattern, and so can the formula.
+            <Lead text="Compared only with your own usual. After a few weeks you can see the pattern, and so can the formula." />
             <Hint className="mt-4 flex">Tap any star</Hint>
           </p>
         </Reveal>

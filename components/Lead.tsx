@@ -1,5 +1,6 @@
-// Sets a paragraph's first sentence as its lead: brighter and a touch
-// heavier, so the eye reads the point first and the rest as detail.
+// Splits a paragraph into its point and its detail: the first sentence is
+// bright and heavier so the eye lands on it; the rest is smaller and
+// quieter, there for anyone who wants it.
 export default function Lead({
   text,
   className = "text-white",
@@ -8,13 +9,15 @@ export default function Lead({
   className?: string;
 }) {
   const i = text.indexOf(". ");
-  if (i < 0) return <>{text}</>;
+  if (i < 0) return <strong className={`font-medium ${className}`}>{text}</strong>;
   return (
     <>
       <strong className={`font-medium ${className}`}>
         {text.slice(0, i + 1)}
       </strong>
-      {text.slice(i + 1)}
+      <span className="block pt-1 text-[0.88em] opacity-75">
+        {text.slice(i + 2)}
+      </span>
     </>
   );
 }

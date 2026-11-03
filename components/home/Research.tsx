@@ -2,6 +2,7 @@ import CountUp from "@/components/CountUp";
 import Reveal from "@/components/Reveal";
 import DotStat from "@/components/home/DotStat";
 import Orbit from "@/components/home/Orbit";
+import Lead from "@/components/Lead";
 
 // Katalyze's own survey, about 75 respondents, 2026 (pitch deck v9).
 const LEAD = {
@@ -45,14 +46,7 @@ export default function Research() {
             className="max-w-sm text-[color:var(--muted-on-dark)]"
             style={{ fontSize: "var(--text-base)", lineHeight: "var(--leading-body)" }}
           >
-            <strong className="font-medium text-white">
-              Quizzes guess; Katalyze checks.
-            </strong>{" "}
-            Most personalized skincare picks your formula once, from a quiz.
-            Katalyze measures your skin every morning instead. Before building
-            it, Katherine surveyed about 75 people who use skincare, asking
-            whether their skin changes and what goes wrong when they shop for
-            it.
+            <Lead text="Quizzes guess once; Katalyze checks every morning. Before building it, Katherine surveyed about 75 skincare users on how their skin changes and what goes wrong when they shop." />
           </p>
         </Reveal>
 

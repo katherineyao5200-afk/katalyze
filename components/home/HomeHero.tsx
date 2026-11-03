@@ -297,12 +297,14 @@ function ScrollHero() {
                 }}
               >
                 <strong className="font-medium text-white">
-                  Katalyze is a countertop skincare device.
-                </strong>{" "}
-                Each morning you rest a fingertip on the sensor pad on top. It
-                checks whether your skin is drier or more hydrated than usual,
-                then mixes one fresh dose of skincare from six cartridges into
-                a small dish, for you to apply like a moisturizer.
+                  A countertop device that mixes your skincare fresh every
+                  morning.
+                </strong>
+                <span className="block pt-1 text-[0.88em] opacity-75">
+                  A fingertip on the sensor pad tells it if your skin is drier
+                  than usual. One dose lands in a small dish; you apply it like a
+                  moisturizer.
+                </span>
               </p>
               <WaitlistForm
                 source="hero"
@@ -594,12 +596,14 @@ function StaticHero() {
             }}
           >
             <strong className="font-medium text-white">
-              Katalyze is a countertop skincare device.
-            </strong>{" "}
-            Each morning you rest a fingertip on the sensor pad on top. It
-            checks whether your skin is drier or more hydrated than usual,
-            then mixes one fresh dose of skincare from six cartridges into
-            a small dish, for you to apply like a moisturizer.
+              A countertop device that mixes your skincare fresh every
+              morning.
+            </strong>
+            <span className="block pt-1 text-[0.88em] opacity-75">
+              A fingertip on the sensor pad tells it if your skin is drier
+              than usual. One dose lands in a small dish; you apply it like a
+              moisturizer.
+            </span>
           </p>
           <WaitlistForm
             source="hero"

@@ -1,4 +1,5 @@
 import Reveal from "@/components/Reveal";
+import Lead from "@/components/Lead";
 
 /*
  * Straight after the hero, so nobody wonders what category this is: a
@@ -91,9 +92,7 @@ export default function SkinRitual() {
               className="max-w-md text-[color:var(--muted-on-dark)]"
               style={{ fontSize: "var(--text-base)", lineHeight: "var(--leading-body)" }}
             >
-              Most of us still reach for the same jar either way. Katalyze
-              mixes a small, fresh dose each morning instead, and you smooth it
-              on like any moisturizer.
+              <Lead text="Same jar, different skin. Katalyze mixes a small, fresh dose each morning to match, and you smooth it on like any moisturizer." />
             </p>
           </Reveal>
           <Reveal>

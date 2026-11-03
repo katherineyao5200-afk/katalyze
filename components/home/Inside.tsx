@@ -1,6 +1,7 @@
 import Reveal from "@/components/Reveal";
 import Hint from "@/components/Hint";
 import { CARTRIDGE_TINT, type CartridgeCode } from "@/lib/tints";
+import Lead from "@/components/Lead";
 
 // The three bases are a toner, a serum and a cream (kat, Nov 2026). Each line says what the ingredient is for, never a
 // percentage: no formulation data exists yet.
@@ -230,11 +231,7 @@ export default function Inside() {
             className="max-w-sm text-[color:var(--muted-on-light)]"
             style={{ fontSize: "var(--text-base)", lineHeight: "var(--leading-body)" }}
           >
-            <strong className="font-medium text-midnight">
-              Every dose fresh. Every ounce used.
-            </strong>{" "}
-            Each dose is mixed for one use. Nothing sits open for months,
-            and nothing gets thrown out half full.
+            <Lead text="Mixed fresh, used up. Each dose is made for one use, so nothing sits open for months or gets thrown out half full." className="text-midnight" />
           </p>
         </Reveal>
 
