@@ -206,7 +206,7 @@ export default function XRayScene({
           };
         });
       },
-      { rootMargin: "80% 0px" },
+      { rootMargin: "250% 0px" },
     );
     if (ref.current) near.observe(ref.current);
     return () => {
@@ -628,9 +628,16 @@ export default function XRayScene({
         };
         raf = requestAnimationFrame(tick);
       }
-      loop();
+      // Compile every shader off the main thread before the first frame,
+      // so the scene doesn't freeze the page when it first appears.
+      let alive = true;
+      const start = () => {
+        if (alive) loop();
+      };
+      renderer.compileAsync(scene, camera).then(start, start);
 
       return () => {
+        alive = false;
         cancelAnimationFrame(raf);
         io.disconnect();
         ro.disconnect();

@@ -5,6 +5,7 @@ import { useCallback, useRef, useState, useSyncExternalStore } from "react";
 import { useMotionValueEvent, useScroll } from "motion/react";
 
 import XRay from "@/components/home/XRay";
+import { images } from "@/lib/images";
 import { CARTRIDGE_TINT } from "@/lib/tints";
 
 const XRayScene = dynamic(() => import("@/components/home/XRayScene"), { ssr: false });
@@ -73,6 +74,19 @@ export default function XRayStory() {
       style={{ height: "560vh" }}
     >
       <div className="sticky top-0 h-svh w-full overflow-hidden">
+        {/* a still of the first frame, so the stage is never empty while the 3D loads */}
+        <picture>
+          <source media="(min-aspect-ratio: 1/1)" srcSet={images.xrayPoster.wide.src} />
+          <img
+            src={images.xrayPoster.tall.src}
+            alt=""
+            width={images.xrayPoster.tall.width}
+            height={images.xrayPoster.tall.height}
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        </picture>
         <XRayScene progress={scrollYProgress} onUnsupported={onUnsupported} className="absolute inset-0" />
 
         {/* soft vignette so captions read over the model */}

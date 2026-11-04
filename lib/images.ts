@@ -102,6 +102,11 @@ export const images = {
       alt: "Katherine Yao, founder of Katalyze",
     },
   },
+  // Stills of the x-ray film's first frame, shown while the 3D loads.
+  xrayPoster: {
+    wide: { src: "/images/xray-poster-wide.webp", width: 1440, height: 900 },
+    tall: { src: "/images/xray-poster-tall.webp", width: 430, height: 932 },
+  },
   cartridges: {
     base: [
       { src: null, width: 320, height: 320, alt: "Base formula cartridge" },
