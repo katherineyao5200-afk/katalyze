@@ -36,7 +36,7 @@ export default function Home() {
       <Inside />
       <FormulaLab />
       <SkinChart />
-      <Chapter n="IV" name="Where it stands" line="A working prototype. Not on sale yet." />
+      <Chapter n="IV" name="Where it stands" line="A working prototype. Not in public markets yet." />
       <Progress />
       <Research />
       <Model />
