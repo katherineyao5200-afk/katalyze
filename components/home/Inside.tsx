@@ -1,6 +1,8 @@
+import { useId } from "react";
 import Reveal from "@/components/Reveal";
 import Hint from "@/components/Hint";
 import { CARTRIDGE_TINT, type CartridgeCode } from "@/lib/tints";
+import Lead from "@/components/Lead";
 
 // The three bases are a toner, a serum and a cream (kat, Nov 2026). Each line says what the ingredient is for, never a
 // percentage: no formulation data exists yet.
@@ -55,7 +57,7 @@ const ACTIVES: Item[] = [
     code: "A-01",
     name: "Hyaluronic acid",
     role: "Holds water at the skin's surface.",
-    when: "Weighted up when your reading is drier than usual or skin feels tight",
+    when: "Added more when your skin reads drier than usual or feels tight",
     sky: {
       caption: "A drop",
       pts: [[30, 4], [22, 18], [20, 27], [25, 35], [35, 35], [40, 27], [38, 18]],
@@ -66,7 +68,7 @@ const ACTIVES: Item[] = [
     code: "A-02",
     name: "Niacinamide",
     role: "Vitamin B3, widely used for oil balance and an even tone.",
-    when: "Weighted up when skin feels shiny or the air is humid",
+    when: "Added more when skin feels shiny or the air is humid",
     sky: {
       caption: "A balance",
       pts: [[30, 8], [30, 24], [10, 24], [50, 24], [6, 32], [14, 32], [46, 32], [54, 32]],
@@ -77,7 +79,7 @@ const ACTIVES: Item[] = [
     code: "A-03",
     name: "Ceramide",
     role: "Part of the skin's own barrier.",
-    when: "Weighted up on irritated or wind-dried days",
+    when: "Added more on irritated or wind-dried days",
     sky: {
       caption: "A wall",
       pts: [[8, 12], [22, 12], [36, 12], [50, 12], [15, 22], [29, 22], [43, 22], [8, 32], [22, 32], [36, 32], [50, 32]],
@@ -86,25 +88,82 @@ const ACTIVES: Item[] = [
   },
 ];
 
-function Constellation({ sky }: { sky: Item["sky"] }) {
+// Engraved into the frosted pane: each line is a dark groove with a
+// bright lower lip, and each star a cut dot with a glowing core and halo.
+// Lines etch themselves in when the vial scrolls into view; stars twinkle.
+function Constellation({ sky, glow }: { sky: Item["sky"]; glow: string }) {
+  const id = useId().replace(/:/g, "");
   return (
-    <svg viewBox="0 0 60 40" aria-hidden="true" className="vial-sky h-12 w-[72px] overflow-visible">
+    <svg viewBox="-4 -4 68 48" aria-hidden="true" className="vial-sky h-[84px] w-[122px] overflow-visible">
+      <defs>
+        <radialGradient id={`h${id}`}>
+          <stop offset="0" stopColor="#ffffff" stopOpacity="1" />
+          <stop offset="0.25" stopColor={glow} stopOpacity="1" />
+          <stop offset="0.6" stopColor="var(--periwinkle)" stopOpacity="0.45" />
+          <stop offset="1" stopColor="var(--periwinkle)" stopOpacity="0" />
+        </radialGradient>
+        <filter id={`b${id}`} x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="1.6" />
+        </filter>
+      </defs>
+      {/* coloured light pooled in the grooves */}
+      <g filter={`url(#b${id})`}>
+        {sky.links.map(([a, b], i) => (
+          <line
+            key={`w${i}`}
+            className="glowline"
+            pathLength={1}
+            x1={sky.pts[a][0]}
+            y1={sky.pts[a][1]}
+            x2={sky.pts[b][0]}
+            y2={sky.pts[b][1]}
+            stroke="var(--periwinkle)"
+            strokeWidth={3.2}
+            strokeLinecap="round"
+          />
+        ))}
+      </g>
+      {/* bright lip, offset down: catches the light below the groove */}
       {sky.links.map(([a, b], i) => (
         <line
-          key={i}
+          key={`l${i}`}
+          className="lip"
+          x1={sky.pts[a][0]}
+          y1={sky.pts[a][1] + 0.6}
+          x2={sky.pts[b][0]}
+          y2={sky.pts[b][1] + 0.6}
+          pathLength={1}
+          stroke="#ffffff"
+          strokeOpacity={0.95}
+          strokeWidth={1.6}
+          strokeLinecap="round"
+          style={{ animationDelay: `${200 + i * 70}ms` }}
+        />
+      ))}
+      {/* the groove */}
+      {sky.links.map(([a, b], i) => (
+        <line
+          key={`g${i}`}
+          className="groove"
           x1={sky.pts[a][0]}
           y1={sky.pts[a][1]}
           x2={sky.pts[b][0]}
           y2={sky.pts[b][1]}
           pathLength={1}
-          stroke="var(--indigo)"
-          strokeOpacity={0.55}
-          strokeWidth={0.7}
-          style={{ transitionDelay: `${i * 60}ms` }}
+          stroke="var(--midnight)"
+          strokeOpacity={0.9}
+          strokeWidth={1.2}
+          strokeLinecap="round"
+          style={{ animationDelay: `${200 + i * 70}ms` }}
         />
       ))}
       {sky.pts.map(([x, y], i) => (
-        <circle key={i} cx={x} cy={y} r={i === 0 ? 1.9 : 1.3} fill="var(--midnight)" />
+        <g key={i} className="star" style={{ animationDelay: `${(i * 430) % 2600}ms` }}>
+          <circle cx={x} cy={y} r={i === 0 ? 8 : 5.6} fill={`url(#h${id})`} className="halo" />
+          <circle cx={x} cy={y + 0.5} r={i === 0 ? 2.5 : 1.8} fill="#ffffff" />
+          <circle cx={x} cy={y} r={i === 0 ? 2.5 : 1.8} fill="var(--midnight)" />
+          <circle cx={x} cy={y} r={i === 0 ? 1.3 : 0.9} fill="#ffffff" />
+        </g>
       ))}
     </svg>
   );
@@ -132,7 +191,7 @@ function Row({
   return (
     <div className="flex flex-col gap-5">
       <p
-        className="font-mono uppercase text-indigo"
+        className="label text-indigo"
         style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}
       >
         {label}
@@ -175,7 +234,7 @@ function Row({
                   </span>
                 </h3>
                 <div className="flex items-end justify-between gap-3">
-                  <Constellation sky={item.sky} />
+                  <Constellation sky={item.sky} glow={CARTRIDGE_TINT[item.code as CartridgeCode]} />
                   <span
                     className="pb-1 font-mono uppercase text-indigo/70"
                     style={{ fontSize: "9px", letterSpacing: "var(--track-label)" }}
@@ -224,17 +283,13 @@ export default function Inside() {
             className="font-display font-extralight text-midnight"
             style={{ fontSize: "var(--text-3xl)", lineHeight: "var(--leading-tight)" }}
           >
-            Three bases, three actives, and what each one is for.
+            What goes into your skincare.
           </h2>
           <p
             className="max-w-sm text-[color:var(--muted-on-light)]"
             style={{ fontSize: "var(--text-base)", lineHeight: "var(--leading-body)" }}
           >
-            <strong className="font-medium text-midnight">
-              Every dose fresh. Every ounce used.
-            </strong>{" "}
-            Each dose is mixed for one use. Nothing sits open for months,
-            and nothing gets thrown out half full.
+            <Lead text="No more half-used bottles. Each dose is mixed fresh and used right away, so nothing sits open for months or gets thrown out." className="text-midnight" />
           </p>
         </Reveal>
 

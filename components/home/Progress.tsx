@@ -1,7 +1,7 @@
 import Gallery from "@/components/Gallery";
-import Chip from "@/components/home/Chip";
 import Reveal from "@/components/Reveal";
 import { images } from "@/lib/images";
+import Lead from "@/components/Lead";
 
 // Real milestones only, from the pitch deck (v9, Sep 2026). Add rows as
 // they actually happen; never pre-date one.
@@ -9,7 +9,7 @@ const MILESTONES = [
   { status: "Done", text: "Market research survey with about 75 respondents" },
   {
     status: "Done",
-    text: "Six-channel prototype built and tested with simulated liquids",
+    text: "Working prototype built and tested with water-like test liquids",
   },
   {
     status: "Done",
@@ -19,7 +19,7 @@ const MILESTONES = [
     status: "Done",
     text: "Finalist (top 2%), Blue Ocean Student Entrepreneur Competition 2026",
   },
-  { status: "Next", text: "Move from simulated liquids to real ingredients" },
+  { status: "Next", text: "Move from test liquids to real skincare ingredients" },
   {
     status: "Next",
     text: "Lock in a manufacturing partner for a first run of about 2,000 units",
@@ -34,17 +34,17 @@ export default function Progress() {
     {
       ...front,
       title: "The working prototype",
-      text: "Six bottles, six tubes, one pull-out drawer. Run so far on simulated liquids.",
+      text: "Six bottles, six tubes, one pull-out drawer. Tested so far with test liquids, not real skincare.",
     },
     {
       ...pumps,
       title: "Six pumps",
-      text: "One peristaltic pump per channel, so no two ingredients share a path.",
+      text: "One small pump for each ingredient, so they never mix inside the machine.",
     },
     {
       ...electronics,
       title: "The controller",
-      text: "Runs the pumps and weighs each dose as it dispenses.",
+      text: "The small computer that runs the pumps and weighs each ingredient as it comes out.",
     },
   ];
 
@@ -62,7 +62,6 @@ export default function Progress() {
         }}
       >
         <Reveal className="col-span-12 flex flex-col gap-6 lg:col-span-7">
-          <Chip tone="dark">Where it stands</Chip>
           <h2
             className="font-display font-extralight"
             style={{
@@ -80,9 +79,7 @@ export default function Progress() {
             lineHeight: "var(--leading-body)",
           }}
         >
-          Each bottle has its own pump and tube, so no two ingredients share
-          a path. So far it has run on simulated liquids, to prove the
-          mechanics before anything touches skin.
+          <Lead text="The prototype works with test liquids. Each ingredient has its own pump and tube, so nothing mixes before it should. Testing with real ingredients comes next." />
         </p>
       </div>
 

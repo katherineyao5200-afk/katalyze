@@ -38,7 +38,7 @@ export default function PageHero({
         }}
       >
         <p
-          className="flex items-center gap-2 font-mono uppercase text-periwinkle"
+          className="flex items-center gap-2 label text-periwinkle"
           style={{
             fontSize: "var(--text-2xs)",
             letterSpacing: "var(--track-label)",

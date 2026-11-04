@@ -4,6 +4,7 @@ import Link from "next/link";
 import DitherField from "@/components/DitherField";
 import Reveal from "@/components/Reveal";
 import { images } from "@/lib/images";
+import Lead from "@/components/Lead";
 
 // Portrait at its full shape on the left, the founder's own words on
 // the right. Admissions readers come for this section.
@@ -44,7 +45,7 @@ export default function Founder() {
               style={{ borderRadius: "var(--r-lg)" }}
             />
             <figcaption
-              className="absolute bottom-4 left-4 rounded-full bg-midnight/70 px-3 py-1 font-mono uppercase text-white backdrop-blur-sm"
+              className="absolute bottom-4 left-4 rounded-full bg-midnight/70 px-3 py-1 label text-white backdrop-blur-sm"
               style={{
                 fontSize: "var(--text-2xs)",
                 letterSpacing: "var(--track-label)",
@@ -73,12 +74,7 @@ export default function Founder() {
               lineHeight: "var(--leading-body)",
             }}
           >
-            Katherine started Katalyze after a cabinet full of half-used
-            bottles, each bought for a skin type that had already changed. She
-            ran the survey, designed the device and built the working prototype.
-            Katalyze is a solo-founder company: she leads product, design,
-            financial planning and supplier sourcing, and works with external
-            partners for hardware, formulation and software.
+            <Lead text="Katherine ran the survey, designed the device and built the prototype. Katalyze is a one-person company, working with outside partners for hardware, formulation and software." />
           </p>
           <Link
             href="/story"

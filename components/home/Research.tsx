@@ -2,6 +2,7 @@ import CountUp from "@/components/CountUp";
 import Reveal from "@/components/Reveal";
 import DotStat from "@/components/home/DotStat";
 import Orbit from "@/components/home/Orbit";
+import Lead from "@/components/Lead";
 
 // Katalyze's own survey, about 75 respondents, 2026 (pitch deck v9).
 const LEAD = {
@@ -37,19 +38,15 @@ export default function Research() {
             className="font-display font-extralight text-white"
             style={{ fontSize: "var(--text-3xl)", lineHeight: "var(--leading-tight)" }}
           >
-            We measure.
+            Our idea,
             <br />
-            <span className="text-periwinkle">They guess.</span>
+            <span className="text-periwinkle">tested in the market.</span>
           </h2>
           <p
             className="max-w-sm text-[color:var(--muted-on-dark)]"
             style={{ fontSize: "var(--text-base)", lineHeight: "var(--leading-body)" }}
           >
-            <strong className="font-medium text-white">
-              Before building anything, Katherine checked the idea.
-            </strong>{" "}
-            She surveyed about 75 people who use skincare, asking whether
-            their skin changes and what goes wrong when they shop for it.
+            <Lead text="Before building anything, Katherine asked about 75 skincare users what goes wrong. Most said their skin changes with the weather, and most had bought products that didn't work for them." />
           </p>
         </Reveal>
 
@@ -68,7 +65,7 @@ export default function Research() {
               className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 opacity-80"
             />
             <p
-              className="relative z-10 font-mono uppercase text-periwinkle"
+              className="relative z-10 label text-periwinkle"
               style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}
             >
               Katalyze survey, 2026

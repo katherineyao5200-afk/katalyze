@@ -11,7 +11,7 @@ export default function Chip({
 }) {
   return (
     <span
-      className={`inline-flex w-fit items-center gap-3 font-mono uppercase ${
+      className={`label inline-flex w-fit items-center gap-2.5 ${
         tone === "light" ? "text-indigo" : "text-periwinkle"
       }`}
       style={{

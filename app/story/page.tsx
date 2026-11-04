@@ -87,7 +87,7 @@ export default function StoryPage() {
               style={{ borderRadius: "var(--r-lg)", aspectRatio: "4 / 5" }}
             />
             <figcaption
-              className="flex items-center justify-between font-mono uppercase text-periwinkle"
+              className="flex items-center justify-between label text-periwinkle"
               style={mono}
             >
               <span>Katherine Yao</span>
@@ -175,7 +175,7 @@ export default function StoryPage() {
                 >
                   <Sparkle size={15} />
                 </span>
-                <p className="font-mono uppercase text-periwinkle" style={mono}>
+                <p className="label text-periwinkle" style={mono}>
                   0{i + 1}
                 </p>
                 <h3

@@ -1,5 +1,6 @@
 import Chip from "@/components/home/Chip";
 import Reveal from "@/components/Reveal";
+import Lead from "@/components/Lead";
 
 // Planned launch pricing, from the pitch deck (v9, Sep 2026, pp. 20-21).
 // Nothing is for sale yet: every number here is labelled as planned.
@@ -94,8 +95,7 @@ export default function Pricing() {
               lineHeight: "var(--leading-body)",
             }}
           >
-            Refills ship when a cartridge is nearly empty, not on a fixed
-            schedule. These are planned launch prices and may still change.
+            <Lead text="Refills arrive when you're running low, not on a fixed schedule. Prices are planned and may change." />
           </p>
         </Reveal>
 
@@ -106,7 +106,7 @@ export default function Pricing() {
         >
           <Reveal className="spot flex flex-col gap-6 bg-[color:var(--canvas-deep)] p-8">
             <span
-              className="font-mono uppercase text-periwinkle"
+              className="label text-periwinkle"
               style={{
                 fontSize: "var(--text-2xs)",
                 letterSpacing: "var(--track-label)",
@@ -150,7 +150,7 @@ export default function Pricing() {
               }`}
             >
               <span
-                className="flex items-center justify-between font-mono uppercase text-periwinkle"
+                className="flex items-center justify-between label text-periwinkle"
                 style={{
                   fontSize: "var(--text-2xs)",
                   letterSpacing: "var(--track-label)",
@@ -195,7 +195,7 @@ export default function Pricing() {
 
         {/* Comparison */}
         <Reveal variant="fade" className="min-w-0">
-          <div className="w-full min-w-0 max-w-[calc(100vw-2*var(--margin))] overflow-x-auto">
+          <div className="scroll-x w-full min-w-0 max-w-[calc(100vw-2*var(--margin))] overflow-x-auto">
             <table
               aria-label="What each refill plan includes"
               className="w-full min-w-[36rem] border-collapse text-left"
@@ -205,7 +205,7 @@ export default function Pricing() {
                 <tr className="border-b border-[color:var(--rule-on-dark)]">
                   <th
                     scope="col"
-                    className="py-4 pr-4 font-mono font-normal uppercase text-periwinkle"
+                    className="py-4 pr-4 label text-periwinkle"
                     style={{
                       fontSize: "var(--text-2xs)",
                       letterSpacing: "var(--track-label)",
@@ -217,7 +217,7 @@ export default function Pricing() {
                     <th
                       key={p.id}
                       scope="col"
-                      className="w-28 py-4 text-center font-mono font-normal uppercase text-periwinkle"
+                      className="w-28 py-4 text-center label text-periwinkle"
                       style={{
                         fontSize: "var(--text-2xs)",
                         letterSpacing: "var(--track-label)",
@@ -254,7 +254,7 @@ export default function Pricing() {
             className="mt-4 text-[color:var(--faint-on-dark)]"
             style={{ fontSize: "var(--text-xs)" }}
           >
-            Planned launch pricing in US dollars. Not yet available to buy. The
+            Planned launch pricing in US dollars. Not in public markets yet. The
             waitlist hears confirmed prices first.
           </p>
         </Reveal>

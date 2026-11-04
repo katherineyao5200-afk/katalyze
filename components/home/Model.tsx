@@ -14,12 +14,6 @@ export default function Model() {
   return (
     <PhotoStatement src={images.mood.counter.src} position="70% 50%">
       <Reveal className="flex flex-col gap-6">
-        <p
-          className="font-mono uppercase text-periwinkle"
-          style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}
-        >
-          The business model
-        </p>
         <h2
           className="font-display font-extralight text-white"
           style={{ fontSize: "clamp(36px, 5vw, 76px)", lineHeight: 1.02 }}
@@ -42,7 +36,7 @@ export default function Model() {
         </dl>
       </Reveal>
       <p className="text-white/50" style={{ fontSize: "var(--text-xs)" }}>
-        Planned pricing. Nothing is on sale yet. The first run is about 2,000 units, and the waitlist hears first.
+        Planned pricing. Not in public markets yet. The first run is about 2,000 units, and the waitlist hears first.
       </p>
     </PhotoStatement>
   );

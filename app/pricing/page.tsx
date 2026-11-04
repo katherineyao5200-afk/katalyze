@@ -97,7 +97,7 @@ export default function PricingPage() {
           style={{ maxWidth: "var(--max-w)", paddingInline: "var(--margin)" }}
         >
           <Reveal className="flex flex-col gap-6 lg:col-span-4">
-            <p className="font-mono uppercase text-periwinkle" style={mono}>
+            <p className="label text-periwinkle" style={mono}>
               The device · one-time
             </p>
             <p
@@ -176,7 +176,7 @@ export default function PricingPage() {
             className="spot hidden overflow-hidden border md:block border-[color:var(--rule-on-dark)] bg-[color:var(--canvas-deep)] lg:col-span-8"
             style={{ borderRadius: "var(--r-lg)" }}
           >
-            <div className="overflow-x-auto">
+            <div className="scroll-x overflow-x-auto">
               <table className="w-full min-w-[560px] border-collapse text-left">
                 <caption className="sr-only">
                   Planned monthly refill plans and what each includes
@@ -185,7 +185,7 @@ export default function PricingPage() {
                   <tr className="border-b border-[color:var(--rule-on-dark)]">
                     <th
                       scope="col"
-                      className="p-6 align-bottom font-mono font-normal uppercase text-periwinkle"
+                      className="p-6 align-bottom label text-periwinkle"
                       style={mono}
                     >
                       Refill plans · monthly
@@ -263,7 +263,7 @@ export default function PricingPage() {
             fontSize: "var(--text-xs)",
           }}
         >
-          Planned pricing. Katalyze isn&apos;t for sale yet, and prices may
+          Planned pricing. Katalyze isn&apos;t in public markets yet, and prices may
           still change before launch. The waitlist hears first either way.
         </p>
       </section>

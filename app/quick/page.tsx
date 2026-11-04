@@ -26,7 +26,7 @@ const label = {
 
 const FACTS = [
   ["What", "A countertop skincare device that mixes one fresh dose for your skin each morning."],
-  ["Stage", "Pre-launch. Working six-channel prototype, tested with simulated liquids. Not on sale yet."],
+  ["Stage", "Pre-launch. Working six-channel prototype, tested with simulated liquids. Not in public markets yet."],
   ["Founder", "Katherine Yao, solo founder, working with outside manufacturing, formulation and development partners."],
   ["Price (planned)", "$279 device, refill plans from $25 a month."],
 ];

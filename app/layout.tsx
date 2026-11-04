@@ -1,3 +1,4 @@
+import { ViewTransition } from "react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import localFont from "next/font/local";
@@ -10,6 +11,8 @@ import PageFX from "@/components/PageFX";
 import MotionProvider from "@/components/MotionProvider";
 import CursorGlow from "@/components/CursorGlow";
 import QuietOnQuick from "@/components/QuietOnQuick";
+import Atmosphere from "@/components/Atmosphere";
+import AmbientSound from "@/components/AmbientSound";
 import QuickReadButton from "@/components/QuickReadButton";
 import ScrollProgress from "@/components/ScrollProgress";
 import GlassLight from "@/components/GlassLight";
@@ -91,7 +94,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <SmoothScroll />
           </QuietOnQuick>
           <Nav />
-          {children}
+          <ViewTransition default="page-fade">{children}</ViewTransition>
           <Footer />
           <PersistentCTA />
           <WaitlistModal />
@@ -99,6 +102,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <QuietOnQuick>
             <ShootingStars />
             <CursorGlow />
+          </QuietOnQuick>
+          <QuietOnQuick>
+            <Atmosphere />
+            <AmbientSound />
           </QuietOnQuick>
           <QuickReadButton />
           <ScrollProgress />

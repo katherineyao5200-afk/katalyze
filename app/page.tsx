@@ -1,4 +1,5 @@
 import Business from "@/components/home/Business";
+import Chapter from "@/components/home/Chapter";
 import Mission from "@/components/home/Mission";
 import Model from "@/components/home/Model";
 import FAQ from "@/components/home/FAQ";
@@ -16,25 +17,32 @@ import Journey from "@/components/home/Journey";
 import Progress from "@/components/home/Progress";
 import Research from "@/components/home/Research";
 import Voices from "@/components/home/Voices";
+import XRayStory from "@/components/home/XRayStory";
 
 // Section map and the reference behind each one: docs/REFERENCES.md.
 export default function Home() {
   return (
     <main className="flex flex-1 flex-col bg-midnight">
       <HomeHero />
+      <Chapter n="I" name="The problem" line="Your skin changes every day. Your skincare doesn't." />
       <SkinRitual />
       <Mission />
-      <Research />
+      <Chapter n="II" name="How it works" line="One touch, about a minute, one fresh dose." />
       <Journey />
+      <XRayStory />
       <Counter />
       <Anatomy />
+      <Chapter n="III" name="What's inside" line="Six cartridges, mixed fresh every morning." tone="light" />
       <Inside />
       <FormulaLab />
       <SkinChart />
+      <Chapter n="IV" name="Where it stands" line="A working prototype. Not on sale yet." />
       <Progress />
+      <Research />
       <Model />
       <Business />
       <Pricing />
+      <Chapter n="V" name="Who's behind it" line="One student founder, outside partners, and a waitlist." />
       <Voices />
       <Founder />
       <FAQ />

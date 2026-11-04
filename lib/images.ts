@@ -102,6 +102,20 @@ export const images = {
       alt: "Katherine Yao, founder of Katalyze",
     },
   },
+  // Real footage slots (FilmBackground). Null until the clips exist; see
+  // the footage brief in the project files. Each is a short muted loop.
+  films: {
+    hero: { src: null as string | null, poster: null as string | null },
+    dose: { src: null as string | null, poster: null as string | null },
+    cream: { src: null as string | null, poster: null as string | null },
+    skin: { src: null as string | null, poster: null as string | null },
+    morning: { src: null as string | null, poster: null as string | null },
+  },
+  // Stills of the x-ray film's first frame, shown while the 3D loads.
+  xrayPoster: {
+    wide: { src: "/images/xray-poster-wide.webp", width: 1440, height: 900 },
+    tall: { src: "/images/xray-poster-tall.webp", width: 430, height: 932 },
+  },
   cartridges: {
     base: [
       { src: null, width: 320, height: 320, alt: "Base formula cartridge" },

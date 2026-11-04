@@ -55,7 +55,7 @@ export default function Voices() {
           </p>
           <dl className="mt-6 flex max-w-md flex-col gap-1 border-t border-[color:var(--rule-on-dark)] pt-6">
             <dt
-              className="font-mono uppercase text-periwinkle"
+              className="label text-periwinkle"
               style={{
                 fontSize: "var(--text-2xs)",
                 letterSpacing: "var(--track-label)",

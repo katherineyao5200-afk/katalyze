@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { CARTRIDGE_TINT, type CartridgeCode } from "@/lib/tints";
 
 import Reveal from "@/components/Reveal";
+import Lead from "@/components/Lead";
 
 /*
  * An interactive illustration of how the rule-based engine reasons.
@@ -128,7 +129,7 @@ function Segmented<T extends string>({
   return (
     <fieldset className="flex flex-col gap-3">
       <legend
-        className="mb-3 font-mono uppercase text-periwinkle"
+        className="mb-3 label text-periwinkle"
         style={{
           fontSize: "var(--text-2xs)",
           letterSpacing: "var(--track-label)",
@@ -307,14 +308,13 @@ export default function FormulaLab() {
               lineHeight: "var(--leading-body)",
             }}
           >
-            Have a go. Hold the pad, tell it the weather and how your skin
-            feels, then mix. The six levels move the way the real rules would.
+            <Lead text="Try it yourself. Hold the pad, pick the weather and how your skin feels, and see what Katalyze would mix." />
           </p>
 
           {/* 01: the sensor */}
           <div className="mt-4 flex flex-col gap-4 border-t border-[color:var(--rule-on-dark)] pt-8">
             <p
-              className="font-mono uppercase text-periwinkle"
+              className="label text-periwinkle"
               style={{
                 fontSize: "var(--text-2xs)",
                 letterSpacing: "var(--track-label)",
@@ -492,7 +492,7 @@ export default function FormulaLab() {
             style={{ borderRadius: "var(--r-lg)" }}
           >
             <div
-              className="mb-6 flex items-center justify-between font-mono uppercase text-periwinkle"
+              className="mb-6 flex items-center justify-between label text-periwinkle"
               style={{
                 fontSize: "var(--text-2xs)",
                 letterSpacing: "var(--track-label)",
@@ -647,7 +647,7 @@ export default function FormulaLab() {
               <div className="overflow-hidden">
                 <div className="flex flex-col gap-2 border-t border-[color:var(--rule-on-dark)] pt-6">
                   <p
-                    className="font-mono uppercase text-periwinkle"
+                    className="label text-periwinkle"
                     style={{
                       fontSize: "var(--text-2xs)",
                       letterSpacing: "var(--track-label)",

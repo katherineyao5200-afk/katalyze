@@ -10,22 +10,22 @@ const STEPS: { n: string; title: string; body: string }[] = [
   {
     n: "01",
     title: "Read",
-    body: "Three seconds on the pad. Katalyze compares today with your usual, so it knows whether your skin is drier or more hydrated than normal.",
+    body: "Touch the top of the machine with one finger. In three seconds it checks if your skin is drier or less dry than normal for you.",
   },
   {
     n: "02",
     title: "Mix",
-    body: "Your reading, the local weather and a quick check-in set the blend. Six pumps measure each ingredient by weight, always inside safe ranges.",
+    body: "Your phone decides the mix. The Katalyze app uses your reading, the weather and how your skin feels today. Six small pumps then measure out each ingredient, always within safe amounts.",
   },
   {
     n: "03",
     title: "Apply",
-    body: "A fresh dose lands in a small dish. Scoop it up with a fingertip, like any serum.",
+    body: "Your skincare comes out into a small dish. Scoop it up with a fingertip and put it on your face.",
   },
   {
     n: "04",
     title: "Learn",
-    body: "Every reading nudges tomorrow's blend. Your formula moves when your skin does.",
+    body: "It keeps up with your skin. Every reading is saved, so tomorrow's mix takes today into account.",
   },
 ];
 

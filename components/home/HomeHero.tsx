@@ -50,7 +50,7 @@ const ANNOTATIONS: Annotation[] = [
     id: "cartridges",
     label: "6 cartridges",
     value: "3 bases: toner, serum, cream",
-    detail: "3 active: the small droppers",
+    detail: "3 actives: extra ingredients for dry, shiny or irritated days",
     side: "right",
     at: 0.3,
   },
@@ -63,8 +63,8 @@ const ANNOTATIONS: Annotation[] = [
   },
   {
     id: "cup",
-    label: "Dose dish",
-    value: "One fresh dose, in a small dish",
+    label: "Dish",
+    value: "Your skincare comes out here, ready to use",
     side: "right",
     at: 0.54,
   },
@@ -283,7 +283,7 @@ function ScrollHero() {
           >
             <div className="flex max-w-xl flex-col gap-6 pt-16">
               <p
-                className="font-mono uppercase text-periwinkle"
+                className="label text-periwinkle"
                 style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}
               >
                 Personalized skincare · In development
@@ -297,11 +297,13 @@ function ScrollHero() {
                 }}
               >
                 <strong className="font-medium text-white">
-                  Katalyze is a countertop skincare device.
-                </strong>{" "}
-                Touch the pad on top each morning and it mixes one fresh
-                dose from six cartridges, based on your skin that day, the
-                weather and how you say it feels.
+                  One device instead of a shelf of skincare.
+                </strong>
+                <span className="block pt-1 text-[0.88em] opacity-75">
+                  Katalyze is a small machine for your bathroom counter. Each
+                  morning you touch it with one finger, it checks how dry your skin
+                  is today, and it mixes the right skincare for you.
+                </span>
               </p>
               <WaitlistForm
                 source="hero"
@@ -319,6 +321,12 @@ function ScrollHero() {
                 >
                   Read the story
                 </Link>
+                <span className="md:hidden">
+                  {" · "}
+                  <Link href="/quick" className="text-blush underline decoration-blush/40 underline-offset-4">
+                    Quick read
+                  </Link>
+                </span>
               </p>
             </div>
           </div>
@@ -431,7 +439,7 @@ function AnnotationMark({
           />
         ))}
         <span
-          className="absolute -top-5 left-0 font-mono uppercase text-white/70"
+          className="absolute -top-5 left-0 label text-white/70"
           style={{ fontSize: "0.625rem", letterSpacing: "var(--track-label)" }}
         >
           {a.label.slice(1, 3)}
@@ -462,7 +470,7 @@ function AnnotationMark({
               className={`flex flex-col gap-0.5 whitespace-nowrap rounded-md border border-white/10 bg-[color:var(--canvas-deep)]/85 px-3 py-2 shadow-[0_8px_24px_rgb(10_12_28/0.5)] backdrop-blur-md ${right ? "ml-3" : "mr-3 items-end text-right"}`}
             >
               <span
-                className="font-mono uppercase text-periwinkle"
+                className="label text-periwinkle"
                 style={{
                   fontSize: "var(--text-2xs)",
                   letterSpacing: "var(--track-label)",
@@ -512,7 +520,7 @@ function PhoneCaption({
       style={{ opacity }}
     >
       <span
-        className="font-mono uppercase text-periwinkle"
+        className="label text-periwinkle"
         style={{
           fontSize: "var(--text-2xs)",
           letterSpacing: "var(--track-label)",
@@ -572,7 +580,7 @@ function StaticHero() {
       >
         <div className="col-span-12 flex flex-col gap-6 lg:col-span-6">
           <p
-            className="font-mono uppercase text-periwinkle"
+            className="label text-periwinkle"
             style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}
           >
             <span aria-hidden="true" className="hint-dot relative size-1.5 rounded-full bg-blush" />
@@ -587,11 +595,13 @@ function StaticHero() {
             }}
           >
             <strong className="font-medium text-white">
-              Katalyze is a countertop skincare device.
-            </strong>{" "}
-            Touch the pad on top each morning and it mixes one fresh
-            dose from six cartridges, based on your skin that day, the
-            weather and how you say it feels.
+              One device instead of a shelf of skincare.
+            </strong>
+            <span className="block pt-1 text-[0.88em] opacity-75">
+              Katalyze is a small machine for your bathroom counter. Each
+              morning you touch it with one finger, it checks how dry your skin
+              is today, and it mixes the right skincare for you.
+            </span>
           </p>
           <WaitlistForm
             source="hero"
@@ -609,6 +619,12 @@ function StaticHero() {
             >
               Read the story
             </Link>
+            <span className="md:hidden">
+              {" · "}
+              <Link href="/quick" className="text-blush underline decoration-blush/40 underline-offset-4">
+                Quick read
+              </Link>
+            </span>
           </p>
         </div>
         <div className="col-span-12 lg:col-span-6">
@@ -617,7 +633,7 @@ function StaticHero() {
             {ANNOTATIONS.map((a) => (
               <div key={a.id} className="flex flex-col">
                 <dt
-                  className="font-mono uppercase text-periwinkle"
+                  className="label text-periwinkle"
                   style={{
                     fontSize: "var(--text-2xs)",
                     letterSpacing: "var(--track-label)",

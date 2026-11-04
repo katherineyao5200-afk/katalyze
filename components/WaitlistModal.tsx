@@ -100,7 +100,7 @@ export default function WaitlistModal() {
             <strong className="font-medium text-white">
               The first run is about 2,000 units.
             </strong>{" "}
-            Katalyze isn&apos;t for sale yet. Join the waitlist to hear first
+            Katalyze isn&apos;t in public markets yet. Join the waitlist to hear first
             when it is.
           </p>
           <WaitlistForm source="persistent" className="mt-3 w-full" />

@@ -5,6 +5,7 @@ import { useState } from "react";
 import Reveal from "@/components/Reveal";
 import { SPARKLE_PATH } from "@/components/Sparkle";
 import Hint from "@/components/Hint";
+import Lead from "@/components/Lead";
 
 /*
  * "Your skin, charted": three weeks of demo readings drawn as a star
@@ -102,7 +103,7 @@ export default function SkinChart() {
               lineHeight: "var(--leading-tight)",
             }}
           >
-            Every morning&apos;s reading becomes a star on your chart.
+            The app shows how your skin changes, day by day.
           </h2>
           <p
             className="col-span-12 max-w-md self-end text-[color:var(--muted-on-dark)] lg:col-span-4 lg:col-start-9"
@@ -111,8 +112,7 @@ export default function SkinChart() {
               lineHeight: "var(--leading-body)",
             }}
           >
-            Each one is compared with your own usual, not anyone else&apos;s.
-            After a few weeks you can see the pattern, and so can the formula.
+            <Lead text="Each star is one morning. Readings are compared with your own normal, so after a few weeks you can spot patterns, like drier skin in cold weather." />
             <Hint className="mt-4 flex">Tap any star</Hint>
           </p>
         </Reveal>
@@ -123,7 +123,7 @@ export default function SkinChart() {
             style={{ borderRadius: "var(--r-lg)" }}
           >
             <div
-              className="flex items-center justify-between border-b border-[color:var(--rule-on-dark)] px-6 py-4 font-mono uppercase text-periwinkle"
+              className="flex items-center justify-between border-b border-[color:var(--rule-on-dark)] px-6 py-4 label text-periwinkle"
               style={{
                 fontSize: "var(--text-2xs)",
                 letterSpacing: "var(--track-label)",
@@ -278,7 +278,7 @@ export default function SkinChart() {
               >
                 <div className="flex flex-col gap-1">
                   <dt
-                    className="font-mono uppercase text-periwinkle"
+                    className="label text-periwinkle"
                     style={{
                       fontSize: "var(--text-2xs)",
                       letterSpacing: "var(--track-label)",
@@ -295,7 +295,7 @@ export default function SkinChart() {
                 </div>
                 <div className="flex flex-col gap-1">
                   <dt
-                    className="font-mono uppercase text-periwinkle"
+                    className="label text-periwinkle"
                     style={{
                       fontSize: "var(--text-2xs)",
                       letterSpacing: "var(--track-label)",
@@ -307,7 +307,7 @@ export default function SkinChart() {
                 </div>
                 <div className="flex flex-col gap-1">
                   <dt
-                    className="font-mono uppercase text-periwinkle"
+                    className="label text-periwinkle"
                     style={{
                       fontSize: "var(--text-2xs)",
                       letterSpacing: "var(--track-label)",
@@ -321,7 +321,7 @@ export default function SkinChart() {
                 </div>
                 <div className="flex flex-col gap-1">
                   <dt
-                    className="font-mono uppercase text-periwinkle"
+                    className="label text-periwinkle"
                     style={{
                       fontSize: "var(--text-2xs)",
                       letterSpacing: "var(--track-label)",

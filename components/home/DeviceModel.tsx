@@ -5,6 +5,7 @@ import { tintHex } from "@/lib/tints";
 import { useEffect, useRef, type RefObject } from "react";
 import * as THREE from "three";
 
+import { createQualityGovernor } from "@/lib/adaptiveQuality";
 import { afterIntro } from "@/lib/afterIntro";
 import { RectAreaLightUniformsLib } from "three/examples/jsm/lights/RectAreaLightUniformsLib.js";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
@@ -66,11 +67,11 @@ const BODY_W = 3.4;
 const BODY_H = 2.1;
 const DEPTH = 1.3;
 const BEVEL = 0.2;
-const FRONT = DEPTH / 2 + BEVEL; // z of the front face
+export const FRONT = DEPTH / 2 + BEVEL; // z of the front face
 
 const WIN = { x0: -1.34, x1: 1.34, y0: -0.3, y1: 0.8, r: 0.16 };
 const BAND_Y = -0.85; // top of the navy base band
-const TOP_Y = BODY_H / 2 + 0.16; // the flat top surface
+export const TOP_Y = BODY_H / 2 + 0.16; // the flat top surface
 
 function roundedRect(
   x0: number,
@@ -139,7 +140,7 @@ function grainTexture() {
   return t;
 }
 
-function buildDevice() {
+export function buildDevice() {
   const group = new THREE.Group();
   const disposables: { dispose(): void }[] = [];
   const track = <T extends { dispose(): void }>(x: T) => {
@@ -961,7 +962,7 @@ function buildDevice() {
 // A photo-studio reflection environment: a dim navy room with a large
 // overhead softbox, two tall strip lights and a faint warm bounce card.
 // This is what the glossy shell and steel reflect.
-function studioEnvironment() {
+export function studioEnvironment() {
   const scene = new THREE.Scene();
   const geos: THREE.BufferGeometry[] = [];
   const mats: THREE.Material[] = [];
@@ -1239,7 +1240,7 @@ function shadowTexture() {
 
 // One WebGL scene build per idle period, page-wide.
 let buildQueue: Promise<void> = Promise.resolve();
-function enqueueBuild(build: () => void) {
+export function enqueueBuild(build: () => void) {
   buildQueue = buildQueue.then(
     () =>
       new Promise<void>((resolve) => {
@@ -1700,8 +1701,14 @@ export default function DeviceModel({
       window.addEventListener("scroll", wake, { passive: true });
       window.addEventListener("pointermove", wake, { passive: true });
       let tick = 0;
-      const loop = () => {
+      let lastT = 0;
+      const governor = createQualityGovernor((r) => renderer.setPixelRatio(r), {
+        max: Math.min(window.devicePixelRatio, 1.5),
+      });
+      const loop = (now: number) => {
         tick++;
+        if (lastT) governor.sample(now - lastT);
+        lastT = now;
         // Skip rendering while the entry gate covers the page.
         if (
           document.documentElement.dataset.gate !== "open" &&
@@ -1714,6 +1721,7 @@ export default function DeviceModel({
         visible = e.isIntersecting;
         if (!ready) return;
         cancelAnimationFrame(raf);
+        lastT = 0;
         if (visible && !still) raf = requestAnimationFrame(loop);
         else if (visible) frame();
       });
