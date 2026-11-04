@@ -10,6 +10,8 @@ import PageFX from "@/components/PageFX";
 import MotionProvider from "@/components/MotionProvider";
 import CursorGlow from "@/components/CursorGlow";
 import QuietOnQuick from "@/components/QuietOnQuick";
+import Atmosphere from "@/components/Atmosphere";
+import AmbientSound from "@/components/AmbientSound";
 import QuickReadButton from "@/components/QuickReadButton";
 import ScrollProgress from "@/components/ScrollProgress";
 import GlassLight from "@/components/GlassLight";
@@ -99,6 +101,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <QuietOnQuick>
             <ShootingStars />
             <CursorGlow />
+          </QuietOnQuick>
+          <QuietOnQuick>
+            <Atmosphere />
+            <AmbientSound />
           </QuietOnQuick>
           <QuickReadButton />
           <ScrollProgress />
