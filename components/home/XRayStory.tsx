@@ -100,7 +100,7 @@ export default function XRayStory() {
         />
 
         <div
-          className="pointer-events-none absolute inset-x-0 top-0 mx-auto flex items-center justify-between font-mono uppercase text-periwinkle"
+          className="pointer-events-none absolute inset-x-0 top-0 mx-auto flex items-center justify-between label text-periwinkle"
           style={{
             maxWidth: "var(--max-w)",
             paddingInline: "var(--margin)",
@@ -150,7 +150,7 @@ export default function XRayStory() {
             transitionTimingFunction: "cubic-bezier(.16,1,.3,1)",
           }}
         >
-          <p className="font-mono uppercase text-periwinkle" style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}>
+          <p className="label text-periwinkle" style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}>
             Today&apos;s mix
           </p>
           <ul className="mt-4 flex flex-col gap-3">

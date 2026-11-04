@@ -249,32 +249,6 @@ export default function ShootingStars() {
     };
     ambient();
 
-    // Stardust: a few tiny sparkles fall off the pointer as it moves.
-    const fine = matchMedia("(pointer: fine)").matches;
-    let px = -1;
-    let py = -1;
-    let travelled = 0;
-    const onMove = (e: PointerEvent) => {
-      if (!fine || e.pointerType !== "mouse") return;
-      if (px >= 0) travelled += Math.hypot(e.clientX - px, e.clientY - py);
-      px = e.clientX;
-      py = e.clientY;
-      if (travelled < 34 || sparks.length > 40) return;
-      travelled = 0;
-      sparks.push({
-        x: px + (Math.random() - 0.5) * 10,
-        y: py + (Math.random() - 0.5) * 10,
-        vx: (Math.random() - 0.5) * 0.015,
-        vy: 0.004 + Math.random() * 0.012,
-        t0: performance.now(),
-        life: 750 + Math.random() * 450,
-        size: 1.4 + Math.random() * 1.8,
-        warm: Math.random() < 0.2,
-      });
-      start();
-    };
-    window.addEventListener("pointermove", onMove, { passive: true });
-
     // Sparks off primary buttons.
     const onClick = (e: MouseEvent) => {
       const el = (e.target as Element | null)?.closest?.(".btn-primary");
@@ -306,7 +280,6 @@ export default function ShootingStars() {
       mo.disconnect();
       window.removeEventListener("resize", resize);
       window.removeEventListener("click", onClick);
-      window.removeEventListener("pointermove", onMove);
       window.removeEventListener("katalyze:burst", onBurst);
     };
   }, [pathname]);

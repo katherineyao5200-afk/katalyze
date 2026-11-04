@@ -21,9 +21,9 @@ const focusRing =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush focus-visible:ring-offset-2 focus-visible:ring-offset-midnight";
 
 /*
- * A floating glass capsule. The page shows through it; the current page
- * is marked by a lit pane that glides between links as you move around
- * the site. The bar tightens once you scroll past the top.
+ * Plain type, no capsule: the links sit straight on the page, and a thin
+ * line glides under the current (or hovered) one. Once you scroll, a soft
+ * scrim fades in behind the bar so the links stay readable over anything.
  */
 export default function Nav() {
   const pathname = usePathname();
@@ -65,9 +65,19 @@ export default function Nav() {
 
   return (
     <header className="pointer-events-none sticky top-0 z-50 h-0">
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 top-0 h-24 transition-opacity duration-700"
+        style={{
+          opacity: scrolled ? 1 : 0,
+          background: light
+            ? "linear-gradient(180deg, rgb(255 255 255 / 0.85), rgb(255 255 255 / 0))"
+            : "linear-gradient(180deg, rgb(21 24 46 / 0.85), rgb(21 24 46 / 0))",
+        }}
+      />
       <nav
         aria-label="Primary"
-        className="pointer-events-auto mx-auto flex max-w-[var(--max-w)] items-center justify-between gap-2 sm:gap-4 px-[var(--margin)] transition-[padding] duration-[600ms] ease-[cubic-bezier(.16,1,.3,1)]"
+        className="pointer-events-auto relative mx-auto flex max-w-[var(--max-w)] items-center justify-between gap-2 sm:gap-4 px-[var(--margin)] transition-[padding] duration-[600ms] ease-[cubic-bezier(.16,1,.3,1)]"
         style={{ paddingTop: scrolled ? 12 : 20 }}
       >
         <Link
@@ -86,7 +96,7 @@ export default function Nav() {
 
         <LayoutGroup id="nav">
           <ul
-            className={`glass flex items-center rounded-full p-1 ${light ? "glass-light" : ""}`}
+            className="flex items-center gap-1 sm:gap-3"
             onMouseLeave={() => setHover(null)}
           >
             {NAV_LINKS.map((link) => {
@@ -101,10 +111,8 @@ export default function Nav() {
                     <motion.span
                       layoutId="nav-pane"
                       aria-hidden="true"
-                      className={`absolute inset-0 rounded-full ${
-                        light
-                          ? "bg-midnight/[0.08]"
-                          : "bg-white/[0.11] shadow-[inset_0_1px_0_rgb(255_255_255/0.18)]"
+                      className={`absolute inset-x-2 bottom-1 h-px sm:inset-x-3 ${
+                        light ? "bg-midnight" : "bg-white"
                       }`}
                       transition={{ type: "spring", stiffness: 420, damping: 36 }}
                     />
@@ -113,7 +121,7 @@ export default function Nav() {
                     href={link.href}
                     aria-current={isActive ? "page" : undefined}
                     onMouseEnter={() => setHover(link.href)}
-                    className={`relative inline-flex min-h-9 items-center whitespace-nowrap rounded-full px-2 text-[13px] transition-colors duration-300 sm:px-4 sm:text-[length:var(--text-sm)] ${
+                    className={`relative inline-flex min-h-9 items-center whitespace-nowrap px-2 text-[13px] transition-colors duration-300 sm:px-4 sm:text-[length:var(--text-sm)] ${
                       light
                         ? isActive
                           ? "text-midnight"

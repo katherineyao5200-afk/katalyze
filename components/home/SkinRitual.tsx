@@ -39,7 +39,7 @@ export default function SkinRitual() {
         <Reveal className="relative mx-auto aspect-square w-full max-w-[380px] md:col-span-5 md:max-w-none">
           <SkinOrb mix={d.mix} className="absolute inset-0" />
           <p
-            className="absolute inset-x-0 bottom-0 text-center font-mono uppercase text-periwinkle"
+            className="absolute inset-x-0 bottom-0 text-center label text-periwinkle"
             style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}
             aria-live="polite"
           >

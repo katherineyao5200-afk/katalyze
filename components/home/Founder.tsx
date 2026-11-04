@@ -45,7 +45,7 @@ export default function Founder() {
               style={{ borderRadius: "var(--r-lg)" }}
             />
             <figcaption
-              className="absolute bottom-4 left-4 rounded-full bg-midnight/70 px-3 py-1 font-mono uppercase text-white backdrop-blur-sm"
+              className="absolute bottom-4 left-4 rounded-full bg-midnight/70 px-3 py-1 label text-white backdrop-blur-sm"
               style={{
                 fontSize: "var(--text-2xs)",
                 letterSpacing: "var(--track-label)",

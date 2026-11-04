@@ -283,7 +283,7 @@ function ScrollHero() {
           >
             <div className="flex max-w-xl flex-col gap-6 pt-16">
               <p
-                className="font-mono uppercase text-periwinkle"
+                className="label text-periwinkle"
                 style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}
               >
                 Personalized skincare · In development
@@ -439,7 +439,7 @@ function AnnotationMark({
           />
         ))}
         <span
-          className="absolute -top-5 left-0 font-mono uppercase text-white/70"
+          className="absolute -top-5 left-0 label text-white/70"
           style={{ fontSize: "0.625rem", letterSpacing: "var(--track-label)" }}
         >
           {a.label.slice(1, 3)}
@@ -470,7 +470,7 @@ function AnnotationMark({
               className={`flex flex-col gap-0.5 whitespace-nowrap rounded-md border border-white/10 bg-[color:var(--canvas-deep)]/85 px-3 py-2 shadow-[0_8px_24px_rgb(10_12_28/0.5)] backdrop-blur-md ${right ? "ml-3" : "mr-3 items-end text-right"}`}
             >
               <span
-                className="font-mono uppercase text-periwinkle"
+                className="label text-periwinkle"
                 style={{
                   fontSize: "var(--text-2xs)",
                   letterSpacing: "var(--track-label)",
@@ -520,7 +520,7 @@ function PhoneCaption({
       style={{ opacity }}
     >
       <span
-        className="font-mono uppercase text-periwinkle"
+        className="label text-periwinkle"
         style={{
           fontSize: "var(--text-2xs)",
           letterSpacing: "var(--track-label)",
@@ -580,7 +580,7 @@ function StaticHero() {
       >
         <div className="col-span-12 flex flex-col gap-6 lg:col-span-6">
           <p
-            className="font-mono uppercase text-periwinkle"
+            className="label text-periwinkle"
             style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}
           >
             <span aria-hidden="true" className="hint-dot relative size-1.5 rounded-full bg-blush" />
@@ -633,7 +633,7 @@ function StaticHero() {
             {ANNOTATIONS.map((a) => (
               <div key={a.id} className="flex flex-col">
                 <dt
-                  className="font-mono uppercase text-periwinkle"
+                  className="label text-periwinkle"
                   style={{
                     fontSize: "var(--text-2xs)",
                     letterSpacing: "var(--track-label)",

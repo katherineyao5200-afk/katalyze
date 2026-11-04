@@ -1,7 +1,6 @@
 import DitherField from "@/components/DitherField";
 import Reveal from "@/components/Reveal";
 import WaitlistForm from "@/components/WaitlistForm";
-import WordVortex from "@/components/home/WordVortex";
 
 // Reference: alethia's dark closing block. Centered statement, one
 // action, one plain fact, and the mark as a quiet watermark.
@@ -11,8 +10,6 @@ export default function Close() {
       className="relative overflow-hidden bg-[color:var(--canvas-deep)]"
       style={{ paddingBlock: "var(--s-40)" }}
     >
-      {/* Words of the routine, drawn slowly inward behind the line. */}
-      <WordVortex className="pointer-events-none absolute inset-0 h-full w-full" />
       {/* The glowing aura rises behind the closing line. */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         <DitherField

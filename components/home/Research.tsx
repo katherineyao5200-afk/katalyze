@@ -65,7 +65,7 @@ export default function Research() {
               className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 opacity-80"
             />
             <p
-              className="relative z-10 font-mono uppercase text-periwinkle"
+              className="relative z-10 label text-periwinkle"
               style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}
             >
               Katalyze survey, 2026

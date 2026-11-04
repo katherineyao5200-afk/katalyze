@@ -9,12 +9,6 @@ export default function Mission() {
   return (
     <PhotoStatement src={images.mood.ritual.src} position="40% 30%">
       <Reveal className="flex flex-col gap-8">
-        <p
-          className="font-mono uppercase text-periwinkle"
-          style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}
-        >
-          Why it exists
-        </p>
         <h2
           className="font-display font-extralight text-white"
           style={{ fontSize: "clamp(40px, 6vw, 96px)", lineHeight: 0.98 }}

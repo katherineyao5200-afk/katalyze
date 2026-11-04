@@ -152,8 +152,8 @@ export default function AmbientSound() {
       aria-pressed={on}
       aria-label={on ? "Turn ambient sound off" : "Turn ambient sound on"}
       data-on={on ? "" : undefined}
-      className="sound-toggle glass glass-solid fixed bottom-6 right-6 z-40 hidden items-center gap-2.5 rounded-full px-4 py-2.5 font-mono uppercase text-white/80 lg:flex"
-      style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}
+      className="sound-toggle corner-link fixed bottom-6 right-6 z-40 hidden items-center gap-2.5 text-white mix-blend-difference lg:flex"
+      style={{ fontSize: "var(--text-xs)" }}
     >
       <span className="sound-bars" aria-hidden="true">
         <i />

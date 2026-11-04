@@ -163,7 +163,7 @@ export default function Anatomy() {
                   <span className="anat-line" />
                   <span className="anat-text">
                     <span
-                      className="font-mono uppercase text-periwinkle"
+                      className="label text-periwinkle"
                       style={{
                         fontSize: "var(--text-2xs)",
                         letterSpacing: "var(--track-label)",

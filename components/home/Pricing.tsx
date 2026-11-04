@@ -106,7 +106,7 @@ export default function Pricing() {
         >
           <Reveal className="spot flex flex-col gap-6 bg-[color:var(--canvas-deep)] p-8">
             <span
-              className="font-mono uppercase text-periwinkle"
+              className="label text-periwinkle"
               style={{
                 fontSize: "var(--text-2xs)",
                 letterSpacing: "var(--track-label)",
@@ -150,7 +150,7 @@ export default function Pricing() {
               }`}
             >
               <span
-                className="flex items-center justify-between font-mono uppercase text-periwinkle"
+                className="flex items-center justify-between label text-periwinkle"
                 style={{
                   fontSize: "var(--text-2xs)",
                   letterSpacing: "var(--track-label)",
@@ -205,7 +205,7 @@ export default function Pricing() {
                 <tr className="border-b border-[color:var(--rule-on-dark)]">
                   <th
                     scope="col"
-                    className="py-4 pr-4 font-mono font-normal uppercase text-periwinkle"
+                    className="py-4 pr-4 label text-periwinkle"
                     style={{
                       fontSize: "var(--text-2xs)",
                       letterSpacing: "var(--track-label)",
@@ -217,7 +217,7 @@ export default function Pricing() {
                     <th
                       key={p.id}
                       scope="col"
-                      className="w-28 py-4 text-center font-mono font-normal uppercase text-periwinkle"
+                      className="w-28 py-4 text-center label text-periwinkle"
                       style={{
                         fontSize: "var(--text-2xs)",
                         letterSpacing: "var(--track-label)",

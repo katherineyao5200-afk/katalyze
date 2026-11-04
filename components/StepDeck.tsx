@@ -161,7 +161,7 @@ function Card({
       }}
     >
       <p
-        className="flex items-baseline justify-between font-mono uppercase text-periwinkle"
+        className="flex items-baseline justify-between label text-periwinkle"
         style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}
       >
         <span className="text-white">
@@ -226,7 +226,7 @@ function StaticSteps({ steps }: { steps: Step[] }) {
         {steps.map((s, i) => (
           <li key={s.title} className="glass flex flex-col gap-4 rounded-[28px] p-8">
             <p
-              className="flex justify-between font-mono uppercase text-periwinkle"
+              className="flex justify-between label text-periwinkle"
               style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}
             >
               <span className="text-white">0{i + 1}</span>

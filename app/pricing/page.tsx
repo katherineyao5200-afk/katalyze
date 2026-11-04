@@ -97,7 +97,7 @@ export default function PricingPage() {
           style={{ maxWidth: "var(--max-w)", paddingInline: "var(--margin)" }}
         >
           <Reveal className="flex flex-col gap-6 lg:col-span-4">
-            <p className="font-mono uppercase text-periwinkle" style={mono}>
+            <p className="label text-periwinkle" style={mono}>
               The device · one-time
             </p>
             <p
@@ -185,7 +185,7 @@ export default function PricingPage() {
                   <tr className="border-b border-[color:var(--rule-on-dark)]">
                     <th
                       scope="col"
-                      className="p-6 align-bottom font-mono font-normal uppercase text-periwinkle"
+                      className="p-6 align-bottom label text-periwinkle"
                       style={mono}
                     >
                       Refill plans · monthly

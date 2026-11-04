@@ -191,7 +191,7 @@ function Row({
   return (
     <div className="flex flex-col gap-5">
       <p
-        className="font-mono uppercase text-indigo"
+        className="label text-indigo"
         style={{ fontSize: "var(--text-2xs)", letterSpacing: "var(--track-label)" }}
       >
         {label}

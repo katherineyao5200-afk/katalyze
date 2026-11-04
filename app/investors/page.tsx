@@ -95,7 +95,7 @@ const TRACTION = [
 function SectionHead({ label, title }: { label: string; title: string }) {
   return (
     <div className="flex flex-col gap-3">
-      <p className="font-mono uppercase text-periwinkle" style={mono}>
+      <p className="label text-periwinkle" style={mono}>
         {label}
       </p>
       <h2
@@ -156,7 +156,7 @@ export default function InvestorsPage() {
               key={h.label}
               className={`flex flex-col gap-2 py-10 pr-6 ${i > 0 ? "lg:border-l lg:border-[color:var(--rule-on-dark)] lg:pl-8" : ""} ${i % 2 === 1 ? "border-l border-[color:var(--rule-on-dark)] pl-6 lg:pl-8" : ""}`}
             >
-              <dt className="order-2 font-mono uppercase text-periwinkle" style={mono}>
+              <dt className="order-2 label text-periwinkle" style={mono}>
                 {h.label}
               </dt>
               <dd
@@ -274,7 +274,7 @@ export default function InvestorsPage() {
         <div className="grid grid-cols-1 gap-px overflow-hidden rounded-[var(--r-lg)] border border-[color:var(--rule-on-dark)] bg-[color:var(--rule-on-dark)] sm:grid-cols-2 lg:grid-cols-4">
           {PLANS.map((p) => (
             <div key={p.name} className="flex flex-col gap-3 bg-[color:var(--canvas-deep)] p-6">
-              <span className="font-mono uppercase text-periwinkle" style={mono}>
+              <span className="label text-periwinkle" style={mono}>
                 {p.name}
               </span>
               <span className="flex items-baseline gap-2">
@@ -312,11 +312,11 @@ export default function InvestorsPage() {
             <caption className="sr-only">Five-year consumer projection (B2C)</caption>
             <thead>
               <tr className="bg-[color:var(--canvas-deep)]">
-                <th scope="col" className="p-4 font-mono font-normal uppercase text-periwinkle" style={mono}>
+                <th scope="col" className="p-4 label text-periwinkle" style={mono}>
                   Projection
                 </th>
                 {YEARS.map((y) => (
-                  <th key={y} scope="col" className="p-4 text-right font-mono font-normal uppercase text-periwinkle" style={mono}>
+                  <th key={y} scope="col" className="p-4 text-right label text-periwinkle" style={mono}>
                     {y}
                   </th>
                 ))}
@@ -395,7 +395,7 @@ export default function InvestorsPage() {
             </p>
           </div>
           <div className="flex flex-col gap-4 lg:col-span-4 lg:col-start-9">
-            <p className="font-mono uppercase text-periwinkle" style={mono}>
+            <p className="label text-periwinkle" style={mono}>
               What it delivers
             </p>
             <p className="text-white/90" style={{ fontSize: "var(--text-base)", lineHeight: "var(--leading-body)" }}>
@@ -413,7 +413,7 @@ export default function InvestorsPage() {
             <thead>
               <tr className="bg-[color:var(--canvas-deep)]">
                 {["Brand", "What they do", "What's missing"].map((h) => (
-                  <th key={h} scope="col" className="p-4 font-mono font-normal uppercase text-periwinkle" style={mono}>
+                  <th key={h} scope="col" className="p-4 label text-periwinkle" style={mono}>
                     {h}
                   </th>
                 ))}
@@ -444,7 +444,7 @@ export default function InvestorsPage() {
         <ol className="grid grid-cols-1 gap-6 md:grid-cols-5">
           {ROADMAP.map((r, i) => (
             <li key={r.phase} className="flex flex-col gap-3 border-t border-[color:var(--rule-on-dark)] pt-5">
-              <span className={`font-mono uppercase ${i === 0 ? "text-blush" : "text-periwinkle"}`} style={mono}>
+              <span className={`label ${i === 0 ? "text-blush" : "text-periwinkle"}`} style={mono}>
                 {r.when}
               </span>
               <span className="font-display font-extralight" style={{ fontSize: "var(--text-xl)" }}>
@@ -476,7 +476,7 @@ export default function InvestorsPage() {
               Katherine Yao leads product, design, the financial model, supplier sourcing and go-to-market. Hardware is built with a Shenzhen manufacturing partner, formulas with a contract formulator, and the app and site with an external development company.
             </p>
             <div className="mt-2 flex flex-col gap-3">
-              <p className="font-mono uppercase text-periwinkle" style={mono}>
+              <p className="label text-periwinkle" style={mono}>
                 Hear first when the first run opens
               </p>
               <WaitlistForm source="investors" className="max-w-md" />

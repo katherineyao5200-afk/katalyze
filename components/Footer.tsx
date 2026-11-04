@@ -60,7 +60,7 @@ export default function Footer() {
           aria-label="Footer"
           className="col-span-6 flex flex-col gap-4 md:col-span-3 md:col-start-8"
         >
-          <p className="font-mono uppercase text-periwinkle" style={label}>
+          <p className="label text-periwinkle" style={label}>
             Pages
           </p>
           <ul
@@ -81,7 +81,7 @@ export default function Footer() {
         </nav>
 
         <div className="col-span-6 flex flex-col gap-4 md:col-span-2">
-          <p className="font-mono uppercase text-periwinkle" style={label}>
+          <p className="label text-periwinkle" style={label}>
             Status
           </p>
           <ul
@@ -111,7 +111,7 @@ export default function Footer() {
             emails are used only for launch news, and you can unsubscribe at any
             time.
           </p>
-          <p className="shrink-0 font-mono uppercase" style={label}>
+          <p className="shrink-0 label" style={label}>
             &copy; {year} Katalyze
           </p>
         </div>

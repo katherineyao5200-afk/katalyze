@@ -99,46 +99,47 @@ export default function Business() {
           </h2>
         </Reveal>
 
-        {/* Market */}
-        <dl className="grid grid-cols-1 border-t border-[color:var(--rule-on-dark)] md:grid-cols-3">
-          {MARKET.map((m, i) => (
-            <Reveal
-              key={m.label}
-              variant="fade"
-              delayMs={i * 90}
-              className={`flex flex-col gap-3 border-b border-[color:var(--rule-on-dark)] py-8 md:border-b-0 md:px-8 ${
-                i === 0 ? "md:pl-0" : "md:border-l"
-              }`}
+        {/* Market: one focal number, the two supporting ones beside it. */}
+        <dl className="grid grid-cols-1 items-end gap-12 border-t border-[color:var(--rule-on-dark)] pt-10 md:grid-cols-[1.5fr_1fr] md:gap-16">
+          <Reveal variant="fade" className="flex flex-col gap-3">
+            <dt className="label order-1 text-periwinkle">{MARKET[1].label}</dt>
+            <dd
+              className="order-2 font-display font-extralight tabular-nums text-white"
+              style={{ fontSize: "clamp(96px, 16vw, 240px)", lineHeight: 0.85 }}
             >
-              <dd
-                className="order-2 font-display font-extralight tabular-nums text-white"
-                style={{ fontSize: "var(--text-display)", lineHeight: 1 }}
+              {MARKET[1].value}
+            </dd>
+            <dd className="order-3 max-w-sm text-[color:var(--faint-on-dark)]" style={{ fontSize: "var(--text-xs)" }}>
+              {MARKET[1].note}
+            </dd>
+          </Reveal>
+          <div className="flex flex-col">
+            {[MARKET[0], MARKET[2]].map((m, i) => (
+              <Reveal
+                key={m.label}
+                variant="fade"
+                delayMs={120 + i * 90}
+                className="grid grid-cols-[auto_1fr] items-baseline gap-x-6 gap-y-1 border-b border-[color:var(--rule-on-dark)] py-5 last:border-b-0"
               >
-                {m.value}
-              </dd>
-              <dt
-                className="order-1 font-mono uppercase text-periwinkle"
-                style={{
-                  fontSize: "var(--text-2xs)",
-                  letterSpacing: "var(--track-label)",
-                }}
-              >
-                {m.label}
-              </dt>
-              <dd
-                className="order-3 max-w-xs text-[color:var(--faint-on-dark)]"
-                style={{ fontSize: "var(--text-xs)" }}
-              >
-                {m.note}
-              </dd>
-            </Reveal>
-          ))}
+                <dd
+                  className="row-span-2 font-display font-extralight tabular-nums text-white"
+                  style={{ fontSize: "var(--text-3xl)", lineHeight: 1 }}
+                >
+                  {m.value}
+                </dd>
+                <dt className="label text-white/80">{m.label}</dt>
+                <dd className="text-[color:var(--faint-on-dark)]" style={{ fontSize: "var(--text-xs)" }}>
+                  {m.note}
+                </dd>
+              </Reveal>
+            ))}
+          </div>
         </dl>
 
         {/* Landscape */}
         <Reveal variant="fade" className="flex min-w-0 flex-col gap-6">
           <h3
-            className="font-mono uppercase text-periwinkle"
+            className="label text-periwinkle"
             style={{
               fontSize: "var(--text-2xs)",
               letterSpacing: "var(--track-label)",
@@ -190,7 +191,7 @@ export default function Business() {
         {/* Roadmap */}
         <div className="flex flex-col gap-6">
           <h3
-            className="font-mono uppercase text-periwinkle"
+            className="label text-periwinkle"
             style={{
               fontSize: "var(--text-2xs)",
               letterSpacing: "var(--track-label)",

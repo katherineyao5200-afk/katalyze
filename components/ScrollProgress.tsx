@@ -47,7 +47,7 @@ export default function ScrollProgress() {
         }}
       />
       <motion.span
-        className="absolute -top-7 left-1/2 -translate-x-1/2 font-mono uppercase text-white/60 [writing-mode:vertical-rl]"
+        className="absolute -top-7 left-1/2 -translate-x-1/2 label text-white/60 [writing-mode:vertical-rl]"
         style={{ opacity: label, fontSize: "9px", letterSpacing: "0.2em", translateY: "-100%" }}
       >
         Scroll

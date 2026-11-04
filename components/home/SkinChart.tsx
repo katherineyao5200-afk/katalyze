@@ -123,7 +123,7 @@ export default function SkinChart() {
             style={{ borderRadius: "var(--r-lg)" }}
           >
             <div
-              className="flex items-center justify-between border-b border-[color:var(--rule-on-dark)] px-6 py-4 font-mono uppercase text-periwinkle"
+              className="flex items-center justify-between border-b border-[color:var(--rule-on-dark)] px-6 py-4 label text-periwinkle"
               style={{
                 fontSize: "var(--text-2xs)",
                 letterSpacing: "var(--track-label)",
@@ -278,7 +278,7 @@ export default function SkinChart() {
               >
                 <div className="flex flex-col gap-1">
                   <dt
-                    className="font-mono uppercase text-periwinkle"
+                    className="label text-periwinkle"
                     style={{
                       fontSize: "var(--text-2xs)",
                       letterSpacing: "var(--track-label)",
@@ -295,7 +295,7 @@ export default function SkinChart() {
                 </div>
                 <div className="flex flex-col gap-1">
                   <dt
-                    className="font-mono uppercase text-periwinkle"
+                    className="label text-periwinkle"
                     style={{
                       fontSize: "var(--text-2xs)",
                       letterSpacing: "var(--track-label)",
@@ -307,7 +307,7 @@ export default function SkinChart() {
                 </div>
                 <div className="flex flex-col gap-1">
                   <dt
-                    className="font-mono uppercase text-periwinkle"
+                    className="label text-periwinkle"
                     style={{
                       fontSize: "var(--text-2xs)",
                       letterSpacing: "var(--track-label)",
@@ -321,7 +321,7 @@ export default function SkinChart() {
                 </div>
                 <div className="flex flex-col gap-1">
                   <dt
-                    className="font-mono uppercase text-periwinkle"
+                    className="label text-periwinkle"
                     style={{
                       fontSize: "var(--text-2xs)",
                       letterSpacing: "var(--track-label)",

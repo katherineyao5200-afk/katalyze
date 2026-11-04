@@ -12,14 +12,11 @@ export default function QuickReadButton() {
     <Link
       href="/quick"
       data-cursor="Skip the show"
-      className="glass glass-solid fixed bottom-24 left-4 z-40 hidden items-center md:flex gap-2 rounded-full px-4 py-2.5 text-white md:bottom-6 md:left-6"
+      className="corner-link fixed bottom-6 left-6 z-40 hidden items-center gap-2 text-white mix-blend-difference md:flex"
       style={{ fontSize: "var(--text-xs)" }}
     >
-      <svg viewBox="0 0 16 16" aria-hidden="true" className="size-3.5">
-        <path d="M3 4h10M3 8h10M3 12h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-      </svg>
-      Quick read
-      <span className="text-white/50">· 2 min, no animations</span>
+      <span className="underline decoration-white/40 underline-offset-4">Quick read</span>
+      <span className="opacity-60">2 min, no animations</span>
     </Link>
   );
 }

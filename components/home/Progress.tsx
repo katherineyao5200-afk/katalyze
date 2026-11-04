@@ -1,5 +1,4 @@
 import Gallery from "@/components/Gallery";
-import Chip from "@/components/home/Chip";
 import Reveal from "@/components/Reveal";
 import { images } from "@/lib/images";
 import Lead from "@/components/Lead";
@@ -63,7 +62,6 @@ export default function Progress() {
         }}
       >
         <Reveal className="col-span-12 flex flex-col gap-6 lg:col-span-7">
-          <Chip tone="dark">Where it stands</Chip>
           <h2
             className="font-display font-extralight"
             style={{
