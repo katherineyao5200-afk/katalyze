@@ -93,7 +93,7 @@ export default function SkinOrb({
       for (let i = 1; i < 6; i++) if (cur[i] > cur[top]) top = i;
       const [hr, hg, hb] = rgb[top];
       const halo = ctx.createRadialGradient(cx, cy, R * 0.6, cx, cy, R * 1.45);
-      halo.addColorStop(0, `rgba(${hr},${hg},${hb},0.4)`);
+      halo.addColorStop(0, `rgba(${hr},${hg},${hb},0.3)`);
       halo.addColorStop(0.45, `rgba(${hr},${hg},${hb},0.12)`);
       halo.addColorStop(1, "rgba(21,24,46,0)");
       ctx.fillStyle = halo;
@@ -133,7 +133,7 @@ export default function SkinOrb({
       // A bright heart where the ingredients meet.
       const heart = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 0.55);
       const pulse = 0.5 + 0.5 * Math.sin(t * 1.3);
-      heart.addColorStop(0, `rgba(255,255,255,${0.32 + pulse * 0.12})`);
+      heart.addColorStop(0, `rgba(255,255,255,${0.2 + pulse * 0.08})`);
       heart.addColorStop(0.35, `rgba(${hr},${hg},${hb},0.22)`);
       heart.addColorStop(1, "rgba(255,255,255,0)");
       ctx.fillStyle = heart;

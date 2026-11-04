@@ -457,7 +457,7 @@ export default function XRayScene({
       if (!lite) {
         composer = new EffectComposer(renderer);
         composer.addPass(new RenderPass(scene, camera));
-        bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), 0.72, 0.55, 0.97);
+        bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), 0.58, 0.45, 1.0);
         composer.addPass(bloom);
         composer.addPass(new OutputPass());
       }
