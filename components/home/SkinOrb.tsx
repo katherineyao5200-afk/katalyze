@@ -60,7 +60,7 @@ export default function SkinOrb({
     let w = 0;
     let h = 0;
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       w = canvas.clientWidth;
       h = canvas.clientHeight;
       canvas.width = Math.round(w * dpr);
@@ -93,7 +93,8 @@ export default function SkinOrb({
       for (let i = 1; i < 6; i++) if (cur[i] > cur[top]) top = i;
       const [hr, hg, hb] = rgb[top];
       const halo = ctx.createRadialGradient(cx, cy, R * 0.6, cx, cy, R * 1.45);
-      halo.addColorStop(0, `rgba(${hr},${hg},${hb},0.22)`);
+      halo.addColorStop(0, `rgba(${hr},${hg},${hb},0.4)`);
+      halo.addColorStop(0.45, `rgba(${hr},${hg},${hb},0.12)`);
       halo.addColorStop(1, "rgba(21,24,46,0)");
       ctx.fillStyle = halo;
       ctx.fillRect(0, 0, w, h);
@@ -129,13 +130,25 @@ export default function SkinOrb({
         ctx.arc(x, y, size, 0, Math.PI * 2);
         ctx.fill();
       }
+      // A bright heart where the ingredients meet.
+      const heart = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 0.55);
+      const pulse = 0.5 + 0.5 * Math.sin(t * 1.3);
+      heart.addColorStop(0, `rgba(255,255,255,${0.32 + pulse * 0.12})`);
+      heart.addColorStop(0.35, `rgba(${hr},${hg},${hb},0.22)`);
+      heart.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = heart;
+      ctx.fillRect(cx - R, cy - R, R * 2, R * 2);
       // Points of light drifting through the mix.
       for (const s of sparks) {
         const a = s.a + t * s.s;
         const x = cx + Math.cos(a) * s.r * R * 0.9;
         const y = cy + Math.sin(a * 0.9) * s.r * R * 0.8;
         const tw = 0.35 + 0.65 * Math.abs(Math.sin(t * 1.4 + s.tw));
-        ctx.fillStyle = `rgba(255,255,255,${0.55 * tw})`;
+        ctx.fillStyle = `rgba(255,255,255,${0.12 * tw})`;
+        ctx.beginPath();
+        ctx.arc(x, y, 4 + tw * 3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = `rgba(255,255,255,${0.75 * tw})`;
         ctx.beginPath();
         ctx.arc(x, y, 1.1 + tw * 0.9, 0, Math.PI * 2);
         ctx.fill();
@@ -151,7 +164,7 @@ export default function SkinOrb({
       ctx.beginPath();
       ctx.arc(cx, cy, R, 0, Math.PI * 2);
       ctx.fill();
-      ctx.strokeStyle = "rgba(220,224,255,0.4)";
+      ctx.strokeStyle = "rgba(230,232,255,0.6)";
       ctx.lineWidth = 1;
       ctx.stroke();
       const spec = ctx.createRadialGradient(cx - R * 0.38, cy - R * 0.45, 0, cx - R * 0.38, cy - R * 0.45, R * 0.45);

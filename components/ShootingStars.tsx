@@ -139,6 +139,14 @@ export default function ShootingStars() {
         grad.addColorStop(0, `rgba(${col},0)`);
         grad.addColorStop(0.7, `rgba(${col},${0.35 * alpha})`);
         grad.addColorStop(1, `rgba(255,255,255,${0.95 * alpha})`);
+        // a wide, faint underglow first, then the bright core
+        g.strokeStyle = `rgba(${col},${0.12 * alpha})`;
+        g.lineWidth = m.w * 5;
+        g.lineCap = "round";
+        g.beginPath();
+        g.moveTo(hx - (m.dx / d) * tail * 0.6, hy - (m.dy / d) * tail * 0.6);
+        g.lineTo(hx, hy);
+        g.stroke();
         g.strokeStyle = grad;
         g.lineWidth = m.w;
         g.lineCap = "round";
@@ -147,12 +155,13 @@ export default function ShootingStars() {
         g.lineTo(hx, hy);
         g.stroke();
         // Head: a soft glow and the sparkle glyph.
-        const glow = g.createRadialGradient(hx, hy, 0, hx, hy, 34);
-        glow.addColorStop(0, `rgba(255,255,255,${0.55 * alpha})`);
+        const glow = g.createRadialGradient(hx, hy, 0, hx, hy, 52);
+        glow.addColorStop(0, `rgba(255,255,255,${0.8 * alpha})`);
+        glow.addColorStop(0.25, `rgba(${col},${0.35 * alpha})`);
         glow.addColorStop(1, `rgba(${col},0)`);
         g.fillStyle = glow;
         g.beginPath();
-        g.arc(hx, hy, 34, 0, Math.PI * 2);
+        g.arc(hx, hy, 52, 0, Math.PI * 2);
         g.fill();
         g.fillStyle = `rgba(255,255,255,${alpha})`;
         star(g, hx, hy, 6);
@@ -180,8 +189,14 @@ export default function ShootingStars() {
         const dt = now - s.t0;
         const x = s.x + s.vx * dt;
         const y = s.y + s.vy * dt + 0.00008 * dt * dt;
-        g.fillStyle = `rgba(${s.warm ? BLUSH : "255,255,255"},${1 - t})`;
-        star(g, x, y, s.size * (1 - t * 0.6));
+        const col = s.warm ? BLUSH : "255,255,255";
+        const r = s.size * (1 - t * 0.6);
+        g.fillStyle = `rgba(${col === BLUSH ? BLUSH : PERI},${0.18 * (1 - t)})`;
+        g.beginPath();
+        g.arc(x, y, r * 2.4, 0, Math.PI * 2);
+        g.fill();
+        g.fillStyle = `rgba(${col},${1 - t})`;
+        star(g, x, y, r);
       }
     };
 
@@ -234,6 +249,32 @@ export default function ShootingStars() {
     };
     ambient();
 
+    // Stardust: a few tiny sparkles fall off the pointer as it moves.
+    const fine = matchMedia("(pointer: fine)").matches;
+    let px = -1;
+    let py = -1;
+    let travelled = 0;
+    const onMove = (e: PointerEvent) => {
+      if (!fine || e.pointerType !== "mouse") return;
+      if (px >= 0) travelled += Math.hypot(e.clientX - px, e.clientY - py);
+      px = e.clientX;
+      py = e.clientY;
+      if (travelled < 34 || sparks.length > 40) return;
+      travelled = 0;
+      sparks.push({
+        x: px + (Math.random() - 0.5) * 10,
+        y: py + (Math.random() - 0.5) * 10,
+        vx: (Math.random() - 0.5) * 0.015,
+        vy: 0.004 + Math.random() * 0.012,
+        t0: performance.now(),
+        life: 750 + Math.random() * 450,
+        size: 1.4 + Math.random() * 1.8,
+        warm: Math.random() < 0.2,
+      });
+      start();
+    };
+    window.addEventListener("pointermove", onMove, { passive: true });
+
     // Sparks off primary buttons.
     const onClick = (e: MouseEvent) => {
       const el = (e.target as Element | null)?.closest?.(".btn-primary");
@@ -265,6 +306,7 @@ export default function ShootingStars() {
       mo.disconnect();
       window.removeEventListener("resize", resize);
       window.removeEventListener("click", onClick);
+      window.removeEventListener("pointermove", onMove);
       window.removeEventListener("katalyze:burst", onBurst);
     };
   }, [pathname]);

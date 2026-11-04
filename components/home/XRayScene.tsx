@@ -8,6 +8,7 @@ import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 
+import { createQualityGovernor } from "@/lib/adaptiveQuality";
 import { afterIntro } from "@/lib/afterIntro";
 import { tintHex } from "@/lib/tints";
 import {
@@ -206,7 +207,7 @@ export default function XRayScene({
           };
         });
       },
-      { rootMargin: "250% 0px" },
+      { rootMargin: "150% 0px" },
     );
     if (ref.current) near.observe(ref.current);
     return () => {
@@ -225,7 +226,8 @@ export default function XRayScene({
         onUnsupported?.();
         return;
       }
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+      const maxRatio = Math.min(window.devicePixelRatio, 1.5);
+      renderer.setPixelRatio(maxRatio);
       renderer.transmissionResolutionScale = 0.5;
       renderer.toneMapping = THREE.NeutralToneMapping;
       renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -455,10 +457,19 @@ export default function XRayScene({
       if (!lite) {
         composer = new EffectComposer(renderer);
         composer.addPass(new RenderPass(scene, camera));
-        bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), 0.5, 0.4, 1.02);
+        bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), 0.72, 0.55, 0.97);
         composer.addPass(bloom);
         composer.addPass(new OutputPass());
       }
+
+      // Drops the render resolution a step if the page starts missing frames.
+      const governor = createQualityGovernor(
+        (r) => {
+          renderer.setPixelRatio(r);
+          resize();
+        },
+        { max: maxRatio },
+      );
 
       function resize() {
         const w = container!.clientWidth;
@@ -468,7 +479,7 @@ export default function XRayScene({
         // Pull back on tall, narrow screens so the device still fits.
         camera.fov = w / h < 0.8 ? 46 : 30;
         camera.updateProjectionMatrix();
-        composer?.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+        composer?.setPixelRatio(governor.ratio);
         composer?.setSize(w, h);
         bloom?.resolution.set(w / 2, h / 2);
       }
@@ -480,9 +491,10 @@ export default function XRayScene({
       const camTgt = new THREE.Vector3();
       let shown = 0; // smoothed progress
       let visible = true;
+      let ready = false;
       const io = new IntersectionObserver(([e]) => {
         visible = e.isIntersecting;
-        if (visible) loop();
+        if (visible && ready) loop();
       });
       io.observe(container);
       let raf = 0;
@@ -621,8 +633,11 @@ export default function XRayScene({
       }
       function loop() {
         cancelAnimationFrame(raf);
-        const tick = () => {
+        let last = 0;
+        const tick = (now: number) => {
           if (!visible) return;
+          if (last) governor.sample(now - last);
+          last = now;
           frame();
           raf = requestAnimationFrame(tick);
         };
@@ -632,7 +647,9 @@ export default function XRayScene({
       // so the scene doesn't freeze the page when it first appears.
       let alive = true;
       const start = () => {
-        if (alive) loop();
+        if (!alive) return;
+        ready = true;
+        loop();
       };
       renderer.compileAsync(scene, camera).then(start, start);
 

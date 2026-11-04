@@ -5,6 +5,7 @@ import { tintHex } from "@/lib/tints";
 import { useEffect, useRef, type RefObject } from "react";
 import * as THREE from "three";
 
+import { createQualityGovernor } from "@/lib/adaptiveQuality";
 import { afterIntro } from "@/lib/afterIntro";
 import { RectAreaLightUniformsLib } from "three/examples/jsm/lights/RectAreaLightUniformsLib.js";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
@@ -1700,8 +1701,14 @@ export default function DeviceModel({
       window.addEventListener("scroll", wake, { passive: true });
       window.addEventListener("pointermove", wake, { passive: true });
       let tick = 0;
-      const loop = () => {
+      let lastT = 0;
+      const governor = createQualityGovernor((r) => renderer.setPixelRatio(r), {
+        max: Math.min(window.devicePixelRatio, 1.5),
+      });
+      const loop = (now: number) => {
         tick++;
+        if (lastT) governor.sample(now - lastT);
+        lastT = now;
         // Skip rendering while the entry gate covers the page.
         if (
           document.documentElement.dataset.gate !== "open" &&
@@ -1714,6 +1721,7 @@ export default function DeviceModel({
         visible = e.isIntersecting;
         if (!ready) return;
         cancelAnimationFrame(raf);
+        lastT = 0;
         if (visible && !still) raf = requestAnimationFrame(loop);
         else if (visible) frame();
       });
