@@ -195,7 +195,7 @@ export default function Pricing() {
 
         {/* Comparison */}
         <Reveal variant="fade" className="min-w-0">
-          <div className="w-full min-w-0 max-w-[calc(100vw-2*var(--margin))] overflow-x-auto">
+          <div className="scroll-x w-full min-w-0 max-w-[calc(100vw-2*var(--margin))] overflow-x-auto">
             <table
               aria-label="What each refill plan includes"
               className="w-full min-w-[36rem] border-collapse text-left"

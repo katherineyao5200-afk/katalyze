@@ -147,7 +147,7 @@ export default function Business() {
           >
             How others personalize
           </h3>
-          <div className="w-full min-w-0 max-w-[calc(100vw-2*var(--margin))] overflow-x-auto">
+          <div className="scroll-x w-full min-w-0 max-w-[calc(100vw-2*var(--margin))] overflow-x-auto">
             <table
               className="w-full min-w-[36rem] border-collapse text-left"
               style={{ fontSize: "var(--text-sm)" }}

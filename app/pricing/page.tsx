@@ -176,7 +176,7 @@ export default function PricingPage() {
             className="spot hidden overflow-hidden border md:block border-[color:var(--rule-on-dark)] bg-[color:var(--canvas-deep)] lg:col-span-8"
             style={{ borderRadius: "var(--r-lg)" }}
           >
-            <div className="overflow-x-auto">
+            <div className="scroll-x overflow-x-auto">
               <table className="w-full min-w-[560px] border-collapse text-left">
                 <caption className="sr-only">
                   Planned monthly refill plans and what each includes

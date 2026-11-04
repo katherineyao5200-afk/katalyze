@@ -307,7 +307,7 @@ export default function InvestorsPage() {
       {/* Projections */}
       <Band>
         <SectionHead label="Five-year projection" title="Revenue grows 10×. Recurring revenue grows to half the business." />
-        <div className="overflow-x-auto rounded-[var(--r-lg)] border border-[color:var(--rule-on-dark)]">
+        <div className="scroll-x overflow-x-auto rounded-[var(--r-lg)] border border-[color:var(--rule-on-dark)]">
           <table className="w-full min-w-[640px] border-collapse text-left tabular-nums">
             <caption className="sr-only">Five-year consumer projection (B2C)</caption>
             <thead>
@@ -408,7 +408,7 @@ export default function InvestorsPage() {
       {/* Competition */}
       <Band>
         <SectionHead label="Competition" title="Competitors personalize at signup or guess from a photo. None of them measure daily." />
-        <div className="overflow-x-auto rounded-[var(--r-lg)] border border-[color:var(--rule-on-dark)]">
+        <div className="scroll-x overflow-x-auto rounded-[var(--r-lg)] border border-[color:var(--rule-on-dark)]">
           <table className="w-full min-w-[640px] border-collapse text-left">
             <thead>
               <tr className="bg-[color:var(--canvas-deep)]">

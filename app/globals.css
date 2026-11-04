@@ -1516,3 +1516,24 @@ a.glass:active {
 /* A section that opens a chapter doesn't need its own top air: the
    chapter mark already gives it. */
 .chapter + section { padding-block-start: clamp(24px, 4vw, 56px) !important; }
+
+/* Wide tables on phones: fade the right edge so it's clear there are more
+   columns to swipe to; the fade lifts once you reach the end (scroll-driven
+   where supported, otherwise it simply stays). */
+@media (max-width: 767px) {
+  /* Tripled class so it outranks the read-in mask when the table sits
+     directly inside a Reveal. */
+  .scroll-x.scroll-x.scroll-x {
+    --fade: 48px;
+    -webkit-mask: linear-gradient(90deg, #000 calc(100% - var(--fade)), transparent) 0 0 / 100% 100% no-repeat;
+    mask: linear-gradient(90deg, #000 calc(100% - var(--fade)), transparent) 0 0 / 100% 100% no-repeat;
+  }
+  @supports (animation-timeline: scroll(self inline)) {
+    .scroll-x.scroll-x.scroll-x {
+      animation: scroll-x-fade linear both;
+      animation-timeline: scroll(self inline);
+    }
+  }
+}
+@property --fade { syntax: "<length>"; inherits: false; initial-value: 48px; }
+@keyframes scroll-x-fade { 0%, 85% { --fade: 48px; } 100% { --fade: 0px; } }
